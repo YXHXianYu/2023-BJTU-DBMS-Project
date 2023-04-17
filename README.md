@@ -47,8 +47,15 @@
   ;
   ```
 
-  * 约束条件语法见下文
-
+  * 约束条件语法
+  
+    ```mysql
+  CONSTRAINT PRIMARY KEY 列名;                # 指定主键
+  CONSTRAINT FOREIGN KEY 列名 REFERENCES 表名2 列名2; # 指定外键，该列 参考 表2的列2
+  CONSTRAINT UNIQUE 列名;                     # 指定该列值不可重复（未指定时，默认可重）
+  CONSTRAINT NOT NULL 列名;                   # 指定该列非空（未指定时，默认可空）
+  CONSTRAINT DEFAULT 列名 值;                  # 指定该列默认值（未指定时，默认值为NULL）
+  
 * 删除表
 
   ```mysql
@@ -69,16 +76,6 @@
   DESC TABLE 表名;
   ```
 
-* 约束条件语法
-
-  ```mysql
-  CONSTRAINT PRIMARY KEY 列名;                      # 指定主键
-  CONSTRAINT FOREIGN KEY 列名 REFERENCES 表名2 列名2; # 指定外键，该列 参考 表2的列2
-  CONSTRAINT UNIQUE 列名;                           # 指定该列值不可重复（未指定时，默认可重）
-  CONSTRAINT NOT NULL 列名;                         # 指定该列非空（未指定时，默认可空）
-  CONSTRAINT DEFAULT 列名 值;                        # 指定该列默认值（未指定时，默认值为NULL）
-  ```
-
 #### 1.4 记录
 
 * 插入记录
@@ -90,7 +87,30 @@
 * 删除记录
 
   ```mysql
-  TODO....
+  DELETE FROM 表名 [WHERE 筛选条件1 筛选条件2 ...];
+  ```
+  
+  * 筛选条件语法
+  
+    ```mysql
+    列名 = 值
+    ```
+    
+    * **筛选条件'='左右必须要包含空格**，否则会产生编译错误
+  
+* 选择记录
+
+  ```mysql
+  SELECT 列名1 列名2 列名3 ...
+  FROM 表名1 [NATURAL JOIN 表名2 ...]
+  [WHERE 筛选条件1 筛选条件2 ...];
+  ```
+
+* 更新记录
+
+  ```mysql
+  UPDATE 表名 SET 列名1 = 值1 [列名2 = 值2 ...]
+  [WHERE 筛选条件1 筛选条件2 ...];
   ```
 
 ### 2. C++函数接口
