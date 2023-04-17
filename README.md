@@ -50,11 +50,12 @@
   * 约束条件语法
   
     ```mysql
-  CONSTRAINT PRIMARY KEY 列名;                # 指定主键
-  CONSTRAINT FOREIGN KEY 列名 REFERENCES 表名2 列名2; # 指定外键，该列 参考 表2的列2
-  CONSTRAINT UNIQUE 列名;                     # 指定该列值不可重复（未指定时，默认可重）
-  CONSTRAINT NOT NULL 列名;                   # 指定该列非空（未指定时，默认可空）
-  CONSTRAINT DEFAULT 列名 值;                  # 指定该列默认值（未指定时，默认值为NULL）
+    CONSTRAINT PRIMARY KEY 列名;                # 指定主键
+    CONSTRAINT FOREIGN KEY 列名 REFERENCES 表名2 列名2; # 指定外键，该列 参考 表2的列2
+    CONSTRAINT UNIQUE 列名;                     # 指定该列值不可重复（未指定时，默认可重）
+    CONSTRAINT NOT NULL 列名;                   # 指定该列非空（未指定时，默认可空）
+    CONSTRAINT DEFAULT 列名 值;                  # 指定该列默认值（未指定时，默认值为NULL）
+    ```
   
 * 删除表
 
