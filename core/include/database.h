@@ -17,7 +17,9 @@ public:
     std::string GetOwnerUserName();
     std::string GetDatabaseName();
     int CreateTable(std::string table_name);
+    int DropTable(std::string table_name);
     int Insert(std::string table_name, std::vector<std::pair<std::string, std::any>>);
+    int Delete(std::string table_name);
     std::vector<std::vector<std::any>> Select(std::string table_name, std::vector<std::string>);
 };
 
