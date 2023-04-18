@@ -7,6 +7,11 @@ Table::Table(std::string table_name, std::vector<std::pair<std::string, std::str
         field_map[field.first] = field.second;
     }
 }
+
+std::string Table::GetTableName() const{
+    return table_name; 
+}
+
 int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
     std::unordered_map<std::string, std::any> record;
     for(const auto& field : record_in) {
@@ -61,12 +66,89 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
     return kSuccess;
 }
 
-std::vector<std::vector<std::any>> Table::Select(std::vector<std::string> field_name) {
-    std::vector<std::vector<std::any>> return_records;
-    for(const auto& record: records) {
-        //todo : where ... continue
-        for(const auto& name: field_name) {
-            //if(!record.)
+int Table::Select(std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string,int>> conditions, std::vector<std::vector<std::any>>& return_records)
+{
+    if(field_name[0] == "*") {
+        field_name.clear();
+        for(auto field : fields) {
+            field_name.push_back(field.first);
         }
     }
+    for(const auto& name: field_name) {
+        if(!field_map.count(name)) {
+            return kFieldNotFound;
+        }
+    }
+    //return_records第一行全是字段名
+    std::vector<std::any> tmp;
+    for(const auto& name: field_name) {
+        tmp.push_back(std::any(name));
+    }
+    return_records.push_back(tmp);
+    //ok
+
+    for(const auto& record: records) {
+        //where ... continue
+        if(CheckCondition(record, conditions) != kSuccess) continue;
+        
+        std::vector<std::any> ret_record;
+        for(const auto& name: field_name) {
+            if(!record.count(name)) {
+                ret_record.push_back(std::any(ColasqlNull()));
+            }
+            else {
+                ret_record.push_back(record.at(name));
+            }
+        }
+        return_records.push_back(ret_record);
+    }
+    // TODO
+    return kSuccess;
+}
+
+int Table::CheckCondition(const std::unordered_map<std::string, std::any>& record, const std::vector<std::tuple<std::string, std::string, int>>& conditions) {
+    for(const auto& condition : conditions) {
+        std::string field_name = std::get<0>(condition);
+        int expected_result = std::get<2>(condition);
+        std::any to_any = ColasqlTool::GetAnyByTypeAndValue(field_map[field_name], std::get<1>(condition));
+        if(!record.count(field_name)) {
+            return kConditionsNotSatisfied;
+        }
+        int compare_result = ColasqlTool::CompareAny(record.at(field_name), to_any);
+        if(compare_result == kEqual) {
+            if (expected_result != kEqualConditon && expected_result != kLessEqualConditon && expected_result != kLargerEqualCondition)
+                return kConditionsNotSatisfied;
+        }
+        if(compare_result == kLarger) {
+            if(expected_result != kLargerConditon) {
+                return kConditionsNotSatisfied;
+            }
+        }
+        if(compare_result == kLess) {
+            if(expected_result != kLessCondition) {
+                return kConditionsNotSatisfied;
+            }
+        }
+    }
+    return kSuccess;
+}
+
+int Table::Delete(std::vector<std::tuple<std::string, std::string, int>> conditions) {
+    for (const auto &condition : conditions) {
+        if(!field_map.count(std::get<0>(condition))) {
+            return kFieldNotFound;
+        }
+    }
+    std::vector<int> index_for_delete;
+    for(int i = 0; i < records.size(); ++i) {
+        std::unordered_map<std::string, std::any>& record = records[i];
+        if(CheckCondition(record, conditions) == kSuccess) {
+            index_for_delete.push_back(i);
+        }
+    }
+    reverse(index_for_delete.begin(), index_for_delete.end());
+    for(const auto& x : index_for_delete) {
+        records.erase(records.begin() + x);
+    }
+    return kSuccess;
 }

@@ -53,6 +53,34 @@ void ColasqlTool::OutputFields(const std::vector<std::pair<std::string, std::any
     std::cout << std::endl;
 }
 
+int ColasqlTool::CompareAny(const std::any& any1, const std::any& any2) {
+    if(any1.type() != any2.type()) {
+        return kNotSameType;
+    }
+    if (any1.type() == typeid(int)) {
+        int val1 = std::any_cast<int>(any1);
+        int val2 = std::any_cast<int>(any2);
+        if(val1 == val2) return kEqual;
+        if(val1 < val2) return kLess;
+        if(val1 > val2) return kLarger;
+    }
+    if (any1.type() == typeid(float)) {
+        float val1 = std::any_cast<float>(any1);
+        float val2 = std::any_cast<float>(any2);
+        if(std::fabs(val1 - val2) <= 1e-6) return kEqual;
+        if(val1 < val2) return kLess;
+        if(val1 > val2) return kLarger;
+    }
+    if (any1.type() == typeid(std::string)) {
+        float val1 = std::any_cast<float>(any1);
+        float val2 = std::any_cast<float>(any2);
+        if (val1 == val2) return kEqual;
+        if(val1 < val2) return kLess;
+        if(val1 > val2) return kLarger;
+    }
+    return kEqual;
+}
+
 void ColasqlTool::OutputConstraints(const std::vector<Constraint*> constraints) {
     std::cout << "Constraints: " << std::endl;
     for(auto &it: constraints) {

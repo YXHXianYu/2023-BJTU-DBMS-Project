@@ -5,7 +5,9 @@
 #include<vector>
 #include<any>
 #include<unordered_map>
-#include"./constraint/all_constraints.h"
+#include"all_constraints.h"
+#include"colasqltool.h"
+#include "constants.h"
 class Table {
 private:
     std::string table_name;
@@ -17,22 +19,12 @@ private:
 private:
     Table();
 public:
-    
+    std::string GetTableName() const;
     Table(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint*> constraints);
-    std::vector<std::vector<std::any>> Select(std::vector<std::string> field_name);
+    int Select(std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string,int>> conditions,        std::vector<std::vector<std::any>> &return_records);
     int Insert(std::vector<std::pair<std::string, std::string>> record_in);
-
-public:
-    static int constexpr kSuccess = 0;
-    static int constexpr kConstraintConflict = 1;
-    static int constexpr kFieldNotFound = 2;
-    static int constexpr kDataTypeWrong = 3;
-    static int constexpr kEqualConditon = 4;
-    static int constexpr kLargerConditon = 5;
-    static int constexpr kLessCondition = 6;
-    static int constexpr kLargerEqualCondition = 7;
-    static int constexpr kLessEqualConditon = 8;
-    static int constexpr kNotEqualConditon = 9;
+    int Delete(std::vector<std::tuple<std::string, std::string, int>> conditions);
+    int CheckCondition(const std::unordered_map<std::string, std::any>& record, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
 };
 
 #endif // TABLE_H
