@@ -322,4 +322,3 @@
                    const std::vector<Field>& values,
                    const std::vector<Field>& conditions);
   ```
-
