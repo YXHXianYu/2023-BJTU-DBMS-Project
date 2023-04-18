@@ -38,11 +38,23 @@
 
 #### 2.2 用户
 
+* 登入数据库
+
+  ```sql
+  colasql 用户名 密码
+  ```
+  
 * 创建用户（需要管理员权限）
 
   ```sql
   CREATE USER 用户名 密码 数据库名 权限名;
   # 数据库名: 用户拥有权限的数据库；若数据库名="ALL"，则会拥有所有数据库的权限
+  ```
+
+* 修改用户权限（需要管理员权限）
+
+  ```sql
+  GRANT 用户名 数据库名 权限名;
   ```
 
   * 权限名
@@ -56,13 +68,6 @@
 
   ```sql
   DROP USER 用户名;
-  ```
-
-* 激活/反激活管理员权限
-
-  ```sql
-  ACTIVATE ADMIN 密码;
-  DEACTIVATE ADMIN;
   ```
 
 #### 2.3 数据类型
@@ -90,11 +95,14 @@
 * 使用数据库
 
   ```sql
-  USE 数据库名 BY 用户名 密码;
+  USE 数据库名;
   ```
   
-  * 使用数据库时，要一起登入用户，确保有权限
-  
+* 显示所有数据库
+
+  ```sql
+  SHOW DATABASES;
+  ```
 
 #### 2.5 表
 
@@ -146,6 +154,12 @@
   ```sql
   DESC TABLE 表名;
   ```
+  
+* 显示所有表
+
+  ```sql
+  SHOW TABLES;
+  ```
 
 #### 2.6 记录
 
@@ -174,7 +188,8 @@
   ```sql
   SELECT 列名1 列名2 列名3 ...
   FROM 表名1 [NATURAL JOIN 表名2 ...]
-  [WHERE 筛选条件1 筛选条件2 ...];
+  [WHERE 筛选条件1 筛选条件2 ...]
+  [ORDER BY 列名1 列名2 ...];
   ```
 
 * 更新记录
@@ -235,9 +250,11 @@
   // 删除用户（需要管理员权限）
   int DeleteAccount(std::string accountName);
   
-  // 激活/反激活管理员权限 —— 该函数会对其他函数产生影响
-  int ActivateAdmin(std::string password);
-  int DeactivateAdmin(std::string password);
+  // 修改用户权限
+  int GrantAccount(std::string accountName,
+                   bool ownAllDatabases,
+                   std::string databaseName,
+                   int authority);
   ```
 
 #### 3.4 数据库
@@ -253,6 +270,9 @@
   int UseDatabase(std::string databaseName,
                   std::string accountName,
                   std::string password);
+  
+  // 显示所有数据库
+  int ShowDatabase(std::string& output);
   ```
 
 #### 3.5 表
@@ -275,6 +295,9 @@
   
   // 查看表结构（通过&output来输出结果）
   int QueryTable(std::string tableName, std::string& output) const;
+  
+  // 显示当前数据库的所有表
+  int ShowTable(std::string& output);
   ```
 
 #### 3.6 记录
@@ -288,6 +311,7 @@
   int DeleteRecord(std::string tableName,
                    const std::vector<Field>& conditions);
   
+  // SelectRecord的参数需要修改！！！目前不完善！！！
   // 选择(查询)记录（conditions储存筛选条件）
   int SelectRecord(std::string tableName,
                    const std::vector<Field>& conditions,
@@ -298,6 +322,4 @@
                    const std::vector<Field>& values,
                    const std::vector<Field>& conditions);
   ```
-
-***
 
