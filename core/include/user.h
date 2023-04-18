@@ -4,6 +4,7 @@
 #include<cstring>
 #include<iostream>
 #include<vector>
+#include"constants.h"
 class User {
 private:
     std::string user_name;
@@ -18,8 +19,6 @@ public:
     std::string GetUserName();
 //常量
 public:
-    static constexpr int kIdentifiedSuccess = 0;
-    static constexpr int kIdentifiedFail = 1;
 };
 
 #endif // __USER_H__
