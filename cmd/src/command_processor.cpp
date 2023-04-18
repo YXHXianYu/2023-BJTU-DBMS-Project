@@ -77,7 +77,7 @@ int CommandProcessor::Tokenize(std::string input, std::vector<std::string>& resu
 
     for(int st = 0, i = 0; i < input.length(); i++) {
         if(input[i] == ';') return -1; // ERROR
-        if(input[i] != ' ') continue;
+        if(input[i] != ' ' && input[i] != '\t') continue;
 
         if(i - st >= 1) result.push_back(input.substr(st, i - st));
         st = i + 1;

@@ -249,10 +249,92 @@ std::string Parser::InsertRecord(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::DeleteRecord(const std::vector<std::string>& seq) {
+
     return "Warning: DeleteRecord Under development";
 }
 
 std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
+
+    if(seq.size() < 4) return error + statementError;
+
+    int selectIdx = 0;
+    int fromIdx = -1;
+    int whereIdx = -1;
+    int groupIdx = -1;  // TODO
+    int havingIdx = -1; // TODO
+    int orderIdx = -1;
+
+    std::vector<int> idx;
+
+    idx.push_back(0);
+    for(int i = selectIdx + 1; i < seq.size(); i++) {
+        if(seq[i] == "from") fromIdx = idx.size(), idx.push_back(i);
+        else if(seq[i] == "where") whereIdx = idx.size(), idx.push_back(i);
+        else if(seq[i] == "group") groupIdx = idx.size(), idx.push_back(i);
+        else if(seq[i] == "having") havingIdx = idx.size(), idx.push_back(i);
+        else if(seq[i] == "order") orderIdx = idx.size(), idx.push_back(i);
+    }
+    idx.push_back(seq.size());
+
+    /**
+     * SELECT 列名1 列名2 列名3 ...
+     * FROM 表名1 [NATURAL JOIN 表名2 ...]
+     * [WHERE 筛选条件1 筛选条件2 ...]
+     * [ORDER BY 列名1 列名2 ...];
+    */
+    std::vector<std::string> fieldName;
+    std::vector<std::string> tableName;
+    std::vector<std::pair<std::string, std::string>> conditions;
+    std::vector<std::string> orderField;
+
+    // select
+    for(int i = idx[selectIdx] + 1; i < idx[selectIdx + 1]; i++) fieldName.push_back(seq[i]);
+
+    // from
+    for(int i = idx[fromIdx] + 1; i < idx[fromIdx + 1]; i += 3) {
+        if(i != idx[fromIdx] + 1 && (seq[i - 2] != "natural" || seq[i - 1] != "join")) return error + statementError + "(missing \"NATURAL JOIN\")";
+
+        tableName.push_back(seq[i]);
+    }
+
+    // where
+    if(whereIdx != -1) {
+        if((idx[whereIdx + 1] - idx[whereIdx] - 1) % 3 != 0) return error + statementError + "(conditions statement is incompatible)";
+
+        for(int i = idx[whereIdx] + 1; i < idx[whereIdx + 1]; i += 3) {
+            if(seq[i + 1] != "=") return error + statementError + "(conditions statement is error)";
+
+            conditions.push_back({seq[i], seq[i + 2]});
+        }
+    }
+
+    // TODO: group by
+    // TODO: having
+
+    // order by
+    for(int i = idx[orderIdx] + 2; i < idx[orderIdx + 1]; i++) {
+        orderField.push_back(seq[i]);
+    }
+
+    // output for testing
+    std::cout << "  fieldName: ";
+    for(auto str: fieldName) std::cout << str << " ";
+    std::cout << std::endl;
+    
+    std::cout << "  tableName: ";
+    for(auto str: tableName) std::cout << str << " ";
+    std::cout << std::endl;
+    
+    std::cout << "  conditions: ";
+    for(auto [str1, str2]: conditions) std::cout << "(" << str1 << ", " << str2 << ") ";
+    std::cout << std::endl;
+    
+    std::cout << "  orderField: ";
+    for(auto str: orderField) std::cout << str << " ";
+    std::cout << std::endl;
+
+    // TODO: Call function
+
     return "Warning: SelectRecord Under development";
 }
 

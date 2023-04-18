@@ -1,3 +1,0 @@
-D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/cmd/build/CMakeFiles/colasql.dir
-D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/cmd/build/CMakeFiles/edit_cache.dir
-D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/cmd/build/CMakeFiles/rebuild_cache.dir
