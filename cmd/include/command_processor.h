@@ -18,13 +18,14 @@ private:
 
 public:
     static CommandProcessor GetInstance();
-    void Start();
+    void Start(const std::string& accountName, const std::string& password);
 
 private:
     CommandProcessor();
     std::string GetPrompt();
     int Tokenize(std::string input, std::vector<std::string>& result);
     int ToLowerCase(std::string& str);
+    std::string& trim(std::string &s);
 };
 
 } // ColaSQLCommand

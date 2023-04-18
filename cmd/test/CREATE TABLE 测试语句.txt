@@ -1,0 +1,51 @@
+CREATE TABLE student
+  Sno int
+  Sname string
+  Ssex string
+  Sbirthday string
+  Totalcredit int
+;
+
+CREATE TABLE student
+  Sno int
+  Sname string
+  Ssex string
+  Sbirthday string
+  Totalcredit int
+
+  Constraint Primary key Sno
+  Constraint Not Null Sname
+  Constraint Unique Sbirthday
+  Constraint Default Totalcredit 0
+;
+
+// ----- error test -----
+
+CREATE TABLE student
+  Sno int
+  Sno float
+;
+
+CREATE TABLE student
+  Sno int
+  Sno1 float
+
+  constraint primary sno
+;
+
+CREATE TABLE student
+  Sno int
+  Sno1 float
+
+  constraint primary key sn1
+;
+
+CREATE TABLE student
+  Sno int
+  Sno1 float
+
+  constraint foreign key Sno reference Sno
+;
+
+
+
