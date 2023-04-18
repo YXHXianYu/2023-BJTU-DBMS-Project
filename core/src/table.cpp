@@ -3,6 +3,9 @@ Table::Table(std::string table_name, std::vector<std::pair<std::string, std::str
     this->table_name = table_name;
     this->fields = fields;
     this->constraints = constraints;
+    for(auto field:fields) {
+        field_map[field.first] = field.second;
+    }
 }
 int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
     std::unordered_map<std::string, std::any> record;
@@ -24,11 +27,9 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
             record[field.first] = std::any(std::stof(field.second));
         }
         else if (field_map[field.first] == "string") {
-            record[field.first] = field.second;
+            record[field.first] = std::any(field.second);
         }
     }
-    
-    
     /*todo: 约束条件
     for(auto constraint:constraints) {
         if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){
@@ -56,5 +57,16 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
 
     }
     */
+    records.push_back(record);
+    return kSuccess;
+}
 
+std::vector<std::vector<std::any>> Table::Select(std::vector<std::string> field_name) {
+    std::vector<std::vector<std::any>> return_records;
+    for(const auto& record: records) {
+        //todo : where ... continue
+        for(const auto& name: field_name) {
+            //if(!record.)
+        }
+    }
 }

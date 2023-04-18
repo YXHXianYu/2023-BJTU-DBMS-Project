@@ -27,6 +27,12 @@ public:
     static int constexpr kConstraintConflict = 1;
     static int constexpr kFieldNotFound = 2;
     static int constexpr kDataTypeWrong = 3;
+    static int constexpr kEqualConditon = 4;
+    static int constexpr kLargerConditon = 5;
+    static int constexpr kLessCondition = 6;
+    static int constexpr kLargerEqualCondition = 7;
+    static int constexpr kLessEqualConditon = 8;
+    static int constexpr kNotEqualConditon = 9;
 };
 
 #endif // TABLE_H
