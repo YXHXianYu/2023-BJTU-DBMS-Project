@@ -50,7 +50,8 @@
         "xhash": "cpp",
         "xtree": "cpp",
         "any": "cpp",
-        "dataprocessor": "c"
+        "dataprocessor": "c",
+        "algorithm": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }
