@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\Co1aSQL_Command.dir/objects.a
+C:\PROGRA~1\MINGW-~1\mingw64\bin\ar.exe qc CMakeFiles\Co1aSQL_Command.dir/objects.a @CMakeFiles\Co1aSQL_Command.dir\objects1.rsp
+C:\PROGRA~1\MINGW-~1\mingw64\bin\G__~1.EXE -Wl,--whole-archive CMakeFiles\Co1aSQL_Command.dir/objects.a -Wl,--no-whole-archive -o Co1aSQL_Command.exe -Wl,--out-implib,libCo1aSQL_Command.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Co1aSQL_Command.dir\linkLibs.rsp

@@ -1,0 +1,3 @@
+D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/cmd/build/CMakeFiles/Co1aSQL_Command.dir
+D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/cmd/build/CMakeFiles/edit_cache.dir
+D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/cmd/build/CMakeFiles/rebuild_cache.dir
