@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/colasql.dir/D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.obj"
+  "CMakeFiles/colasql.dir/D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.obj.d"
   "CMakeFiles/colasql.dir/D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.cpp.obj"
   "CMakeFiles/colasql.dir/D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.cpp.obj.d"
   "CMakeFiles/colasql.dir/D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/default_constraint.cpp.obj"

@@ -8,6 +8,7 @@
 #include <any>
 
 #include "all_constraints.h"
+#include "colasqltool.h"
 
 namespace ColaSQLCommand {
 
@@ -21,11 +22,7 @@ public:
     std::string Parse(const std::vector<std::string>& seq);
 
 private:
-    std::any GetAnyByType(const std::string& type);
-    std::any GetAnyByTypeAndValue(const std::any& type, const std::string& value);
-    std::string AnyToString(const std::any& any);
-    void OutputFields(const std::vector<std::pair<std::string, std::any>>& fields);
-    void OutputConstraints(const std::vector<Constraint*> constraints);
+    
 
     const std::string success = "Success: ";
     const std::string error = "Error: ";
@@ -59,7 +56,6 @@ private:
     std::string SelectRecord(const std::vector<std::string>& seq);
     std::string UpdateRecord(const std::vector<std::string>& seq);
 
-    class Exception {};
 };
 
 } // ColaSQLCommand

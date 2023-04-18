@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "any": "cpp",
         "array": "cpp",
         "atomic": "cpp",
         "*.tcc": "cpp",
@@ -11,6 +12,7 @@
         "cstdint": "cpp",
         "cstdio": "cpp",
         "cstdlib": "cpp",
+        "cstring": "cpp",
         "cwchar": "cpp",
         "cwctype": "cpp",
         "deque": "cpp",
@@ -18,7 +20,6 @@
         "vector": "cpp",
         "exception": "cpp",
         "algorithm": "cpp",
-        "map": "cpp",
         "memory": "cpp",
         "memory_resource": "cpp",
         "optional": "cpp",

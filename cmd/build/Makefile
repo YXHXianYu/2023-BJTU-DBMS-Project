@@ -128,6 +128,30 @@ colasql/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\colasql.dir\build.make CMakeFiles/colasql.dir/build
 .PHONY : colasql/fast
 
+D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.obj: D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.obj
+.PHONY : D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.obj
+
+# target to build an object file
+D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\colasql.dir\build.make CMakeFiles/colasql.dir/D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.obj
+.PHONY : D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.obj
+
+D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.i: D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.i
+.PHONY : D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.i
+
+# target to preprocess a source file
+D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\colasql.dir\build.make CMakeFiles/colasql.dir/D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.i
+.PHONY : D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.i
+
+D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.s: D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.s
+.PHONY : D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.s
+
+# target to generate assembly for a file
+D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\colasql.dir\build.make CMakeFiles/colasql.dir/D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.s
+.PHONY : D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp.s
+
 D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.obj: D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.cpp.obj
 .PHONY : D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.obj
 
@@ -353,6 +377,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... colasql
+	@echo ... D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.obj
+	@echo ... D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.i
+	@echo ... D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.s
 	@echo ... D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.obj
 	@echo ... D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.i
 	@echo ... D_/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.s

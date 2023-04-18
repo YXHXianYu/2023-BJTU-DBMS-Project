@@ -138,4 +138,5 @@ CMakeFiles/colasql.dir/src/main.cpp.obj: \
  D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/include/constraint/foreign_key_constraint.h \
  D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/include/constraint/unique_constraint.h \
  D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/include/constraint/not_null_constraint.h \
- D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/include/constraint/default_constraint.h
+ D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/include/constraint/default_constraint.h \
+ D:/Data/BJTU/BJTU4/DatabaseTraining/DBMS/2023-BJTU-DBMS-Project/core/include/colasqltool.h
