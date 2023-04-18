@@ -4,7 +4,7 @@
 # compile CXX with C:/Program Files/mingw-w64/mingw64/bin/g++.exe
 CXX_DEFINES = 
 
-CXX_INCLUDES = @CMakeFiles/Co1aSQL_Command.dir/includes_CXX.rsp
+CXX_INCLUDES = @CMakeFiles/colasql.dir/includes_CXX.rsp
 
-CXX_FLAGS = 
+CXX_FLAGS = -std=gnu++17
 

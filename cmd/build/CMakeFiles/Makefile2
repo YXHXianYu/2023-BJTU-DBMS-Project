@@ -62,7 +62,7 @@ CMAKE_BINARY_DIR = D:\Data\BJTU\BJTU4\DatabaseTraining\DBMS\2023-BJTU-DBMS-Proje
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/Co1aSQL_Command.dir/all
+all: CMakeFiles/colasql.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -70,34 +70,34 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/Co1aSQL_Command.dir/clean
+clean: CMakeFiles/colasql.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/Co1aSQL_Command.dir
+# Target rules for target CMakeFiles/colasql.dir
 
 # All Build rule for target.
-CMakeFiles/Co1aSQL_Command.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Co1aSQL_Command.dir\build.make CMakeFiles/Co1aSQL_Command.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Co1aSQL_Command.dir\build.make CMakeFiles/Co1aSQL_Command.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=D:\Data\BJTU\BJTU4\DatabaseTraining\DBMS\2023-BJTU-DBMS-Project\cmd\build\CMakeFiles --progress-num=1,2,3,4 "Built target Co1aSQL_Command"
-.PHONY : CMakeFiles/Co1aSQL_Command.dir/all
+CMakeFiles/colasql.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\colasql.dir\build.make CMakeFiles/colasql.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\colasql.dir\build.make CMakeFiles/colasql.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=D:\Data\BJTU\BJTU4\DatabaseTraining\DBMS\2023-BJTU-DBMS-Project\cmd\build\CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10 "Built target colasql"
+.PHONY : CMakeFiles/colasql.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/Co1aSQL_Command.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start D:\Data\BJTU\BJTU4\DatabaseTraining\DBMS\2023-BJTU-DBMS-Project\cmd\build\CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/Co1aSQL_Command.dir/all
+CMakeFiles/colasql.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start D:\Data\BJTU\BJTU4\DatabaseTraining\DBMS\2023-BJTU-DBMS-Project\cmd\build\CMakeFiles 10
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/colasql.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start D:\Data\BJTU\BJTU4\DatabaseTraining\DBMS\2023-BJTU-DBMS-Project\cmd\build\CMakeFiles 0
-.PHONY : CMakeFiles/Co1aSQL_Command.dir/rule
+.PHONY : CMakeFiles/colasql.dir/rule
 
 # Convenience name for target.
-Co1aSQL_Command: CMakeFiles/Co1aSQL_Command.dir/rule
-.PHONY : Co1aSQL_Command
+colasql: CMakeFiles/colasql.dir/rule
+.PHONY : colasql
 
 # clean rule for target.
-CMakeFiles/Co1aSQL_Command.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Co1aSQL_Command.dir\build.make CMakeFiles/Co1aSQL_Command.dir/clean
-.PHONY : CMakeFiles/Co1aSQL_Command.dir/clean
+CMakeFiles/colasql.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\colasql.dir\build.make CMakeFiles/colasql.dir/clean
+.PHONY : CMakeFiles/colasql.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

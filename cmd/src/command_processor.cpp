@@ -7,7 +7,9 @@ CommandProcessor CommandProcessor::GetInstance() {
     return instance;
 }
 
-void CommandProcessor::Start() {
+void CommandProcessor::Start(const std::string& accountName, const std::string& password) {
+
+    // TODO: Login
 
     // TODO: Welcome information
 
@@ -63,6 +65,8 @@ std::string CommandProcessor::GetPrompt() {
 // 若返回 -1，则说明语句异常（语句中包含不正常的分号）
 int CommandProcessor::Tokenize(std::string input, std::vector<std::string>& result) {
     
+    trim(input);
+
     bool haveEnd = false; // 是否以分号结尾
     if(input[input.length() - 1] == ';') {
         haveEnd = true;
@@ -92,5 +96,15 @@ int CommandProcessor::ToLowerCase(std::string& str) {
     }
     return 0;
 }
+
+std::string& CommandProcessor::trim(std::string &s) {
+    if (s.empty()) {
+        return s;
+    }
+    s.erase(0,s.find_first_not_of(" "));
+    s.erase(s.find_last_not_of(" ") + 1);
+    return s;
+}
+
 
 } // ColaSQLCommand

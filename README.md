@@ -54,7 +54,7 @@
 * 修改用户权限（需要管理员权限）
 
   ```sql
-  GRANT 用户名 数据库名 权限名;
+  GRANT USER 用户名 数据库名 权限名;
   ```
 
   * 权限名
@@ -280,8 +280,8 @@
 * ```c++
   // 创建表
   int CreateTable(std::string tableName,
-                  const std::vector<Field>& fields,
-                  const std::vector<Constraint>& constraints);
+                  const std::vector<std::pair<std::string, std::any>>& fields,
+                  const std::vector<Constraint*>& constraints);
   
   // 删除表
   int DeleteTable(std::string tableName);
