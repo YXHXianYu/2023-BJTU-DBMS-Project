@@ -29,6 +29,7 @@ public:
 
     int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints);
     int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);
+    int AlterTableDrop(std::string table_name, std::string field_name);
 };
 
 
