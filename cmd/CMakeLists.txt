@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.10)
 project(colasql)
 
 # 将src文件夹下所有文件添加至SOURCE_src
-aux_source_directory(./src SOURCE_SRC)
-# aux_source_directory(./../core/src/. SOURCE_CORE)
-# aux_source_directory(./src SOURCE_CONSTRAINT)
+aux_source_directory(./src/ SOURCE_SRC)
+aux_source_directory(./../core/src/ SOURCE_CORE)
+aux_source_directory(./../core/src/constraint/ SOURCE_CONSTRAINT)
 
 
 add_executable(
@@ -15,15 +15,10 @@ add_executable(
     ${SOURCE_SRC}
 
     # core
-    ./../core/src/colasqltool.cpp
+    ${SOURCE_CORE}
 
-    # constraints (因为constraint下有测试代码，会产生冲突)
-    ./../core/src/constraint/constraint.cpp
-    ./../core/src/constraint/default_constraint.cpp
-    ./../core/src/constraint/foreign_key_constraint.cpp
-    ./../core/src/constraint/not_null_constraint.cpp
-    ./../core/src/constraint/primary_key_constraint.cpp
-    ./../core/src/constraint/unique_constraint.cpp
+    # constraints
+    ${SOURCE_CONSTRAINT}
 )
 
 target_include_directories(

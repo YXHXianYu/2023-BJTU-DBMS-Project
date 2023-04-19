@@ -10,6 +10,8 @@ CommandProcessor CommandProcessor::GetInstance() {
 void CommandProcessor::Start(const std::string& accountName, const std::string& password) {
 
     // TODO: Login
+    DataProcessor::GetInstance().CreateUser(accountName, password);
+    DataProcessor::GetInstance().Login(accountName, password);
 
     // TODO: Welcome information
 

@@ -73,7 +73,19 @@ std::string Parser::DeleteUser(const std::vector<std::string>& seq) {
 // ----- Database -----
 
 std::string Parser::CreateDatabase(const std::vector<std::string>& seq) {
-    return "Warning: CreateDatabase Under development";
+    if(seq.size() != 3) {
+        return error + statementRedundant;
+    }
+
+    std::string databaseName = seq[2];
+
+    int ret = DataProcessor::GetInstance().CreateDatabase(databaseName);
+
+    if(ret != 0) {
+        return error; // TODO: error information
+    }
+
+    return success;
 }
 
 std::string Parser::DeleteDatabase(const std::vector<std::string>& seq) {
@@ -81,15 +93,19 @@ std::string Parser::DeleteDatabase(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::UseDatabase(const std::vector<std::string>& seq) {
-    if(seq.size() >= 3) {
+    if(seq.size() != 2) {
         return error + statementRedundant;
     }
 
     std::string databaseName = seq[1];
 
-    // TODO: use database
+    int ret = DataProcessor::GetInstance().UseDatabase(databaseName);
 
-    return "Warning: UseDatabase Under development";
+    if(ret != 0) {
+        return error; // TODO: error information
+    }
+
+    return success;
 }
 
 std::string Parser::ShowDatabases(const std::vector<std::string>& seq) {
@@ -105,16 +121,12 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
     }
 
     std::string tableName = seq[2];
-
-    std::vector<std::pair<std::string, std::any>> fields;
+    std::vector<std::pair<std::string, std::string>> fields;
     std::vector<Constraint*> constraints;
-
-    // 通过 类型名 获取对应类型的 any值
-
 
     const std::string constraint = "constraint";
 
-    std::unordered_map<std::string, std::any> fieldMap; // 预处理，防止往core传入错误内容
+    std::unordered_map<std::string, std::string> fieldMap; // 预处理，防止往core传入错误内容
 
     // 获取 fields
     int i;
@@ -124,14 +136,14 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
         }
 
         std::string fieldName = seq[i];
-        std::any value = ColasqlTool::GetAnyByType(seq[i + 1]);
-        if(value.type() == typeid(ColasqlException)) return error + statementError + "(type name is unknown) (maybe forgot to add \"constraint\")";
+        // std::any value = ColasqlTool::GetAnyByType(seq[i + 1]);
+        // if(value.type() == typeid(ColasqlException)) return error + statementError + "(type name is unknown) (maybe forgot to add \"constraint\")";
 
         if(fieldMap.count(fieldName) != 0) return error + statementError + "(field name is duplicate)";
 
-        fields.push_back({fieldName, value});
+        fields.push_back({fieldName, seq[i + 1]});
 
-        fieldMap[fieldName] = value;
+        fieldMap[fieldName] = seq[i + 1];
     }
 
     // 获取 constraints
@@ -187,9 +199,17 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
     ColasqlTool::OutputFields(fields);
     ColasqlTool::OutputConstraints(constraints);
 
-    // TODO: call function
+    // std::string tableName = seq[2];
+    // std::vector<std::pair<std::string, std::any>> fields;
+    // std::vector<Constraint*> constraints;
 
-    return "Warning: CreateTable Under development";
+    int ret = DataProcessor::GetInstance().CreateTable(tableName, fields, constraints);
+
+    if(ret != 0) {
+        return error; // TODO: error information
+    }
+
+    return success;
 }
 
 std::string Parser::DeleteTable(const std::vector<std::string>& seq) {
@@ -243,9 +263,13 @@ std::string Parser::InsertRecord(const std::vector<std::string>& seq) {
         values.push_back({seq[i], seq[j]});
     }
 
-    // TODO: Call function
+    int ret = DataProcessor::GetInstance().Insert(tableName, values);
 
-    return "Warning: InsertRecord Under development";
+    if(ret != 0) {
+        return error; // TODO: error information
+    }
+
+    return success;
 }
 
 std::string Parser::DeleteRecord(const std::vector<std::string>& seq) {
@@ -284,7 +308,7 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
     */
     std::vector<std::string> fieldName;
     std::vector<std::string> tableName;
-    std::vector<std::pair<std::string, std::string>> conditions;
+    std::vector<std::tuple<std::string, std::string, int>> conditions;
     std::vector<std::string> orderField;
 
     // select
@@ -297,6 +321,11 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
         tableName.push_back(seq[i]);
     }
 
+    // from error
+    if(tableName.size() <= 0) {
+        return error + statementError + "(have no tables)";
+    }
+
     // where
     if(whereIdx != -1) {
         if((idx[whereIdx + 1] - idx[whereIdx] - 1) % 3 != 0) return error + statementError + "(conditions statement is incompatible)";
@@ -304,7 +333,8 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
         for(int i = idx[whereIdx] + 1; i < idx[whereIdx + 1]; i += 3) {
             if(seq[i + 1] != "=") return error + statementError + "(conditions statement is error)";
 
-            conditions.push_back({seq[i], seq[i + 2]});
+            // TODO: 缺少了其他关系条件
+            conditions.push_back({seq[i], seq[i + 2], kEqualConditon});
         }
     }
 
@@ -326,16 +356,29 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
     std::cout << std::endl;
 
     std::cout << "  conditions: ";
-    for(auto [str1, str2]: conditions) std::cout << "(" << str1 << ", " << str2 << ") ";
+    for(auto [str1, str2, i]: conditions) std::cout << "(" << str1 << ", " << str2 << ", " << i << ") ";
     std::cout << std::endl;
 
     std::cout << "  orderField: ";
     for(auto str: orderField) std::cout << str << " ";
     std::cout << std::endl;
 
-    // TODO: Call function
+    // std::vector<std::string> fieldName;
+    // std::vector<std::string> tableName;
+    // std::vector<std::tuple<std::string, std::string, int>> conditions;
+    // std::vector<std::string> orderField;
 
-    return "Warning: SelectRecord Under development";
+    std::vector<std::vector<std::any>> result;
+
+    int ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
+
+    if(ret != 0) {
+        return error; // TODO: error information
+    }
+
+    ColasqlTool::OutputSelectResult(result);
+
+    return success;
 }
 
 std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
