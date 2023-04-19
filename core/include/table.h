@@ -21,7 +21,11 @@ private:
 public:
     Table(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
     //获取表名
-    std::string GetTableName() const;
+    const std::string& GetTableName() const;
+    const std::vector<std::pair<std::string, std::string>>& GetFields() const;
+    const std::vector<std::unordered_map<std::string, std::any> >& GetRecords() const;
+    const std::vector<Constraint*>& GetConstraints() const;
+    
     //查询记录
     int Select(std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string,int>> conditions,        std::vector<std::vector<std::any>> &return_records);
     //插入记录

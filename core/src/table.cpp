@@ -9,8 +9,20 @@ Table::Table(std::string table_name, std::vector<std::pair<std::string, std::str
     }
 }
 
-std::string Table::GetTableName() const{
+const std::string& Table::GetTableName() const {
     return table_name;
+}
+
+const std::vector<std::pair<std::string, std::string>>& Table::GetFields() const {
+    return fields;
+}
+
+const std::vector<std::unordered_map<std::string, std::any> >& Table::GetRecords() const {
+    return records;
+}
+
+const std::vector<Constraint*>& Table::GetConstraints() const {
+    return constraints;
 }
 
 int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
