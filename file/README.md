@@ -21,8 +21,8 @@ int ReadDatabases(std::vector<Database>& databases);
 
 int WriteUser(User user);
 int WriteUsers(std::vector<User> users);
-int ReadDatabase(Database& database);
-int ReadDatabases(std::vector<Database> databases);
+int WriteDatabase(Database& database);
+int WriteDatabases(std::vector<Database> databases);
 
 ```
 
