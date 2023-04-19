@@ -32,7 +32,7 @@ public:
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);                                                               // 创建表
     int DropTable(std::string table_name);                                      //删除表
     int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>&    constraints);                                  //查看表结构
-    
+
     int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);//修改表结构,增加字段
     int AlterTableDrop(std::string table_name, std::string field_name);          //删除字段
     int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field); //修改字段
@@ -44,13 +44,12 @@ public:
     int Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in); // 插入记录
     int Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string, int>> conditions, std::vector<std::vector<std::any>> &return_records); // 查询记录
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);                                                                                         // 删除记录
-    int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& value, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
-    
+    int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
     //values: vector<>
 public:
     const std::vector<Database>& GetDatabases() const ;
     void SetDatabases(const std::vector<Database>& databases);
-    
+
 };
 
 #endif // DATAPROCESSOR_H

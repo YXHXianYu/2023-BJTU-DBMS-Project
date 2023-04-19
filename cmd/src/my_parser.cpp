@@ -7,7 +7,7 @@ namespace ColaSQLCommand {
 Parser::Parser() {}
 
 std::string Parser::Parse(const std::vector<std::string>& seq) {
-    
+
     // std::string output = "";
     // for(auto str: seq) output.append(str + " ");
     // return output;
@@ -92,7 +92,7 @@ std::string Parser::CreateDatabase(const std::vector<std::string>& seq) {
     if(ret != 0) {
         return error + GetErrorMessage(ret); // TODO: error information
     }
-    
+
     return success;
 }
 
@@ -112,7 +112,7 @@ std::string Parser::UseDatabase(const std::vector<std::string>& seq) {
     if(ret != 0) {
         return error + GetErrorMessage(ret); // TODO: error information
     }
-    
+
     return success;
 }
 
@@ -175,7 +175,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
             if(j - i != 6) return error + statementError + "(constraint statement is too short or too long)";
             if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
             if(seq[i + 4] != "reference") return error + statementError + "(not found \"reference\")";
-            
+
             constraints.push_back(new ForeignKeyConstraint(seq[i + 3], seq[i + 5], seq[i + 6]));
 
         } else if(seq[i + 1] == "unique") {
@@ -216,7 +216,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
     if(ret != 0) {
         return error + GetErrorMessage(ret); // TODO: error information
     }
-    
+
     return success;
 }
 
@@ -255,7 +255,7 @@ std::string Parser::ShowTables(const std::vector<std::string>& seq) {
 // ----- Record -----
 
 std::string Parser::InsertRecord(const std::vector<std::string>& seq) {
-    
+
     if(seq.size() < 6) return error + statementError;
 
     std::string tableName = seq[2];
@@ -276,7 +276,7 @@ std::string Parser::InsertRecord(const std::vector<std::string>& seq) {
     if(ret != 0) {
         return error + GetErrorMessage(ret); // TODO: error information
     }
-    
+
     return success;
 }
 
@@ -328,7 +328,7 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
 
         tableName.push_back(seq[i]);
     }
-    
+
     // from error
     if(tableName.size() <= 0) {
         return error + statementError + "(have no tables)";
@@ -359,15 +359,15 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
         std::cout << "  fieldName: ";
         for(auto str: fieldName) std::cout << str << " ";
         std::cout << std::endl;
-        
+
         std::cout << "  tableName: ";
         for(auto str: tableName) std::cout << str << " ";
         std::cout << std::endl;
-        
+
         std::cout << "  conditions: ";
         for(auto [str1, str2, i]: conditions) std::cout << "(" << str1 << ", " << str2 << ", " << i << ") ";
         std::cout << std::endl;
-        
+
         std::cout << "  orderField: ";
         for(auto str: orderField) std::cout << str << " ";
         std::cout << std::endl;
@@ -428,7 +428,7 @@ std::string Parser::Read(bool debug) {
                 std::cout << std::endl;
             }
         }
-        
+
     }
 
     DataProcessor::GetInstance().SetDatabases(databases);
@@ -441,7 +441,7 @@ std::string Parser::Save() {
     for(const auto& database: DataProcessor::GetInstance().GetDatabases()) {
         FileManager::GetInstance().WriteTablesFile(database.GetDatabaseName(), database.GetTables());
     }
-    
+
     return success + "Saved";
 }
 

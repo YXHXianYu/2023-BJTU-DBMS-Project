@@ -72,9 +72,9 @@ int ColasqlTool::CompareAny(const std::any& any1, const std::any& any2) {
         if(val1 < val2) return kLess;
         if(val1 > val2) return kLarger;
     }
-    
+
     if (any1.type() == typeid(std::string)) {
-        
+
         std::string val1 = std::any_cast<std::string>(any1);
         std::string val2 = std::any_cast<std::string>(any2);
         if (val1 == val2) return kEqual;
@@ -133,7 +133,7 @@ std::vector<std::vector<std::any>> ColasqlTool::ChangeDescriptionToRecords(const
     inner.push_back(std::string("Key"));
     inner.push_back(std::string("Default"));
     ret.push_back(inner);
-    
+
     inner.clear();
     for(const auto& field : fields) {
         std::string field_name = field.first;
@@ -162,7 +162,7 @@ std::vector<std::vector<std::any>> ColasqlTool::ChangeDescriptionToRecords(const
             if (dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr){
                 Key = "PRI";
             }
-            
+
         }
         inner.clear();
         inner.push_back(field_name);
@@ -190,7 +190,7 @@ std::vector<std::vector<std::any>> ColasqlTool::ChangeStringsToRecords(std::vect
     return ret;
 }
 
-void ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::any>> result) {
+std::string ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::any>> result) {
     std::string out_result;
     int count_field = 0;
     int count_record = 0;
@@ -233,4 +233,5 @@ void ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::any>> re
         out_result += '\n';
     }
     std::cout<<out_result;
+    return out_result;
 }

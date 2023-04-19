@@ -160,7 +160,7 @@ int DataProcessor::Insert(std::string table_name, std::vector<std::pair<std::str
         return kDatabaseNotUse;
     }
     return current_database->Insert(table_name,record_in);
-}                     
+}
 int DataProcessor::Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string, int>> conditions, std::vector<std::vector<std::any>> &return_records) {
     return_records.clear();
     if (current_user == nullptr) {
