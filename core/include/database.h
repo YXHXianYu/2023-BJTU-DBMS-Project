@@ -14,17 +14,21 @@ private:
     Database();
 public:
     Database(std::string database_name, std::string owner_user);
-    std::string GetOwnerUserName();
-    std::string GetDatabaseName();
+    std::string GetOwnerUserName() const;
+    std::string GetDatabaseName() const;
+    int ShowTables(std::vector<std::string>& return_tables);
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
     int DropTable(std::string table_name);
     int Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in);
-
+    
     int Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string,std::string,int>> conditions, std::vector<std::vector<std::any>> &return_records);
 
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);
 
     int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
+
+    int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints);
+    int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);
 };
 
 

@@ -114,21 +114,24 @@ int Table::CheckCondition(const std::unordered_map<std::string, std::any>& recor
         std::string field_name = std::get<0>(condition);
         int expected_result = std::get<2>(condition);
         std::any to_any = ColasqlTool::GetAnyByTypeAndValue(field_map[field_name], std::get<1>(condition));
+        
         if(!record.count(field_name)) {
             return kConditionsNotSatisfied;
         }
+        
         int compare_result = ColasqlTool::CompareAny(record.at(field_name), to_any);
+        /*std::cout<<field_name<<" "<<compare_result<<" "<<std::get<0>(condition)<<" "<<std::get<1>(condition)<<std::endl;*/
         if(compare_result == kEqual) {
             if (expected_result != kEqualConditon && expected_result != kLessEqualConditon && expected_result != kLargerEqualCondition)
                 return kConditionsNotSatisfied;
         }
         if(compare_result == kLarger) {
-            if(expected_result != kLargerConditon) {
+            if(expected_result != kLargerConditon && expected_result != kLargerEqualCondition && expected_result != kNotEqualConditon) {
                 return kConditionsNotSatisfied;
             }
         }
         if(compare_result == kLess) {
-            if(expected_result != kLessCondition) {
+            if(expected_result != kLessCondition && expected_result != kLessEqualConditon && expected_result != kNotEqualConditon) {
                 return kConditionsNotSatisfied;
             }
         }
@@ -186,4 +189,17 @@ int Table::Update(const std::vector<std::pair<std::string,std::string>>& values,
             }
         }
     }
+    return kSuccess;
+}
+
+int Table::DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints) {
+    fields = this->fields;
+    constraints = this->constraints;
+    return kSuccess;
+}
+int Table::AlterTableAdd(std::pair<std::string, std::string> new_field) {
+    if(field_map.count(new_field.first)) return kFieldExisted;
+    fields.push_back(new_field);
+    field_map[new_field.first] = new_field.second;
+    return kSuccess; 
 }

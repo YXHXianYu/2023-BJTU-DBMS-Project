@@ -1,6 +1,6 @@
 #include"dataprocessor.h"
 
-DataProcessor DataProcessor::GetInstance() {
+DataProcessor& DataProcessor::GetInstance() {
     static DataProcessor instance;
     return instance;
 }
@@ -8,27 +8,25 @@ DataProcessor DataProcessor::GetInstance() {
 DataProcessor::DataProcessor() {
     current_user = nullptr;
     current_database = nullptr;
-
     //to do: read files into data
 
 }
 
 int DataProcessor::CreateUser(std::string user_name, std::string user_password) {
-    int user_name_exist = 0;
     for(auto user : users) {
         if(user.GetUserName() == user_name) {
-            user_name_exist = 1;
+            return kUserNameExisted;
         }
     }
-    if(user_name_exist) {
-        return kUserNameExisted;
-    }
+    
     users.push_back(User(user_name, user_password));
+    
     return kSuccess;
 }
 
 int DataProcessor::Login(std::string user_name, std::string user_password) {
     for(auto& user : users) {
+        
         if(user.GetUserName() == user_name) {
             if(user.Identify(user_password) == kSuccess) {
                 current_user = &user;
@@ -40,6 +38,16 @@ int DataProcessor::Login(std::string user_name, std::string user_password) {
         }
     }
     return kUserNameNotFound;
+}
+
+ int DataProcessor::ShowDatabases(std::vector<std::string>& return_databases) {
+    if(current_user == nullptr) {
+        return kUserNotLogin;
+    }
+    for(const auto& database : databases) {
+        return_databases.push_back(database.GetDatabaseName());
+    }
+    return kSuccess;
 }
 
 int DataProcessor::CreateDatabase(std::string database_name) {
@@ -87,13 +95,36 @@ int DataProcessor::DropTable(std::string table_name) {
     return current_database->DropTable(table_name);
 }
 
-int DataProcessor::DescribeTable(std::string table_name) {
-    //todo
+int DataProcessor::DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints) {
+    if(current_user == nullptr) {
+        return kUserNotLogin;
+    }
+    if(current_database == nullptr) {
+        return kDatabaseNotUse;
+    }
+    return current_database->DescribeTable(table_name,fields,constraints);
 }
 
-int DataProcessor::ShowTables(std::string table_name){
-    //todo
+int DataProcessor::ShowTables(std::vector<std::string>& return_tables){
+    if(current_user == nullptr) {
+        return kUserNotLogin;
+    }
+    if(current_database == nullptr) {
+        return kDatabaseNotUse;
+    }
+    return current_database->ShowTables(return_tables);
 }
+
+int DataProcessor::AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field) {
+    if(current_user == nullptr) {
+        return kUserNotLogin;
+    }
+    if(current_database == nullptr) {
+        return kDatabaseNotUse;
+    }
+    return current_database->AlterTableAdd(table_name,field);
+}
+
 
 int DataProcessor::Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in) {
     if (current_user == nullptr) {

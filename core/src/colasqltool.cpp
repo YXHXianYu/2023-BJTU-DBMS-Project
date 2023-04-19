@@ -41,6 +41,7 @@ std::string ColasqlTool::AnyToString(const std::any& any) {
     if(any.type() == typeid(int)) return std::to_string(std::any_cast<int>(any));
     else if(any.type() == typeid(float)) return std::to_string(std::any_cast<float>(any));
     else if(any.type() == typeid(std::string)) return std::any_cast<std::string>(any);
+    else if(any.type() == typeid(ColasqlNull)) return "";
     else return "[not found this type]";
 
 }
@@ -71,9 +72,11 @@ int ColasqlTool::CompareAny(const std::any& any1, const std::any& any2) {
         if(val1 < val2) return kLess;
         if(val1 > val2) return kLarger;
     }
+    
     if (any1.type() == typeid(std::string)) {
-        float val1 = std::any_cast<float>(any1);
-        float val2 = std::any_cast<float>(any2);
+        
+        std::string val1 = std::any_cast<std::string>(any1);
+        std::string val2 = std::any_cast<std::string>(any2);
         if (val1 == val2) return kEqual;
         if(val1 < val2) return kLess;
         if(val1 > val2) return kLarger;
