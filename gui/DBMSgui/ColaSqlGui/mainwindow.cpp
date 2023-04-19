@@ -62,8 +62,15 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
             if (clickedItem == item && getLevel(item) == 1) {
               qDebug() << "You clicked on item: " << clickedItem->text(column);
               clickedItem->setSelected(true);
-              // todo
-              // show table
+              std::vector<std::string> fields;
+              fields.push_back("*");
+              std::vector<std::tuple<std::string, std::string, int>> conditions;
+              std::vector<std::vector<std::any>> return_records;
+              DataProcessor::GetInstance().Select(
+                  clickedItem->text(column).toStdString(), fields, conditions,
+                  return_records);
+              std::string ret = ColasqlTool::OutputSelectResult(return_records);
+              ui->textBrowser->setText(QString::fromStdString(ret));
             }
           });
 }
