@@ -22,7 +22,12 @@ public:
     static CommandProcessor& GetInstance();
     void Start(const std::string& accountName, const std::string& password);
 
+    // 本函数不包含登入！请务必先登入再调用本函数
+    std::string Run(std::string input);
+
 private:
+    std::vector<std::string> seq;
+
     CommandProcessor();
     std::string GetPrompt();
     int Tokenize(std::string input, std::vector<std::string>& result);
