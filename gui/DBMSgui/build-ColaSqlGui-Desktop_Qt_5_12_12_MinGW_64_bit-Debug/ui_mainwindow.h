@@ -33,7 +33,7 @@ public:
     QAction *actionrow;
     QAction *action;
     QAction *action_table;
-    QAction *action_addrow;
+    QAction *action_row;
     QAction *action_column;
     QAction *action_database;
     QWidget *centralwidget;
@@ -67,8 +67,8 @@ public:
         action->setObjectName(QString::fromUtf8("action"));
         action_table = new QAction(MainWindow);
         action_table->setObjectName(QString::fromUtf8("action_table"));
-        action_addrow = new QAction(MainWindow);
-        action_addrow->setObjectName(QString::fromUtf8("action_addrow"));
+        action_row = new QAction(MainWindow);
+        action_row->setObjectName(QString::fromUtf8("action_row"));
         action_column = new QAction(MainWindow);
         action_column->setObjectName(QString::fromUtf8("action_column"));
         action_database = new QAction(MainWindow);
@@ -155,7 +155,7 @@ public:
         menu_create->addAction(action_database);
         menu_create->addAction(action_table);
         menu_create->addAction(action_column);
-        menu_create->addAction(action_addrow);
+        menu_create->addAction(action_row);
 
         retranslateUi(MainWindow);
 
@@ -169,10 +169,11 @@ public:
         actionrow->setText(QApplication::translate("MainWindow", "row", nullptr));
         action->setText(QApplication::translate("MainWindow", "\350\241\250", nullptr));
         action_table->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\350\241\250", nullptr));
-        action_addrow->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\350\241\214", nullptr));
+        action_row->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\350\241\214", nullptr));
         action_column->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\345\210\227", nullptr));
         action_database->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\346\225\260\346\215\256\345\272\223", nullptr));
         QTreeWidgetItem *___qtreewidgetitem = treeWidget->headerItem();
+        ___qtreewidgetitem->setText(1, QApplication::translate("MainWindow", "using", nullptr));
         ___qtreewidgetitem->setText(0, QApplication::translate("MainWindow", "Database", nullptr));
         groupBox_2->setTitle(QString());
         QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);

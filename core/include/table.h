@@ -11,17 +11,27 @@
 class Table {
 private:
     std::string table_name;
-    std::vector<std::pair<std::string, std::string>> fields; //pair<field_name, field_type>
+    std::vector<std::pair<std::string, std::string>> fields; //pair<字段名, 类型>
     std::unordered_map<std::string, std::string> field_map;
     std::vector<std::unordered_map<std::string, std::any> > records;
     std::vector<Constraint*> constraints;
 
-private:
-    Table();
 public:
-    Table(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
+    Table(const std::string& table_name,
+          const std::vector<std::pair<std::string, std::string>>& fields,
+          const std::vector<Constraint*>& constraints);
+
+    Table(const std::string& table_name,
+          const std::vector<std::pair<std::string, std::string>>& fields,
+          const std::vector<Constraint*>& constraints,
+          const std::vector<std::unordered_map<std::string, std::any>>& records);
+    
     //获取表名
-    std::string GetTableName() const;
+    const std::string& GetTableName() const;
+    const std::vector<std::pair<std::string, std::string>>& GetFields() const;
+    const std::vector<std::unordered_map<std::string, std::any> >& GetRecords() const;
+    const std::vector<Constraint*>& GetConstraints() const;
+    
     //查询记录
     int Select(std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string,int>> conditions,        std::vector<std::vector<std::any>> &return_records);
     //插入记录
@@ -33,8 +43,12 @@ public:
     int Update(const std::vector<std::pair<std::string,std::string>>& value, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
     //更新记录
     int DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints);
+    
+    int CheckDataType(std::string type, std::string value);
     //增加字段
     int AlterTableAdd(std::pair<std::string, std::string> new_field);
+    int AlterTableDrop(std::string field_name);
+    int AlterTableModify(std::pair<std::string, std::string> field);
 };
 
 #endif // TABLE_H

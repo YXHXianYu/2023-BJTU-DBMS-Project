@@ -1,6 +1,10 @@
 #include "table.h"
 #include <algorithm>
-Table::Table(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint*> constraints) {
+
+
+Table::Table(const std::string& table_name,
+             const std::vector<std::pair<std::string, std::string>>& fields,
+             const std::vector<Constraint*>& constraints) {
     this->table_name = table_name;
     this->fields = fields;
     this->constraints = constraints;
@@ -9,8 +13,33 @@ Table::Table(std::string table_name, std::vector<std::pair<std::string, std::str
     }
 }
 
-std::string Table::GetTableName() const{
+Table::Table(const std::string& table_name,
+             const std::vector<std::pair<std::string, std::string>>& fields,
+             const std::vector<Constraint*>& constraints,
+             const std::vector<std::unordered_map<std::string, std::any>>& records) {
+    this->table_name = table_name;
+    this->fields = fields;
+    this->constraints = constraints;
+    this->records = records;
+    for(auto field:fields) {
+        field_map[field.first] = field.second;
+    }
+}
+
+const std::string& Table::GetTableName() const {
     return table_name;
+}
+
+const std::vector<std::pair<std::string, std::string>>& Table::GetFields() const {
+    return fields;
+}
+
+const std::vector<std::unordered_map<std::string, std::any> >& Table::GetRecords() const {
+    return records;
+}
+
+const std::vector<Constraint*>& Table::GetConstraints() const {
+    return constraints;
 }
 
 int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
@@ -158,11 +187,34 @@ int Table::Delete(std::vector<std::tuple<std::string, std::string, int>> conditi
     }
     return kSuccess;
 }
+
+int Table::CheckDataType(std::string type, std::string value) {
+    if(type == "int") {
+        
+        for(auto x : value) {
+            if(x > '9' || x < '0') return kDataTypeWrong;
+        }
+    }
+    else if(type == "float") {
+        int sum_dot = 0;
+        for (auto x : value) {
+            if(x == '.') sum_dot++;
+            if ((x > '9' || x < '0') && sum_dot>=2)
+                return kDataTypeWrong;
+        }
+    }
+    return kSuccess;
+}
+
 int Table::Update(const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions){
     for(const auto& change_field: values) {
         if(!field_map.count(change_field.first)) {
             return kFieldNotFound;
         }
+    }
+    for(const auto& field : values) {
+        int ret = CheckDataType(field_map[field.first], field.second);
+        if(ret != kSuccess) return ret;
     }
     for(auto& record: records) {
         if(CheckCondition(record,conditions) != kSuccess) {
@@ -194,6 +246,8 @@ int Table::Update(const std::vector<std::pair<std::string,std::string>>& values,
 
 int Table::DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints) {
     fields = this->fields;
+    
+    
     constraints = this->constraints;
     return kSuccess;
 }
@@ -202,4 +256,57 @@ int Table::AlterTableAdd(std::pair<std::string, std::string> new_field) {
     fields.push_back(new_field);
     field_map[new_field.first] = new_field.second;
     return kSuccess; 
+}
+
+int Table::AlterTableDrop(std::string field_name) {
+    if(!field_map.count(field_name)) return kFieldNotFound;
+    for(auto& record : records) {
+        for(auto it = record.begin(); it != record.end(); ++it) {
+            if(it->first == field_name) {
+                record.erase(it);
+                break;
+            }
+        }
+    }
+    for(auto it = field_map.begin(); it != field_map.end(); ++it) {
+        if(it->first == field_name) {
+            field_map.erase(it);
+            break;
+        }
+    }
+    for(int i = 0; i < fields.size(); ++i) {
+        if(fields[i].first == field_name) {
+            fields.erase(fields.begin() + i);
+            break;
+        }
+    }
+    return kSuccess;
+}
+
+int Table::AlterTableModify(std::pair<std::string, std::string> field) {
+    if(!field_map.count(field.first)) {
+        return kFieldNotFound;
+    }
+    for(auto& record: records) {
+        if(!record.count(field.first)) {
+            continue;
+        }
+        int ret = CheckDataType(field.second, ColasqlTool::AnyToString(record[field.first]));
+        //std::cout<<"ret : "<<ret<<std::endl;
+        if(ret != kSuccess) return ret;
+    }
+    field_map[field.first] = field.second;
+    for(auto& old_field : fields) {
+        if(old_field.first == field.first) {
+            old_field = field;
+        }
+    }
+    for(auto& record: records) {
+        if(!record.count(field.first)) {
+            continue;
+        }
+        std::string tmp = ColasqlTool::AnyToString(record[field.first]);
+        record[field.first] = ColasqlTool::GetAnyByTypeAndValue(field.second, tmp);
+    }
+    return kSuccess;
 }

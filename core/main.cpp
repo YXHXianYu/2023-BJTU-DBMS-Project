@@ -44,28 +44,65 @@ int main() {
     //测试select
     std::string table_name = "student";
     std::vector<std::string> field_name;
-    field_name.push_back("Sno");
-    field_name.push_back("Sname");
-    field_name.push_back("Age");
+    field_name.push_back("*");
     std::vector<std::tuple<std::string, std::string, int>> conditions;
-    conditions.push_back(std::make_tuple("Age","50", kLargerConditon));
-    conditions.push_back(std::make_tuple("Sname","hahaha", kEqualConditon));
+    //conditions.push_back(std::make_tuple("Age","50", kLargerConditon));
+    //conditions.push_back(std::make_tuple("Sname","hahaha", kEqualConditon));
     std::vector<std::vector<std::any>> return_records;
     std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
-    for(auto x : return_records) {
-        for(auto mes : x){
-            std::cout<<ColasqlTool::AnyToString(mes)<<" ";
-        }
-        std::cout<<" "<<std::endl;
-    }
+    ColasqlTool::OutputSelectResult(return_records);
+    //测试update
+    // int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& value, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
+    std::vector<std::pair<std::string,std::string>> values;
+    conditions.clear();
+    values.push_back({"Age","70"});
+    conditions.push_back({"Sno","21301032",kEqualConditon});
+    conditions.push_back({"Sname","drj",kNotEqualConditon});
+    std::cout<<DataProcessor::GetInstance().Update("student",values,conditions)<<std::endl;
+    conditions.clear();
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
 
+    //测试AlterTable Add
+    std::pair<std::string, std::string> new_field = {"Ssex","string"};
+    DataProcessor::GetInstance().AlterTableAdd("student", new_field);
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+    
+    //调试AlterTable Modify
+    //int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field);
+    std::cout<<"here : "<<DataProcessor::GetInstance().AlterTableModify("student",{"Sname", "int"})<<std::endl;
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+    
+    std::cout<<"here : "<<DataProcessor::GetInstance().AlterTableModify("student",{"Age", "string"})<<std::endl;
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+
+    //调试AlterTable Drop
+    //int AlterTableDrop(std::string table_name, std::string field_name);
+    DataProcessor::GetInstance().AlterTableDrop("student", "Age");
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+
+
+    //调试Show Databases
     std::vector<std::string> databases;
     std::cout<<DataProcessor::GetInstance().ShowDatabases(databases)<<std::endl;
+    ColasqlTool::OutputSelectResult(ColasqlTool::ChangeStringsToRecords(databases, "DATABASES"));
+
+    //调试Show Tables
     std::vector<std::string> tables;
     std::cout<<DataProcessor::GetInstance().ShowTables(tables)<<std::endl;
-    for(auto x : tables) {
-        std::cout<<x<<" ";
-    }
+    ColasqlTool::OutputSelectResult(ColasqlTool::ChangeStringsToRecords(tables, "TABLES"));
+
+    //调试Desc Tables
+    // int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>&    constraints);
+    std::vector<std::pair<std::string, std::string>> table_fields;
+    
+    std::vector<Constraint*> table_constraints;
+    std::cout<<DataProcessor::GetInstance().DescribeTable("student",table_fields,table_constraints)<<std::endl;
+    ColasqlTool::OutputSelectResult(ColasqlTool::ChangeDescriptionToRecords(table_fields,table_constraints));
 
     
 

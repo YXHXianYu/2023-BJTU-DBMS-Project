@@ -9,12 +9,20 @@ Database::Database(std::string database_name, std::string owner_user) {
     this->owner_user = owner_user;
 }
 
-std::string Database::GetOwnerUserName() const {
+const std::string& Database::GetOwnerUserName() const {
     return owner_user;
 }
 
-std::string Database::GetDatabaseName() const {
+const std::string& Database::GetDatabaseName() const {
     return database_name;
+}
+
+const std::vector<Table>& Database::GetTables() const {
+    return tables;
+}
+
+void Database::SetTables(const std::vector<Table>& tables) {
+    this->tables = tables;
 }
 
 int Database::CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints) {
@@ -76,6 +84,7 @@ int Database::DescribeTable(std::string table_name,std::vector<std::pair<std::st
     for(auto& table: tables) {
         if(table.GetTableName() == table_name) {
             return table.DescribeTable(fields, constraints);
+
         }
     }
     return kTableNotFound;
@@ -89,6 +98,26 @@ int Database::AlterTableAdd(std::string table_name, std::pair<std::string, std::
     }
     return kTableNotFound;
 }
+
+int Database::AlterTableDrop(std::string table_name, std::string field_name) {
+    for(auto& table:tables) {
+        if(table.GetTableName() == table_name) {
+            return table.AlterTableDrop(field_name);
+        }
+    }
+    return kTableNotFound;
+}
+
+int Database::AlterTableModify(std::string table_name, std::pair<std::string, std::string> field){
+    for(auto& table :tables) {
+        if(table.GetTableName() == table_name) {
+            int ret = table.AlterTableModify(field);
+            //std::cout<<"ret is "<<ret<<std::endl;
+            return ret;
+        }
+    }
+    return kTableNotFound;
+};
 
 int Database::ShowTables(std::vector<std::string>& return_tables) {
     for(const auto& table:tables) {

@@ -7,6 +7,7 @@
 #include <QInputDialog>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QTreeWidget>
 
 #include "dataprocessor.h"
 
@@ -23,11 +24,19 @@ class MainWindow : public QMainWindow {
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
+ private:
+  int getLevel(QTreeWidgetItem *item);
+  void addTreeItem();
+  void setConnectTreeItem(QTreeWidgetItem *item, QString dbName);
  private slots:
   void click_action_database();
+  void click_action_table();
+  void click_action_column();
+  void click_action_row();
 
  private:
   Ui::MainWindow *ui;
   ui_login *ui_log;
+  std::vector<std::string> databases;
 };
 #endif  // MAINWINDOW_H

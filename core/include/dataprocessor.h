@@ -28,10 +28,11 @@ public:
     int ShowDatabases(std::vector<std::string>& return_databases);      //显示所有数据库
 //表
 public:
+    int ShowTables(std::vector<std::string>& return_tables);                                     //显示所有表
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);                                                               // 创建表
     int DropTable(std::string table_name);                                      //删除表
     int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>&    constraints);                                  //查看表结构
-    int ShowTables(std::vector<std::string>& return_tables);                                     //显示所有表
+
     int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);//修改表结构,增加字段
     int AlterTableDrop(std::string table_name, std::string field_name);          //删除字段
     int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field); //修改字段
@@ -46,7 +47,8 @@ public:
     int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
     //values: vector<>
 public:
-    std::vector<Database>& GetDatabases();
+    const std::vector<Database>& GetDatabases() const ;
+    void SetDatabases(const std::vector<Database>& databases);
 
 };
 

@@ -34,6 +34,11 @@
         <string>Database</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>using</string>
+       </property>
+      </column>
      </widget>
     </item>
     <item row="0" column="1">
@@ -41,56 +46,14 @@
       <property name="title">
        <string/>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2" rowstretch="2,1">
-       <item row="0" column="1">
-        <widget class="QTableWidget" name="tableWidget">
-         <row>
-          <property name="text">
-           <string>1</string>
-          </property>
-         </row>
-         <column>
-          <property name="text">
-           <string>Sno</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Sname</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Ssex</string>
-          </property>
-         </column>
-         <item row="0" column="0">
-          <property name="text">
-           <string>21301034</string>
-          </property>
-         </item>
-         <item row="0" column="1">
-          <property name="text">
-           <string>付家齐</string>
-          </property>
-         </item>
-         <item row="0" column="2">
-          <property name="text">
-           <string>男</string>
-          </property>
-         </item>
-        </widget>
-       </item>
+      <layout class="QGridLayout" name="gridLayout_2" rowstretch="2,0">
        <item row="1" column="1">
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>命令行</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="1">
-           <widget class="QTextEdit" name="textEdit_code"/>
-          </item>
-          <item row="0" column="2">
+          <item row="1" column="2">
            <widget class="QPushButton" name="pushButton">
             <property name="minimumSize">
              <size>
@@ -103,8 +66,14 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="1">
+           <widget class="QTextEdit" name="textEdit_code"/>
+          </item>
          </layout>
         </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QTextBrowser" name="textBrowser"/>
        </item>
       </layout>
      </widget>
@@ -127,7 +96,7 @@
     <addaction name="action_database"/>
     <addaction name="action_table"/>
     <addaction name="action_column"/>
-    <addaction name="action_addrow"/>
+    <addaction name="action_row"/>
    </widget>
    <widget class="QMenu" name="menu_delete">
     <property name="title">
@@ -169,7 +138,7 @@
     <string>新建表</string>
    </property>
   </action>
-  <action name="action_addrow">
+  <action name="action_row">
    <property name="text">
     <string>新建行</string>
    </property>

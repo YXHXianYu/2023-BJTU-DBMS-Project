@@ -124,16 +124,20 @@ void ColasqlTool::OutputConstraints(const std::vector<Constraint*> constraints) 
 std::vector<std::vector<std::any>> ColasqlTool::ChangeDescriptionToRecords(const std::vector<std::pair<std::string, std::string>>& fields,const std::vector<Constraint*>&constraints) {
     std::vector<std::vector<std::any>> ret;
     std::vector<std::any> inner;
-    inner.push_back("Field");
-    inner.push_back("Type");
-    inner.push_back("Null");
-    inner.push_back("Key");
-    inner.push_back("Default");
+    for(auto x : fields) {
+        std::cout<<"Che: "<<x.first<<" "<<x.second<<std::endl;
+    }
+    inner.push_back(std::string("Field"));
+    inner.push_back(std::string("Type"));
+    inner.push_back(std::string("Null"));
+    inner.push_back(std::string("Key"));
+    inner.push_back(std::string("Default"));
     ret.push_back(inner);
+    
     inner.clear();
     for(const auto& field : fields) {
         std::string field_name = field.first;
-        std::cout<<"testdes"<<" "<<field_name<<std::endl;
+        //std::cout<<"testdes"<<" "<<field_name<<std::endl;
         std::string Type = field.second;
         std::string Null = "YES";
         std::string Key = "";
@@ -158,14 +162,15 @@ std::vector<std::vector<std::any>> ColasqlTool::ChangeDescriptionToRecords(const
             if (dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr){
                 Key = "PRI";
             }
-            inner.clear();
-            inner.push_back(field_name);
-            inner.push_back(Type);
-            inner.push_back(Null);
-            inner.push_back(Key);
-            inner.push_back(Default);
-            ret.push_back(inner);
+            
         }
+        inner.clear();
+        inner.push_back(field_name);
+        inner.push_back(Type);
+        inner.push_back(Null);
+        inner.push_back(Key);
+        inner.push_back(Default);
+        ret.push_back(inner);
     }
     return ret;
 }

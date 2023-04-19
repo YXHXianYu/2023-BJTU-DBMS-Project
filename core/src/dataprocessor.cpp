@@ -105,7 +105,9 @@ int DataProcessor::DescribeTable(std::string table_name,std::vector<std::pair<st
     }
     fields.clear();
     constraints.clear();
-    return current_database->DescribeTable(table_name,fields,constraints);
+    int ret = current_database->DescribeTable(table_name,fields,constraints);
+    
+    return ret;
 }
 
 int DataProcessor::ShowTables(std::vector<std::string>& return_tables){
@@ -129,6 +131,26 @@ int DataProcessor::AlterTableAdd(std::string table_name, std::pair<std::string, 
     return current_database->AlterTableAdd(table_name,field);
 }
 
+int DataProcessor::AlterTableDrop(std::string table_name, std::string field_name) {
+    if(current_user == nullptr) {
+        return kUserNotLogin;
+    }
+    if(current_database == nullptr) {
+        return kDatabaseNotUse;
+    }
+    return current_database->AlterTableDrop(table_name, field_name);
+}
+
+int DataProcessor::AlterTableModify(std::string table_name, std::pair<std::string, std::string> field) {
+    //todo
+    if(current_user == nullptr) {
+        return kUserNotLogin;
+    }
+    if(current_database == nullptr) {
+        return kDatabaseNotUse;
+    }
+    return current_database->AlterTableModify(table_name, field);
+}
 
 int DataProcessor::Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in) {
     if (current_user == nullptr) {
@@ -168,6 +190,11 @@ int DataProcessor::Update(std::string table_name, const std::vector<std::pair<st
     return current_database->Update(table_name,values,conditions);
 }
 
-std::vector<Database>& DataProcessor::GetDatabases() {
+const std::vector<Database>& DataProcessor::GetDatabases() const {
     return databases;
+}
+
+
+void DataProcessor::SetDatabases(const std::vector<Database>& databases) {
+    this->databases = databases;
 }

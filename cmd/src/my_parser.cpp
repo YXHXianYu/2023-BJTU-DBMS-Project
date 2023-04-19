@@ -15,8 +15,9 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
     // ----- size 0 -----
     if(seq.size() <= 0) return error + statementIncomplete;
 
-    // ----- Save -----
-    if(seq[0] == "save") return TestSave();
+    // ----- Save & Read -----
+    if(seq[0] == "save" && seq.size() == 1) return Save();
+    if(seq[0] == "read" && seq.size() == 1) return Read();
 
     // ----- size 1 -----
     if(seq.size() <= 1) return error + statementIncomplete;
@@ -89,7 +90,7 @@ std::string Parser::CreateDatabase(const std::vector<std::string>& seq) {
     int ret = DataProcessor::GetInstance().CreateDatabase(databaseName);
 
     if(ret != 0) {
-        return error; // TODO: error information
+        return error + GetErrorMessage(ret); // TODO: error information
     }
 
     return success;
@@ -109,7 +110,7 @@ std::string Parser::UseDatabase(const std::vector<std::string>& seq) {
     int ret = DataProcessor::GetInstance().UseDatabase(databaseName);
 
     if(ret != 0) {
-        return error; // TODO: error information
+        return error + GetErrorMessage(ret); // TODO: error information
     }
 
     return success;
@@ -203,8 +204,8 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
         }
     }
 
-    ColasqlTool::OutputFields(fields);
-    ColasqlTool::OutputConstraints(constraints);
+    if(DEBUG) ColasqlTool::OutputFields(fields);
+    if(DEBUG) ColasqlTool::OutputConstraints(constraints);
 
     // std::string tableName = seq[2];
     // std::vector<std::pair<std::string, std::any>> fields;
@@ -213,7 +214,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
     int ret = DataProcessor::GetInstance().CreateTable(tableName, fields, constraints);
 
     if(ret != 0) {
-        return error; // TODO: error information
+        return error + GetErrorMessage(ret); // TODO: error information
     }
 
     return success;
@@ -273,7 +274,7 @@ std::string Parser::InsertRecord(const std::vector<std::string>& seq) {
     int ret = DataProcessor::GetInstance().Insert(tableName, values);
 
     if(ret != 0) {
-        return error; // TODO: error information
+        return error + GetErrorMessage(ret); // TODO: error information
     }
 
     return success;
@@ -354,33 +355,30 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
     }
 
     // output for testing
-    std::cout << "  fieldName: ";
-    for(auto str: fieldName) std::cout << str << " ";
-    std::cout << std::endl;
+    if(DEBUG) {
+        std::cout << "  fieldName: ";
+        for(auto str: fieldName) std::cout << str << " ";
+        std::cout << std::endl;
 
-    std::cout << "  tableName: ";
-    for(auto str: tableName) std::cout << str << " ";
-    std::cout << std::endl;
+        std::cout << "  tableName: ";
+        for(auto str: tableName) std::cout << str << " ";
+        std::cout << std::endl;
 
-    std::cout << "  conditions: ";
-    for(auto [str1, str2, i]: conditions) std::cout << "(" << str1 << ", " << str2 << ", " << i << ") ";
-    std::cout << std::endl;
+        std::cout << "  conditions: ";
+        for(auto [str1, str2, i]: conditions) std::cout << "(" << str1 << ", " << str2 << ", " << i << ") ";
+        std::cout << std::endl;
 
-    std::cout << "  orderField: ";
-    for(auto str: orderField) std::cout << str << " ";
-    std::cout << std::endl;
-
-    // std::vector<std::string> fieldName;
-    // std::vector<std::string> tableName;
-    // std::vector<std::tuple<std::string, std::string, int>> conditions;
-    // std::vector<std::string> orderField;
+        std::cout << "  orderField: ";
+        for(auto str: orderField) std::cout << str << " ";
+        std::cout << std::endl;
+    }
 
     std::vector<std::vector<std::any>> result;
 
     int ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
 
     if(ret != 0) {
-        return error; // TODO: error information
+        return error + GetErrorMessage(ret); // TODO: error information
     }
 
     ColasqlTool::OutputSelectResult(result);
@@ -392,9 +390,63 @@ std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
     return "Warning: UpdateRecord Under development";
 }
 
-std::string Parser::TestSave() {
-    FileManager::GetInstance().WriteDatabases(DataProcessor::GetInstance().GetDatabases());
-    return "Test";
+std::string Parser::Read(bool debug) {
+    std::vector<Database> databases;
+
+    FileManager::GetInstance().ReadDatabasesFile(databases);
+
+    if(debug) {
+        std::cout << databases.size() << std::endl;
+    }
+
+    for(auto& database: databases) {
+        std::vector<Table> tables;
+        FileManager::GetInstance().ReadTablesFile(database.GetDatabaseName(), tables);
+        database.SetTables(tables);
+
+        if(debug) {
+            std::cout << " - " << tables.size() << std::endl;
+            for(const auto& table: tables) {
+                std::cout << " - - " << table.GetTableName() << std::endl;
+
+                std::cout << " - - - ";
+                for(const auto& field: table.GetFields()) {
+                    std::cout << "(" << field.first << ", " << field.second << ") ";
+                }
+                std::cout << std::endl;
+
+                std::cout << " - - - ";
+                for(const auto& record: table.GetRecords()) {
+                    std::cout << "[";
+                    for(const auto& [name, value]: record) {
+                        std::cout << name << ": " << ColasqlTool::AnyToString(value) << " ";
+                    }
+                    std::cout << "]    ";
+                }
+                std::cout << std::endl;
+
+                std::cout << std::endl;
+            }
+        }
+
+    }
+
+    DataProcessor::GetInstance().SetDatabases(databases);
+
+    return success + "Readed";
+}
+
+std::string Parser::Save() {
+    FileManager::GetInstance().WriteDatabasesFile(DataProcessor::GetInstance().GetDatabases());
+    for(const auto& database: DataProcessor::GetInstance().GetDatabases()) {
+        FileManager::GetInstance().WriteTablesFile(database.GetDatabaseName(), database.GetTables());
+    }
+
+    return success + "Saved";
+}
+
+std::string Parser::GetErrorMessage(int errorCode) {
+    return "ErrorCode: " + std::to_string(errorCode);
 }
 
 } // ColaSQLCommand
