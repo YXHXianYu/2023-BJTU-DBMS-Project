@@ -12,6 +12,13 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
     // for(auto str: seq) output.append(str + " ");
     // return output;
 
+    // ----- size 0 -----
+    if(seq.size() <= 0) return error + statementIncomplete;
+
+    // ----- Save -----
+    if(seq[0] == "save") return TestSave();
+
+    // ----- size 1 -----
     if(seq.size() <= 1) return error + statementIncomplete;
 
     // ----- User -----
@@ -383,6 +390,11 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
 
 std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
     return "Warning: UpdateRecord Under development";
+}
+
+std::string Parser::TestSave() {
+    FileManager::GetInstance().WriteDatabases(DataProcessor::GetInstance().GetDatabases());
+    return "Test";
 }
 
 } // ColaSQLCommand
