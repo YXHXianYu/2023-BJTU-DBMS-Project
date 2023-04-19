@@ -33,12 +33,14 @@
   //表
   public:
   	// 创建表
-      int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);                                                               
-  	//删除表
-      int DropTable(std::string table_name);
-  	//查看表结构
-      int DescribeTable(std::string table_name);         //显示所有表                         
-      int ShowTables(std::string table_name);                                     
+      int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);       int DropTable(std::string table_name);                                      //删除表
+      int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>&,std::vector<Constraint>&    constraints);                                  //查看表结构
+      int ShowTables(std::string table_name);                                     //显示所有表
+      int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);//修改表结构,增加字段
+      int AlterTableDrop(std::string table_name, std::string field_name);          //删除字段
+      int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field); //修改字段
+      int AlterTableConstraint(std::string table_name, Constraint constraint);    //添加约束条件
+      int AlterTableDeleteConstraint(std::string table_name, std::string constraint_name); ///删除约束                                                                                  
   //记录
   public:
   	// 插入记录
@@ -95,7 +97,9 @@
   	//获取表名
       std::string GetTableName() const;
       //Select查询记录
-      int Select(std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string,int>> conditions,        std::vector<std::vector<std::any>> &return_records);
+      int Select(std::vector<std::string> field_name,
+                 std::vector<std::tuple<std::string, std::string,int>> conditions,
+                 std::vector<std::vector<std::any>> &return_records);
       //Insert插入记录
       int Insert(std::vector<std::pair<std::string, std::string>> record_in);
       //Delete删除记录
@@ -105,4 +109,3 @@
   ```
 
   
-
