@@ -51,12 +51,40 @@ int main() {
     std::vector<std::vector<std::any>> return_records;
     std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
     ColasqlTool::OutputSelectResult(return_records);
-    
+    //测试update
+    // int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& value, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
+    std::vector<std::pair<std::string,std::string>> values;
+    conditions.clear();
+    values.push_back({"Age","70"});
+    conditions.push_back({"Sno","21301032",kEqualConditon});
+    conditions.push_back({"Sname","drj",kNotEqualConditon});
+    std::cout<<DataProcessor::GetInstance().Update("student",values,conditions)<<std::endl;
+    conditions.clear();
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+
     //测试AlterTable Add
     std::pair<std::string, std::string> new_field = {"Ssex","string"};
     DataProcessor::GetInstance().AlterTableAdd("student", new_field);
     std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
     ColasqlTool::OutputSelectResult(return_records);
+    
+    //调试AlterTable Modify
+    //int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field);
+    std::cout<<"here : "<<DataProcessor::GetInstance().AlterTableModify("student",{"Sname", "int"})<<std::endl;
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+    
+    std::cout<<"here : "<<DataProcessor::GetInstance().AlterTableModify("student",{"Age", "string"})<<std::endl;
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+
+    //调试AlterTable Drop
+    //int AlterTableDrop(std::string table_name, std::string field_name);
+    DataProcessor::GetInstance().AlterTableDrop("student", "Age");
+    std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+
 
     //调试Show Databases
     std::vector<std::string> databases;
@@ -76,7 +104,7 @@ int main() {
     std::cout<<DataProcessor::GetInstance().DescribeTable("student",table_fields,table_constraints)<<std::endl;
     ColasqlTool::OutputSelectResult(ColasqlTool::ChangeDescriptionToRecords(table_fields,table_constraints));
 
-
+    
 
     return 0;
 }
