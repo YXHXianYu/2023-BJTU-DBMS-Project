@@ -95,6 +95,10 @@ int CommandProcessor::Tokenize(std::string input, std::vector<std::string>& resu
 int CommandProcessor::Preprocess(std::string& str) {
     if(str.empty()) return -1;
 
+    // 删去前后多余空格 (trim)
+    str.erase(0, str.find_first_not_of(" "));
+    str.erase(str.find_last_not_of(" ") + 1);
+
     int del = 'a'-'A';
     for(int i = 0; i < str.length(); i++) {
         if('A' <= str[i] && str[i] <= 'Z') { // 全小写
@@ -104,9 +108,7 @@ int CommandProcessor::Preprocess(std::string& str) {
         }
     }
 
-    // 删去前后多余空格 (trim)
-    str.erase(0, str.find_first_not_of(" "));
-    str.erase(str.find_last_not_of(" ") + 1);
+    
 
     return 0;
 }
