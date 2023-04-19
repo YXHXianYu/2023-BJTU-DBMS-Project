@@ -108,6 +108,17 @@ int Database::AlterTableDrop(std::string table_name, std::string field_name) {
     return kTableNotFound;
 }
 
+int Database::AlterTableModify(std::string table_name, std::pair<std::string, std::string> field){
+    for(auto& table :tables) {
+        if(table.GetTableName() == table_name) {
+            int ret = table.AlterTableModify(field);
+            //std::cout<<"ret is "<<ret<<std::endl;
+            return ret;
+        }
+    }
+    return kTableNotFound;
+};
+
 int Database::ShowTables(std::vector<std::string>& return_tables) {
     for(const auto& table:tables) {
         return_tables.push_back(table.GetTableName());

@@ -11,7 +11,7 @@
 class Table {
 private:
     std::string table_name;
-    std::vector<std::pair<std::string, std::string>> fields; //pair<field_name, field_type>
+    std::vector<std::pair<std::string, std::string>> fields; //pair<字段名, 类型>
     std::unordered_map<std::string, std::string> field_map;
     std::vector<std::unordered_map<std::string, std::any> > records;
     std::vector<Constraint*> constraints;
@@ -43,9 +43,12 @@ public:
     int Update(const std::vector<std::pair<std::string,std::string>>& value, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
     //更新记录
     int DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints);
+    
+    int CheckDataType(std::string type, std::string value);
     //增加字段
     int AlterTableAdd(std::pair<std::string, std::string> new_field);
     int AlterTableDrop(std::string field_name);
+    int AlterTableModify(std::pair<std::string, std::string> field);
 };
 
 #endif // TABLE_H

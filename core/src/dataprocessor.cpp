@@ -141,6 +141,17 @@ int DataProcessor::AlterTableDrop(std::string table_name, std::string field_name
     return current_database->AlterTableDrop(table_name, field_name);
 }
 
+int DataProcessor::AlterTableModify(std::string table_name, std::pair<std::string, std::string> field) {
+    //todo
+    if(current_user == nullptr) {
+        return kUserNotLogin;
+    }
+    if(current_database == nullptr) {
+        return kDatabaseNotUse;
+    }
+    return current_database->AlterTableModify(table_name, field);
+}
+
 int DataProcessor::Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in) {
     if (current_user == nullptr) {
         return kUserNotLogin;
