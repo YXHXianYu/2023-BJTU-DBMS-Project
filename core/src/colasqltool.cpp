@@ -46,10 +46,10 @@ std::string ColasqlTool::AnyToString(const std::any& any) {
 
 }
 
-void ColasqlTool::OutputFields(const std::vector<std::pair<std::string, std::any>>& fields) {
+void ColasqlTool::OutputFields(const std::vector<std::pair<std::string, std::string>>& fields) {
     std::cout << "Fields:" << std::endl;
     for(auto [name, value]: fields) {
-        std::cout << "  " << name << ": " << AnyToString(value) << std::endl;
+        std::cout << "  " << name << ": " << value << std::endl;
     }
     std::cout << std::endl;
 }
@@ -119,4 +119,13 @@ void ColasqlTool::OutputConstraints(const std::vector<Constraint*> constraints) 
         }
     }
     std::cout << std::endl;
+}
+
+void ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::any>> result) {
+    for(auto x : result) {
+        for(auto mes : x){
+            std::cout<<ColasqlTool::AnyToString(mes)<<" ";
+        }
+        std::cout<<" "<<std::endl;
+    }
 }

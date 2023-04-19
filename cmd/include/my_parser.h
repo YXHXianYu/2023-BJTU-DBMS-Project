@@ -7,8 +7,13 @@
 #include <string>
 #include <any>
 
+// cmd
 #include "all_constraints.h"
 #include "colasqltool.h"
+
+// core
+#include "dataprocessor.h"
+#include "constants.h"
 
 namespace ColaSQLCommand {
 

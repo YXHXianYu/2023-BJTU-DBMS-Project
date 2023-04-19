@@ -7,6 +7,8 @@
 #include <vector>
 #include <string>
 
+#include "dataprocessor.h"
+
 #include "my_parser.h"
 
 namespace ColaSQLCommand {

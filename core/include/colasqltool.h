@@ -23,7 +23,7 @@ public:
     static std::string AnyToString(const std::any& any);
 
     // 用stdout输出fields内的信息
-    static void OutputFields(const std::vector<std::pair<std::string, std::any>>& fields);
+    static void OutputFields(const std::vector<std::pair<std::string, std::string>>& fields);
 
     //输入两个any,比较它们的大小
     static int CompareAny(const std::any& any1, const std::any& any2);
@@ -31,6 +31,7 @@ public:
     // 用stdout输出constraints内的信息
     static void OutputConstraints(const std::vector<Constraint*> constraints);
 
+    static void OutputSelectResult(const std::vector<std::vector<std::any>> result);
 
 };
 
