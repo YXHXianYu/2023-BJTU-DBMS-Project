@@ -13,6 +13,6 @@ std::string User::GetUserName() {
 }
 
 int User::Identify(std::string password) {
-    if(user_password == password) return kIdentifiedSuccess;
+    if(user_password == password) return kSuccess;
     return kIdentifiedFail;
 }

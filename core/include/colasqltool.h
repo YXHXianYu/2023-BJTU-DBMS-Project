@@ -4,9 +4,9 @@
 #include <vector>
 #include <string>
 #include <any>
-
+#include<cmath>
 #include "all_constraints.h"
-
+#include "constants.h"
 class ColasqlTool {
 public:
 
@@ -25,13 +25,19 @@ public:
     // 用stdout输出fields内的信息
     static void OutputFields(const std::vector<std::pair<std::string, std::any>>& fields);
 
+    //输入两个any,比较它们的大小
+    static int CompareAny(const std::any& any1, const std::any& any2);
+
     // 用stdout输出constraints内的信息
     static void OutputConstraints(const std::vector<Constraint*> constraints);
+
 
 };
 
 class ColasqlException {
 
 };
+class ColasqlNull {
 
+};
 #endif // __COLASQLTOOL_H__
