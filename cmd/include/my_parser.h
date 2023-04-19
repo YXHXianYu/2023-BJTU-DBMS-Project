@@ -15,6 +15,9 @@
 #include "dataprocessor.h"
 #include "constants.h"
 
+// file
+#include "filemanager.h"
+
 namespace ColaSQLCommand {
 
 /**
@@ -60,6 +63,8 @@ private:
     std::string DeleteRecord(const std::vector<std::string>& seq); // TODO
     std::string SelectRecord(const std::vector<std::string>& seq);
     std::string UpdateRecord(const std::vector<std::string>& seq); // TODO
+
+    std::string TestSave();
 
 };
 

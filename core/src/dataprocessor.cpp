@@ -178,3 +178,7 @@ int DataProcessor::Update(std::string table_name, const std::vector<std::pair<st
     }
     return current_database->Update(table_name,values,conditions);
 }
+
+std::vector<Database>& DataProcessor::GetDatabases() {
+    return databases;
+}

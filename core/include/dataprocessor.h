@@ -47,7 +47,7 @@ public:
     
     //values: vector<>
 public:
-    
+    std::vector<Database>& GetDatabases();
     
 };
 

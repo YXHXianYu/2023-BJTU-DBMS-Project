@@ -1,4 +1,4 @@
-Remove-Item "./build" -Recurse
+# Remove-Item "./build" -Recurse
 New-Item -Path "./build" -ItemType Directory
 Set-Location "./build"
 # cmake ..
