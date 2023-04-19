@@ -19,7 +19,7 @@ private:
     Parser _parser;
 
 public:
-    static CommandProcessor GetInstance();
+    static CommandProcessor& GetInstance();
     void Start(const std::string& accountName, const std::string& password);
 
 private:

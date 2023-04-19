@@ -2,7 +2,7 @@
 
 namespace ColaSQLCommand {
 
-CommandProcessor CommandProcessor::GetInstance() {
+CommandProcessor& CommandProcessor::GetInstance() {
     static CommandProcessor instance;
     return instance;
 }
