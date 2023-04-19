@@ -10,7 +10,7 @@ Table::Table(std::string table_name, std::vector<std::pair<std::string, std::str
 }
 
 std::string Table::GetTableName() const{
-    return table_name; 
+    return table_name;
 }
 
 int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
