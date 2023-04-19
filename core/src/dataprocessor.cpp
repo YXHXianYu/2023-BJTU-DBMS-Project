@@ -122,3 +122,12 @@ int DataProcessor::Delete(std::string table_name, std::vector<std::tuple<std::st
     }
     return current_database->Delete(table_name,conditions);
 }
+int DataProcessor::Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions) {
+    if (current_user == nullptr){
+        return kUserNotLogin;
+    }
+    if (current_database == nullptr){
+        return kDatabaseNotUse;
+    }
+    return current_database->Update(table_name,values,conditions);
+}

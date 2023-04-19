@@ -23,6 +23,8 @@ public:
     int Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string,std::string,int>> conditions, std::vector<std::vector<std::any>> &return_records);
 
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);
+
+    int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
 };
 
 

@@ -1,4 +1,5 @@
 #include "table.h"
+#include <algorithm>
 Table::Table(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint*> constraints) {
     this->table_name = table_name;
     this->fields = fields;
@@ -25,8 +26,10 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
             record[field.first] = std::any(std::stoi(field.second));
         }
         else if(field_map[field.first] == "float") {
+            int sum_dot = 0;
             for (auto x : field.second) {
-                if ((x > '9' || x < '0') && x != '.')
+                if(x == '.') sum_dot++;
+                if ((x > '9' || x < '0') && sum_dot>=2)
                     return kDataTypeWrong;
             }
             record[field.first] = std::any(std::stof(field.second));
@@ -151,4 +154,36 @@ int Table::Delete(std::vector<std::tuple<std::string, std::string, int>> conditi
         records.erase(records.begin() + x);
     }
     return kSuccess;
+}
+int Table::Update(const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions){
+    for(const auto& change_field: values) {
+        if(!field_map.count(change_field.first)) {
+            return kFieldNotFound;
+        }
+    }
+    for(auto& record: records) {
+        if(CheckCondition(record,conditions) != kSuccess) {
+            continue;
+        } 
+        for(const auto& field : values) {
+            if(field_map[field.first] == "int") {
+                for(auto x : field.second) {
+                    if(x > '9' || x < '0') return kDataTypeWrong;
+                }
+                record[field.first] = std::any(std::stoi(field.second));
+            }
+            else if(field_map[field.first] == "float") {
+                int sum_dot = 0;
+                for (auto x : field.second) {
+                    if(x == '.') sum_dot++;
+                    if ((x > '9' || x < '0') && sum_dot>=2)
+                        return kDataTypeWrong;
+                }
+                record[field.first] = std::any(std::stof(field.second));
+            }
+            else if (field_map[field.first] == "string") {
+                record[field.first] = std::any(field.second);
+            }
+        }
+    }
 }

@@ -63,3 +63,11 @@ int Database::Select(std::string table_name, std::vector<std::string> field_name
     }
     return kTableNotFound;
 }
+int Database::Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions) {
+    for(auto& table:tables) {
+        if(table.GetTableName() == table_name) {
+            return table.Update(values, conditions);
+        }
+    }
+    return kTableNotFound;
+}

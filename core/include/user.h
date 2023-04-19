@@ -15,10 +15,11 @@ private:
     User();
 public:
     User(std::string user_name, std::string user_password);
+    //验证密码
     int Identify(std::string password);
+    //获取用户名
     std::string GetUserName();
-//常量
-public:
+
 };
 
 #endif // __USER_H__
