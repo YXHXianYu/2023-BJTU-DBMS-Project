@@ -105,7 +105,7 @@ int DataProcessor::DescribeTable(std::string table_name,std::vector<std::pair<st
     return current_database->DescribeTable(table_name,fields,constraints);
 }
 
-int DataProcessor::ShowTables(std::vector<std::string> return_tables){
+int DataProcessor::ShowTables(std::vector<std::string>& return_tables){
     if(current_user == nullptr) {
         return kUserNotLogin;
     }

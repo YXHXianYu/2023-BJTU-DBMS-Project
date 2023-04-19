@@ -18,6 +18,11 @@ int main() {
     std::vector<Constraint*> constraints;
     std::cout<<DataProcessor::GetInstance().CreateTable("student",fields,constraints)<<std::endl;
     
+    fields.clear();
+    fields.push_back({"Cno", "string"});
+    fields.push_back({"Cname", "string"});
+    std::cout<<DataProcessor::GetInstance().CreateTable("course",fields,constraints)<<std::endl;
+
     //测试insert
     std::vector<std::pair<std::string, std::string>> record_in;
     record_in.push_back({"Sno", "21301032"});
@@ -54,8 +59,15 @@ int main() {
         std::cout<<" "<<std::endl;
     }
 
-
     std::vector<std::string> databases;
     std::cout<<DataProcessor::GetInstance().ShowDatabases(databases)<<std::endl;
+    std::vector<std::string> tables;
+    std::cout<<DataProcessor::GetInstance().ShowTables(tables)<<std::endl;
+    for(auto x : tables) {
+        std::cout<<x<<" ";
+    }
+
+    
+
     return 0;
 }

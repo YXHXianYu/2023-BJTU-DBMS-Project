@@ -16,7 +16,7 @@ public:
     Database(std::string database_name, std::string owner_user);
     std::string GetOwnerUserName() const;
     std::string GetDatabaseName() const;
-    int ShowTables(std::vector<std::string> return_tables);
+    int ShowTables(std::vector<std::string>& return_tables);
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
     int DropTable(std::string table_name);
     int Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in);

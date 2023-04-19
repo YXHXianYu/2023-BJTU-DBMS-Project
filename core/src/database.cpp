@@ -90,7 +90,7 @@ int Database::AlterTableAdd(std::string table_name, std::pair<std::string, std::
     return kTableNotFound;
 }
 
-int Database::ShowTables(std::vector<std::string> return_tables) {
+int Database::ShowTables(std::vector<std::string>& return_tables) {
     for(const auto& table:tables) {
         return_tables.push_back(table.GetTableName());
     }
