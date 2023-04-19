@@ -320,6 +320,11 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
 
         tableName.push_back(seq[i]);
     }
+    
+    // from error
+    if(tableName.size() <= 0) {
+        return error + statementError + "(have no tables)";
+    }
 
     // where
     if(whereIdx != -1) {
