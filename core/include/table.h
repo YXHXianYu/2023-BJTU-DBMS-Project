@@ -30,8 +30,11 @@ public:
     int Delete(std::vector<std::tuple<std::string, std::string, int>> conditions);
     //检查记录是否满足Where条件
     int CheckCondition(const std::unordered_map<std::string, std::any>& record, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
-    int Update(const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
+    int Update(const std::vector<std::pair<std::string,std::string>>& value, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
     //更新记录
+    int DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints);
+    //增加字段
+    int AlterTableAdd(std::pair<std::string, std::string> new_field);
 };
 
 #endif // TABLE_H

@@ -9,11 +9,11 @@ Database::Database(std::string database_name, std::string owner_user) {
     this->owner_user = owner_user;
 }
 
-std::string Database::GetOwnerUserName() {
+std::string Database::GetOwnerUserName() const {
     return owner_user;
 }
 
-std::string Database::GetDatabaseName() {
+std::string Database::GetDatabaseName() const {
     return database_name;
 }
 
@@ -70,4 +70,29 @@ int Database::Update(std::string table_name, const std::vector<std::pair<std::st
         }
     }
     return kTableNotFound;
+}
+
+int Database::DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints) {
+    for(auto& table: tables) {
+        if(table.GetTableName() == table_name) {
+            return table.DescribeTable(fields, constraints);
+        }
+    }
+    return kTableNotFound;
+}
+
+int Database::AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field) {
+    for(auto& table:tables) {
+        if(table.GetTableName() == table_name) {
+            return table.AlterTableAdd(field);
+        }
+    }
+    return kTableNotFound;
+}
+
+int Database::ShowTables(std::vector<std::string> return_tables) {
+    for(const auto& table:tables) {
+        return_tables.push_back(table.GetTableName());
+    }
+    return kSuccess;
 }

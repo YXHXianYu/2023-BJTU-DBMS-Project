@@ -13,10 +13,11 @@ private:
     std::vector<User> users;
     Database* current_database;
     User* current_user;
+    int x = 6;
 private:
     DataProcessor();
 public:
-    static DataProcessor GetInstance();
+    static DataProcessor& GetInstance();
 //数据库
 public:
     int CreateUser(std::string user_name, std::string user_password);           //创建用户
@@ -25,13 +26,13 @@ public:
 public:
     int CreateDatabase(std::string database_name);                              //创建数据库
     int UseDatabase(std::string database_name);                                 //使用数据库
-    std::vector<std::string> ShowDatabases();                                   //显示所有数据库
+    int ShowDatabases(std::vector<std::string>& return_databases);      //显示所有数据库
 //表
 public:
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);                                                               // 创建表
     int DropTable(std::string table_name);                                      //删除表
-    int DescribeTable(std::string table_name);                                  //查看表结构
-    int ShowTables(std::string table_name);                                     //显示所有表
+    int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>&    constraints);                                  //查看表结构
+    int ShowTables(std::vector<std::string> return_tables);                                     //显示所有表
     int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);//修改表结构,增加字段
     int AlterTableDrop(std::string table_name, std::string field_name);          //删除字段
     int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field); //修改字段
@@ -43,7 +44,7 @@ public:
     int Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in); // 插入记录
     int Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string, int>> conditions, std::vector<std::vector<std::any>> &return_records); // 查询记录
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);                                                                                         // 删除记录
-    int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
+    int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& value, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
     
     //values: vector<>
 public:
