@@ -223,6 +223,8 @@ int Table::Update(const std::vector<std::pair<std::string,std::string>>& values,
 
 int Table::DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints) {
     fields = this->fields;
+    
+    
     constraints = this->constraints;
     return kSuccess;
 }
@@ -231,4 +233,29 @@ int Table::AlterTableAdd(std::pair<std::string, std::string> new_field) {
     fields.push_back(new_field);
     field_map[new_field.first] = new_field.second;
     return kSuccess; 
+}
+
+int Table::AlterTableDrop(std::string field_name) {
+    if(!field_map.count(field_name)) return kFieldNotFound;
+    for(auto& record : records) {
+        for(auto it = record.begin(); it != record.end(); ++it) {
+            if(it->first == field_name) {
+                record.erase(it);
+                break;
+            }
+        }
+    }
+    for(auto it = field_map.begin(); it != field_map.end(); ++it) {
+        if(it->first == field_name) {
+            field_map.erase(it);
+            break;
+        }
+    }
+    for(int i = 0; i < fields.size(); ++i) {
+        if(fields[i].first == field_name) {
+            fields.erase(fields.begin() + i);
+            break;
+        }
+    }
+    return kSuccess;
 }

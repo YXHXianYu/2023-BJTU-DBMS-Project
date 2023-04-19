@@ -45,6 +45,7 @@ public:
     int DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints);
     //增加字段
     int AlterTableAdd(std::pair<std::string, std::string> new_field);
+    int AlterTableDrop(std::string field_name);
 };
 
 #endif // TABLE_H

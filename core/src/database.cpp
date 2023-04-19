@@ -84,6 +84,7 @@ int Database::DescribeTable(std::string table_name,std::vector<std::pair<std::st
     for(auto& table: tables) {
         if(table.GetTableName() == table_name) {
             return table.DescribeTable(fields, constraints);
+
         }
     }
     return kTableNotFound;
@@ -93,6 +94,15 @@ int Database::AlterTableAdd(std::string table_name, std::pair<std::string, std::
     for(auto& table:tables) {
         if(table.GetTableName() == table_name) {
             return table.AlterTableAdd(field);
+        }
+    }
+    return kTableNotFound;
+}
+
+int Database::AlterTableDrop(std::string table_name, std::string field_name) {
+    for(auto& table:tables) {
+        if(table.GetTableName() == table_name) {
+            return table.AlterTableDrop(field_name);
         }
     }
     return kTableNotFound;
