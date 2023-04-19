@@ -10,7 +10,7 @@ Table::Table(std::string table_name, std::vector<std::pair<std::string, std::str
 }
 
 std::string Table::GetTableName() const{
-    return table_name; 
+    return table_name;
 }
 
 int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
@@ -93,7 +93,7 @@ int Table::Select(std::vector<std::string> field_name, std::vector<std::tuple<st
     for(const auto& record: records) {
         //where ... continue
         if(CheckCondition(record, conditions) != kSuccess) continue;
-        
+
         std::vector<std::any> ret_record;
         for(const auto& name: field_name) {
             if(!record.count(name)) {
@@ -164,7 +164,7 @@ int Table::Update(const std::vector<std::pair<std::string,std::string>>& values,
     for(auto& record: records) {
         if(CheckCondition(record,conditions) != kSuccess) {
             continue;
-        } 
+        }
         for(const auto& field : values) {
             if(field_map[field.first] == "int") {
                 for(auto x : field.second) {

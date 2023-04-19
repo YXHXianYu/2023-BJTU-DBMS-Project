@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>750</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1000</width>
+    <height>750</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1000</width>
+    <height>750</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_3" columnstretch="1,3">
+    <item row="0" column="0">
+     <widget class="QTreeWidget" name="treeWidget">
+      <column>
+       <property name="text">
+        <string>Database</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2" rowstretch="2,1">
+       <item row="0" column="1">
+        <widget class="QTableWidget" name="tableWidget">
+         <row>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </row>
+         <column>
+          <property name="text">
+           <string>Sno</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Sname</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Ssex</string>
+          </property>
+         </column>
+         <item row="0" column="0">
+          <property name="text">
+           <string>21301034</string>
+          </property>
+         </item>
+         <item row="0" column="1">
+          <property name="text">
+           <string>付家齐</string>
+          </property>
+         </item>
+         <item row="0" column="2">
+          <property name="text">
+           <string>男</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>命令行</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="1">
+           <widget class="QTextEdit" name="textEdit_code"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="pushButton">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>200</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>RUN</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_create">
+    <property name="title">
+     <string>新建</string>
+    </property>
+    <addaction name="action_database"/>
+    <addaction name="action_addtable"/>
+    <addaction name="action_column"/>
+    <addaction name="action_addrow"/>
+   </widget>
+   <widget class="QMenu" name="menu_delete">
+    <property name="title">
+     <string>删除</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_update">
+    <property name="title">
+     <string>修改</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_query">
+    <property name="title">
+     <string>查询</string>
+    </property>
+   </widget>
+   <addaction name="menu_create"/>
+   <addaction name="menu_delete"/>
+   <addaction name="menu_update"/>
+   <addaction name="menu_query"/>
+  </widget>
+  <action name="actiontable">
+   <property name="text">
+    <string>table</string>
+   </property>
+  </action>
+  <action name="actionrow">
+   <property name="text">
+    <string>row</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>表</string>
+   </property>
+  </action>
+  <action name="action_addtable">
+   <property name="text">
+    <string>新建表</string>
+   </property>
+  </action>
+  <action name="action_addrow">
+   <property name="text">
+    <string>新建行</string>
+   </property>
+  </action>
+  <action name="action_column">
+   <property name="text">
+    <string>新建列</string>
+   </property>
+  </action>
+  <action name="action_database">
+   <property name="text">
+    <string>新建数据库</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -7,7 +7,7 @@ namespace ColaSQLCommand {
 Parser::Parser() {}
 
 std::string Parser::Parse(const std::vector<std::string>& seq) {
-    
+
     // std::string output = "";
     // for(auto str: seq) output.append(str + " ");
     // return output;
@@ -110,7 +110,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
     std::vector<Constraint*> constraints;
 
     // 通过 类型名 获取对应类型的 any值
-    
+
 
     const std::string constraint = "constraint";
 
@@ -155,7 +155,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
             if(j - i != 6) return error + statementError + "(constraint statement is too short or too long)";
             if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
             if(seq[i + 4] != "reference") return error + statementError + "(not found \"reference\")";
-            
+
             constraints.push_back(new ForeignKeyConstraint(seq[i + 3], seq[i + 5], seq[i + 6]));
 
         } else if(seq[i + 1] == "unique") {
@@ -227,7 +227,7 @@ std::string Parser::ShowTables(const std::vector<std::string>& seq) {
 // ----- Record -----
 
 std::string Parser::InsertRecord(const std::vector<std::string>& seq) {
-    
+
     if(seq.size() < 6) return error + statementError;
 
     std::string tableName = seq[2];
@@ -320,15 +320,15 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
     std::cout << "  fieldName: ";
     for(auto str: fieldName) std::cout << str << " ";
     std::cout << std::endl;
-    
+
     std::cout << "  tableName: ";
     for(auto str: tableName) std::cout << str << " ";
     std::cout << std::endl;
-    
+
     std::cout << "  conditions: ";
     for(auto [str1, str2]: conditions) std::cout << "(" << str1 << ", " << str2 << ") ";
     std::cout << std::endl;
-    
+
     std::cout << "  orderField: ";
     for(auto str: orderField) std::cout << str << " ";
     std::cout << std::endl;
