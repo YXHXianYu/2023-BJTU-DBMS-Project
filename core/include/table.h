@@ -16,10 +16,16 @@ private:
     std::vector<std::unordered_map<std::string, std::any> > records;
     std::vector<Constraint*> constraints;
 
-private:
-    Table();
 public:
-    Table(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
+    Table(const std::string& table_name,
+          const std::vector<std::pair<std::string, std::string>>& fields,
+          const std::vector<Constraint*>& constraints);
+
+    Table(const std::string& table_name,
+          const std::vector<std::pair<std::string, std::string>>& fields,
+          const std::vector<Constraint*>& constraints,
+          const std::vector<std::unordered_map<std::string, std::any>>& records);
+    
     //获取表名
     const std::string& GetTableName() const;
     const std::vector<std::pair<std::string, std::string>>& GetFields() const;

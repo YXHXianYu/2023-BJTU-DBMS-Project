@@ -14,8 +14,12 @@ private:
     Database();
 public:
     Database(std::string database_name, std::string owner_user);
-    std::string GetOwnerUserName() const;
-    std::string GetDatabaseName() const;
+    
+    const std::string& GetOwnerUserName() const;
+    const std::string& GetDatabaseName() const;
+    const std::vector<Table>& GetTables() const;
+    void SetTables(const std::vector<Table>&);
+
     int ShowTables(std::vector<std::string>& return_tables);
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
     int DropTable(std::string table_name);

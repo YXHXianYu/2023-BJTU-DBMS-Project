@@ -9,12 +9,20 @@ Database::Database(std::string database_name, std::string owner_user) {
     this->owner_user = owner_user;
 }
 
-std::string Database::GetOwnerUserName() const {
+const std::string& Database::GetOwnerUserName() const {
     return owner_user;
 }
 
-std::string Database::GetDatabaseName() const {
+const std::string& Database::GetDatabaseName() const {
     return database_name;
+}
+
+const std::vector<Table>& Database::GetTables() const {
+    return tables;
+}
+
+void Database::SetTables(const std::vector<Table>& tables) {
+    this->tables = tables;
 }
 
 int Database::CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints) {

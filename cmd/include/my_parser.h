@@ -64,7 +64,10 @@ private:
     std::string SelectRecord(const std::vector<std::string>& seq);
     std::string UpdateRecord(const std::vector<std::string>& seq); // TODO
 
-    std::string TestSave();
+    std::string Read(bool debug);
+    std::string Save();
+
+    std::string GetErrorMessage(int errorCode);
 
 };
 

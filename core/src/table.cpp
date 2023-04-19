@@ -1,9 +1,26 @@
 #include "table.h"
 #include <algorithm>
-Table::Table(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint*> constraints) {
+
+
+Table::Table(const std::string& table_name,
+             const std::vector<std::pair<std::string, std::string>>& fields,
+             const std::vector<Constraint*>& constraints) {
     this->table_name = table_name;
     this->fields = fields;
     this->constraints = constraints;
+    for(auto field:fields) {
+        field_map[field.first] = field.second;
+    }
+}
+
+Table::Table(const std::string& table_name,
+             const std::vector<std::pair<std::string, std::string>>& fields,
+             const std::vector<Constraint*>& constraints,
+             const std::vector<std::unordered_map<std::string, std::any>>& records) {
+    this->table_name = table_name;
+    this->fields = fields;
+    this->constraints = constraints;
+    this->records = records;
     for(auto field:fields) {
         field_map[field.first] = field.second;
     }

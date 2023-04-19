@@ -68,7 +68,9 @@ int DataProcessor::UseDatabase(std::string database_name) {
     if(current_user == nullptr) {
         return kUserNotLogin;
     }
+    std::cout << "!" << databases.size() << std::endl;
     for(auto& database : databases) {
+        std::cout << "!" << database.GetDatabaseName() << std::endl;
         if(database.GetDatabaseName() == database_name) {
             current_database = &database;
             return kSuccess;
@@ -168,6 +170,11 @@ int DataProcessor::Update(std::string table_name, const std::vector<std::pair<st
     return current_database->Update(table_name,values,conditions);
 }
 
-std::vector<Database>& DataProcessor::GetDatabases() {
+const std::vector<Database>& DataProcessor::GetDatabases() const {
     return databases;
+}
+
+
+void DataProcessor::SetDatabases(const std::vector<Database>& databases) {
+    this->databases = databases;
 }
