@@ -2,7 +2,7 @@
 
 namespace ColaSQLCommand {
 
-CommandProcessor CommandProcessor::GetInstance() {
+CommandProcessor& CommandProcessor::GetInstance() {
     static CommandProcessor instance;
     return instance;
 }
@@ -15,9 +15,8 @@ void CommandProcessor::Start(const std::string& accountName, const std::string& 
 
     // TODO: Welcome information
 
-    std::vector<std::string> seq;
+    seq.clear();
     int ret;
-
     while(true) { // 主循环
         std::cout << GetPrompt();
 
@@ -30,28 +29,34 @@ void CommandProcessor::Start(const std::string& accountName, const std::string& 
             break;
         }
 
-        // preprocess
-        Preprocess(input);
+        std::string output = Run(input);
 
-        // tokenize
-        ret = Tokenize(input, seq);
-        
-        if(ret == -1) { // 语句异常（语句中包含不正常的分号）
-            std::cout << "Error: Statement error!" << std::endl;
-            seq.clear();
-            continue;
-        }
-        
-        if(ret == 1) { // 语句未结束
-            continue;
-        }
-
-        // parse
-        std::string output;
-        output = _parser.Parse(seq);
+        if(output == "") continue;
         std::cout << output << std::endl;
-        seq.clear();
     }
+}
+
+std::string CommandProcessor::Run(std::string input) {
+    // preprocess
+    Preprocess(input);
+
+    // tokenize
+    int ret = Tokenize(input, seq);
+
+    if(ret == -1) { // 语句异常（语句中包含不正常的分号）
+        seq.clear();
+        return "Error: Statement error!";
+    }
+
+    if(ret == 1) { // 语句未结束
+        return "";
+    }
+
+    // parse
+    std::string output;
+    output = _parser.Parse(seq);
+    seq.clear();
+    return output;
 }
 
 CommandProcessor::CommandProcessor() {}
