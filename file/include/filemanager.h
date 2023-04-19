@@ -23,23 +23,14 @@ private:
 
     int ReadDatabasesFile(std::vector<Database>& databases);
 
-    // ----- ./data/database/ -----
-    int WriteTablesFile(const std::vector<Table>& tables);
-    int WriteLogFile(const std::string& log);
+    // ----- ./data/database/* -----
+    // *: tables.txt, table.txt, tableRecord.txt, tableConstraint.txt, tableIndex.txt
+    int WriteTablesFile(const std::string& databaseName, const std::vector<Table>& tables);
+    int ReadTablesFile(const std::string& databaseName, std::vector<Table>& tables);
 
-    int ReadTablesFile(std::vector<Table>& tables);
-    int ReadLogFile(std::string& log);
-
-    // ----- ./data/database/ -----
-    int WriteTableFile(const Table& table);
-    int WriteRecordFile(const Table& table);
-    int WriteConstraintFile(const Table& table);
-    int WriteIndexFile(const Table& table);
-
-    int ReadTableFile(Table& table);
-    int ReadRecordFile(Table& table);
-    int ReadConstraintFile(Table& table);
-    int ReadIndexFile(Table& table);
+    // ----- ./data/database/log.txt -----
+    int WriteLogFile(const std::string& databaseName, const std::string& log);
+    int ReadLogFile(const std::string& databaseName, std::string& log);
 };
 
 
