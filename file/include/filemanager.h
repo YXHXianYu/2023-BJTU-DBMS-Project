@@ -13,7 +13,6 @@ public :
     static FileManager& GetInstance();
 
 public :
-
     // ----- Write -----
 
     int WriteDatabasesFile(const std::vector<Database>& databases);
@@ -30,7 +29,6 @@ public :
     int ReadTablesFile(const std::string& databaseName, std::vector<Table>& tables);
 
     int ReadLogFile(const std::string& databaseName, std::string& log);
-
 };
 
 

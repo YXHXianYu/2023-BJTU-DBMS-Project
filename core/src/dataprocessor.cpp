@@ -68,9 +68,7 @@ int DataProcessor::UseDatabase(std::string database_name) {
     if(current_user == nullptr) {
         return kUserNotLogin;
     }
-    std::cout << "!" << databases.size() << std::endl;
     for(auto& database : databases) {
-        std::cout << "!" << database.GetDatabaseName() << std::endl;
         if(database.GetDatabaseName() == database_name) {
             current_database = &database;
             return kSuccess;

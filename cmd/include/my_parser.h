@@ -30,7 +30,7 @@ public:
     std::string Parse(const std::vector<std::string>& seq);
 
 private:
-    
+    const bool DEBUG = false;
 
     const std::string success = "Success: ";
     const std::string error = "Error: ";
@@ -64,7 +64,7 @@ private:
     std::string SelectRecord(const std::vector<std::string>& seq);
     std::string UpdateRecord(const std::vector<std::string>& seq); // TODO
 
-    std::string Read(bool debug);
+    std::string Read(bool debug = false);
     std::string Save();
 
     std::string GetErrorMessage(int errorCode);
