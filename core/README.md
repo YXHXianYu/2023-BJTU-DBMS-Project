@@ -20,14 +20,17 @@
   public:
   	//创建用户
       int CreateUser(std::string user_name,
-                     std::string user_password);         //登录用户  
+                     std::string user_password);         
+  	//登录用户  
       int Login(std::string user_name,
                 std::string user_password);                
   //数据库
   public:
    	//创建数据库
-      int CreateDatabase(std::string database_name);     //使用数据库                        
-      int UseDatabase(std::string database_name);       //显示所有数据库                          
+      int CreateDatabase(std::string database_name);     
+  	//使用数据库                        
+      int UseDatabase(std::string database_name);       
+  	//显示所有数据库                          
       std::vector<std::string> ShowDatabases();
   
   //表
@@ -56,7 +59,7 @@
   	int Delete(std::string table_name,
                  std::vector<std::tuple<std::string, 					std::string, int>> conditions);    
   ```
-
+  
   
 
 #### 1.2 用户(User)

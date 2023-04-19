@@ -17,6 +17,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/colasqltool.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/database.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/dataprocessor.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/table.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/user.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/constraint.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/default_constraint.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/foreign_key_constraint.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/not_null_constraint.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/primary_key_constraint.cpp \
+    D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/src/constraint/unique_constraint.cpp \
     main.cpp \
     mainwindow.cpp \
     ui_login.cpp \
@@ -37,5 +48,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += ./../../../core/include
-INCLUDEPATH += ./../../../core/include/constraint
+INCLUDEPATH +=$$quote("D:\QtPrograms\DBMS\2023-BJTU-DBMS-Project\core\include")
+INCLUDEPATH +=$$quote("D:\QtPrograms\DBMS\2023-BJTU-DBMS-Project\core\include\constraint")
+

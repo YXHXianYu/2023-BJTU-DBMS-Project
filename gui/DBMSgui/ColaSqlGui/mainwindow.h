@@ -3,7 +3,12 @@
 
 #include <ui_login.h>
 
+#include <QDebug>
+#include <QInputDialog>
 #include <QMainWindow>
+#include <QMessageBox>
+
+#include "dataprocessor.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,6 +22,9 @@ class MainWindow : public QMainWindow {
  public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
+
+ private slots:
+  void click_action_database();
 
  private:
   Ui::MainWindow *ui;

@@ -44,6 +44,7 @@ int DataProcessor::Login(std::string user_name, std::string user_password) {
     if(current_user == nullptr) {
         return kUserNotLogin;
     }
+    return_databases.clear();
     for(const auto& database : databases) {
         return_databases.push_back(database.GetDatabaseName());
     }
@@ -102,6 +103,8 @@ int DataProcessor::DescribeTable(std::string table_name,std::vector<std::pair<st
     if(current_database == nullptr) {
         return kDatabaseNotUse;
     }
+    fields.clear();
+    constraints.clear();
     return current_database->DescribeTable(table_name,fields,constraints);
 }
 
@@ -112,6 +115,7 @@ int DataProcessor::ShowTables(std::vector<std::string>& return_tables){
     if(current_database == nullptr) {
         return kDatabaseNotUse;
     }
+    return_tables.clear();
     return current_database->ShowTables(return_tables);
 }
 
@@ -136,6 +140,7 @@ int DataProcessor::Insert(std::string table_name, std::vector<std::pair<std::str
     return current_database->Insert(table_name,record_in);
 }
 int DataProcessor::Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string, int>> conditions, std::vector<std::vector<std::any>> &return_records) {
+    return_records.clear();
     if (current_user == nullptr) {
         return kUserNotLogin;
     }
@@ -161,4 +166,8 @@ int DataProcessor::Update(std::string table_name, const std::vector<std::pair<st
         return kDatabaseNotUse;
     }
     return current_database->Update(table_name,values,conditions);
+}
+
+std::vector<Database>& DataProcessor::GetDatabases() {
+    return databases;
 }

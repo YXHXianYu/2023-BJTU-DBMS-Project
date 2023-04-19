@@ -46,7 +46,7 @@ public:
     int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
     //values: vector<>
 public:
-
+    std::vector<Database>& GetDatabases();
 
 };
 

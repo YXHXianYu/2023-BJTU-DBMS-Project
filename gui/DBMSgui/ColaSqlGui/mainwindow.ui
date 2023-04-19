@@ -117,7 +117,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_create">
@@ -125,7 +125,7 @@
      <string>新建</string>
     </property>
     <addaction name="action_database"/>
-    <addaction name="action_addtable"/>
+    <addaction name="action_table"/>
     <addaction name="action_column"/>
     <addaction name="action_addrow"/>
    </widget>
@@ -164,7 +164,7 @@
     <string>表</string>
    </property>
   </action>
-  <action name="action_addtable">
+  <action name="action_table">
    <property name="text">
     <string>新建表</string>
    </property>
