@@ -24,8 +24,7 @@ private:
     CommandProcessor();
     std::string GetPrompt();
     int Tokenize(std::string input, std::vector<std::string>& result);
-    int ToLowerCase(std::string& str);
-    std::string& trim(std::string &s);
+    int Preprocess(std::string& str);
 };
 
 } // ColaSQLCommand

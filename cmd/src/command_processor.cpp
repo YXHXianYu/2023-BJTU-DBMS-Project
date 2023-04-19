@@ -28,8 +28,8 @@ void CommandProcessor::Start(const std::string& accountName, const std::string& 
             break;
         }
 
-        // toLower
-        ToLowerCase(input);
+        // preprocess
+        Preprocess(input);
 
         // tokenize
         ret = Tokenize(input, seq);
@@ -64,8 +64,6 @@ std::string CommandProcessor::GetPrompt() {
 // 若返回 1，则说明语句未结束
 // 若返回 -1，则说明语句异常（语句中包含不正常的分号）
 int CommandProcessor::Tokenize(std::string input, std::vector<std::string>& result) {
-    
-    trim(input);
 
     bool haveEnd = false; // 是否以分号结尾
     if(input[input.length() - 1] == ';') {
@@ -87,23 +85,23 @@ int CommandProcessor::Tokenize(std::string input, std::vector<std::string>& resu
 }
 
 
-int CommandProcessor::ToLowerCase(std::string& str) {
+int CommandProcessor::Preprocess(std::string& str) {
+    if(str.empty()) return -1;
+
     int del = 'a'-'A';
     for(int i = 0; i < str.length(); i++) {
-        if('A' <= str[i] && str[i] <= 'Z') {
+        if('A' <= str[i] && str[i] <= 'Z') { // 全小写
             str[i] += del;
+        } else if(str[i] == ',' || str[i] == '(' || str[i] == ')') { // 替换字符
+            str[i] = ' ';
         }
     }
-    return 0;
-}
 
-std::string& CommandProcessor::trim(std::string &s) {
-    if (s.empty()) {
-        return s;
-    }
-    s.erase(0,s.find_first_not_of(" "));
-    s.erase(s.find_last_not_of(" ") + 1);
-    return s;
+    // 删去前后多余空格 (trim)
+    str.erase(0, str.find_first_not_of(" "));
+    str.erase(str.find_last_not_of(" ") + 1);
+
+    return 0;
 }
 
 
