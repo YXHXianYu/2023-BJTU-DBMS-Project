@@ -17,7 +17,7 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
 
     // ----- Save & Read -----
     if(seq[0] == "save" && seq.size() == 1) return Save();
-    if(seq[0] == "read" && seq.size() == 1) return Read(true);
+    if(seq[0] == "read" && seq.size() == 1) return Read();
 
     // ----- size 1 -----
     if(seq.size() <= 1) return error + statementIncomplete;
@@ -204,8 +204,8 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
         }
     }
 
-    ColasqlTool::OutputFields(fields);
-    ColasqlTool::OutputConstraints(constraints);
+    if(DEBUG) ColasqlTool::OutputFields(fields);
+    if(DEBUG) ColasqlTool::OutputConstraints(constraints);
 
     // std::string tableName = seq[2];
     // std::vector<std::pair<std::string, std::any>> fields;
@@ -355,26 +355,23 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
     }
 
     // output for testing
-    std::cout << "  fieldName: ";
-    for(auto str: fieldName) std::cout << str << " ";
-    std::cout << std::endl;
-    
-    std::cout << "  tableName: ";
-    for(auto str: tableName) std::cout << str << " ";
-    std::cout << std::endl;
-    
-    std::cout << "  conditions: ";
-    for(auto [str1, str2, i]: conditions) std::cout << "(" << str1 << ", " << str2 << ", " << i << ") ";
-    std::cout << std::endl;
-    
-    std::cout << "  orderField: ";
-    for(auto str: orderField) std::cout << str << " ";
-    std::cout << std::endl;
-
-    // std::vector<std::string> fieldName;
-    // std::vector<std::string> tableName;
-    // std::vector<std::tuple<std::string, std::string, int>> conditions;
-    // std::vector<std::string> orderField;
+    if(DEBUG) {
+        std::cout << "  fieldName: ";
+        for(auto str: fieldName) std::cout << str << " ";
+        std::cout << std::endl;
+        
+        std::cout << "  tableName: ";
+        for(auto str: tableName) std::cout << str << " ";
+        std::cout << std::endl;
+        
+        std::cout << "  conditions: ";
+        for(auto [str1, str2, i]: conditions) std::cout << "(" << str1 << ", " << str2 << ", " << i << ") ";
+        std::cout << std::endl;
+        
+        std::cout << "  orderField: ";
+        for(auto str: orderField) std::cout << str << " ";
+        std::cout << std::endl;
+    }
 
     std::vector<std::vector<std::any>> result;
 
@@ -393,7 +390,7 @@ std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
     return "Warning: UpdateRecord Under development";
 }
 
-std::string Parser::Read(bool debug = false) {
+std::string Parser::Read(bool debug) {
     std::vector<Database> databases;
 
     FileManager::GetInstance().ReadDatabasesFile(databases);
