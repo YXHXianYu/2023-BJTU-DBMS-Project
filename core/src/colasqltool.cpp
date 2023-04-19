@@ -41,7 +41,7 @@ std::string ColasqlTool::AnyToString(const std::any& any) {
     if(any.type() == typeid(int)) return std::to_string(std::any_cast<int>(any));
     else if(any.type() == typeid(float)) return std::to_string(std::any_cast<float>(any));
     else if(any.type() == typeid(std::string)) return std::any_cast<std::string>(any);
-    else if(any.type() == typeid(ColasqlNull)) return "";
+    else if(any.type() == typeid(ColasqlNull)) return "NULL";
     else return "[not found this type]";
 
 }
@@ -121,11 +121,111 @@ void ColasqlTool::OutputConstraints(const std::vector<Constraint*> constraints) 
     std::cout << std::endl;
 }
 
-void ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::any>> result) {
-    for(auto x : result) {
-        for(auto mes : x){
-            std::cout<<ColasqlTool::AnyToString(mes)<<" ";
+std::vector<std::vector<std::any>> ColasqlTool::ChangeDescriptionToRecords(const std::vector<std::pair<std::string, std::string>>& fields,const std::vector<Constraint*>&constraints) {
+    std::vector<std::vector<std::any>> ret;
+    std::vector<std::any> inner;
+    inner.push_back("Field");
+    inner.push_back("Type");
+    inner.push_back("Null");
+    inner.push_back("Key");
+    inner.push_back("Default");
+    ret.push_back(inner);
+    inner.clear();
+    for(const auto& field : fields) {
+        std::string field_name = field.first;
+        std::cout<<"testdes"<<" "<<field_name<<std::endl;
+        std::string Type = field.second;
+        std::string Null = "YES";
+        std::string Key = "";
+        std::string Default = "NULL";
+        for(auto constraint: constraints) {
+            if (constraint->GetFieldName() != field_name) {
+                continue;
+            }
+            if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){
+                //todo
+                Default = ColasqlTool::AnyToString(dynamic_cast<const DefaultConstraint *>(constraint)->GetValue());
+            }
+            if(dynamic_cast<const NotNullConstraint *>(constraint) != nullptr) {//非空
+                Null = "NO";
+            }
+            if (dynamic_cast<const UniqueConstraint *>(constraint) != nullptr){
+                Key = "UNI";
+            }
+            if (dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr){
+                Key = "FOR";
+            }
+            if (dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr){
+                Key = "PRI";
+            }
+            inner.clear();
+            inner.push_back(field_name);
+            inner.push_back(Type);
+            inner.push_back(Null);
+            inner.push_back(Key);
+            inner.push_back(Default);
+            ret.push_back(inner);
         }
-        std::cout<<" "<<std::endl;
     }
+    return ret;
+}
+
+std::vector<std::vector<std::any>> ColasqlTool::ChangeStringsToRecords(std::vector<std::string> strings, std::string head="") {
+    std::vector<std::vector<std::any>> ret;
+    if(head != "") {
+        std::vector<std::any> inner;
+        inner.push_back(head);
+        ret.push_back(inner);
+    }
+    for(const auto x: strings) {
+        std::vector<std::any> inner;
+        inner.push_back(x);
+        ret.push_back(inner);
+    }
+    return ret;
+}
+
+void ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::any>> result) {
+    std::string out_result;
+    int count_field = 0;
+    int count_record = 0;
+    std::vector<int> len;
+    for(auto field_name : result[0]) {
+        count_record++;
+        len.push_back(ColasqlTool::AnyToString(field_name).length());
+    }
+    for(auto record : result) {
+        for(int i = 0; i < record.size(); ++i){
+            len[i] = std::max(len[i], (int)ColasqlTool::AnyToString(record[i]).length());
+        }
+    }
+    std::string tmp;
+    tmp += "+-";
+    for(int i = 0; i < count_record; ++i) {
+        for(int j = 1; j <= len[i]; ++j) {
+            tmp += "-";
+        }
+        if(i != count_record - 1)
+            tmp += "-+-";
+        else tmp += "-+";
+    }
+    out_result += tmp;
+    out_result += '\n';
+    for(const auto& record : result) {
+        out_result += "| ";
+        for(int i = 0; i < count_record; ++i){
+            out_result += ColasqlTool::AnyToString(record[i]);
+            int current_len = ColasqlTool::AnyToString(record[i]).length();
+            for(int j = 1; j <= len[i] - current_len; ++j) {
+                out_result += " ";
+            }
+            if(i != count_record - 1)
+                out_result += " | ";
+            else out_result += " |";
+        }
+        out_result += '\n';
+        out_result += tmp;
+        out_result += '\n';
+    }
+    std::cout<<out_result;
 }

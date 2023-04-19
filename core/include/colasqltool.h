@@ -32,7 +32,12 @@ public:
     static void OutputConstraints(const std::vector<Constraint*> constraints);
 
     static void OutputSelectResult(const std::vector<std::vector<std::any>> result);
+    
+    //把string 转换成表结构, head为表头, 默认为空
+    static std::vector<std::vector<std::any>> ChangeStringsToRecords(std::vector<std::string> strings, std::string head);
 
+    //把表描述信息转换成表结构
+    static std::vector<std::vector<std::any>> ChangeDescriptionToRecords(const std::vector<std::pair<std::string, std::string>>& fields, const std::vector<Constraint*>&constraints);
 };
 
 class ColasqlException {
