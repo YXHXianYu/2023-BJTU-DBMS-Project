@@ -26,7 +26,6 @@ public:
     Parser();
     std::string Parse(const std::vector<std::string>& seq);
 
-private:
     const bool DEBUG = false;
 
     const std::string success = "Success!";
@@ -34,6 +33,8 @@ private:
     const std::string statementIncomplete = "Statement is incomplete.";
     const std::string statementError = "Statement has errors.";
     const std::string statementRedundant = "Statment has redundant parts.";
+
+private:
 
     std::string CreateUser(const std::vector<std::string>& seq); // TODO
     std::string GrantUser(const std::vector<std::string>& seq); // TODO

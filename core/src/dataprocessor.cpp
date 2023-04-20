@@ -10,7 +10,7 @@ DataProcessor::DataProcessor() {
     current_database = nullptr;
 
     // read files into data
-    Read();
+    Read(false);
 }
 
 int DataProcessor::CreateUser(std::string user_name, std::string user_password) {
@@ -52,9 +52,9 @@ int DataProcessor::Login(std::string user_name, std::string user_password) {
 }
 
  int DataProcessor::ShowDatabases(std::vector<std::string>& return_databases) {
-    if(current_user == nullptr) {
-        return kUserNotLogin;
-    }
+//    if(current_user == nullptr) {
+//        return kUserNotLogin;
+//    }
     return_databases.clear();
     for(const auto& database : databases) {
         return_databases.push_back(database.GetDatabaseName());
@@ -213,9 +213,9 @@ int DataProcessor::Update(std::string table_name, const std::vector<std::pair<st
 }
 
 int DataProcessor::Read(bool debug) {
-
+      
     FileManager::GetInstance().ReadDatabasesFile(databases);
-
+    
     if(debug) {
         std::cout << databases.size() << std::endl;
     }
