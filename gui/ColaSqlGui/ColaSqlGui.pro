@@ -30,6 +30,7 @@ SOURCES += \
 HEADERS += \
     columndialog.h \
     mainwindow.h \
+    qtbstreambuf.h \
     ui_login.h \
     ui_register.h
 
