@@ -115,12 +115,12 @@ void MainWindow::addTreeItem() {
     assert(false);
   }
 
-  std::cout << "databases_size: " << databases.size() << std::endl;
+  //  std::cout << "databases_size: " << databases.size() << std::endl;
 
   ui->treeWidget->clear();
   for (const auto &database : databases) {
     DataProcessor::GetInstance().UseDatabase(database);
-    std::cout << "using database:" << database;
+    //    std::cout << "using database:" << database;
     QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
     setConnectTreeItem(item, QString::fromStdString(database));
     std::vector<std::string> tables;
