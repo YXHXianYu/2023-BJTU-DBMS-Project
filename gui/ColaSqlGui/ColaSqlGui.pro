@@ -17,17 +17,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ../../core/src/colasqltool.cpp \
-    ../../core/src/database.cpp \
-    ../../core/src/dataprocessor.cpp \
-    ../../core/src/table.cpp \
-    ../../core/src/user.cpp \
-    ../../core/src/constraint/constraint.cpp \
-    ../../core/src/constraint/default_constraint.cpp \
-    ../../core/src/constraint/foreign_key_constraint.cpp \
-    ../../core/src/constraint/not_null_constraint.cpp \
-    ../../core/src/constraint/primary_key_constraint.cpp \
-    ../../core/src/constraint/unique_constraint.cpp \
+    $${PWD}/../../cmd/src/*.cpp \
+    $${PWD}/../../core/src/*.cpp \
+    $${PWD}/../../core/src/constraint/*.cpp \
     ../../file/src/filemanager.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -51,6 +43,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+INCLUDEPATH +=$$quote("../../cmd/include")
 INCLUDEPATH +=$$quote("../../core/include")
 INCLUDEPATH +=$$quote("../../core/include/constraint")
 INCLUDEPATH +=$$quote("../../file/include/")

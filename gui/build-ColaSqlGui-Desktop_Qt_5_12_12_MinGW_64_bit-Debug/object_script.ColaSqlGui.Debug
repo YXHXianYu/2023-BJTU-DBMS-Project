@@ -1,3 +1,6 @@
+debug/command_processor.o
+debug/main.o
+debug/my_parser.o
 debug/colasqltool.o
 debug/database.o
 debug/dataprocessor.o
