@@ -5,7 +5,8 @@
 # Added by. YXHXianYu
 # Vscode
 .vscode/
-
+# VSCodeCounter
+.VSCodeCounter/
 # Cmd
 cmd/build/
 cmd/data/
