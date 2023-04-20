@@ -329,3 +329,9 @@
                    const std::vector<Field>& values,
                    const std::vector<Field>& conditions);
   ```
+
+***
+
+### 4. TODO Lists
+
+* DELETE全表后，不一定返回empty set的问题。

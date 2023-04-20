@@ -389,8 +389,49 @@ std::string Parser::InsertRecord(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::DeleteRecord(const std::vector<std::string>& seq) {
+    if(seq.size() < 3) {
+        return error + statementError;
+    }
 
-    return "Warning: DeleteRecord Under development";
+    std::string tableName = seq[2];
+
+    // get index
+    int selectIdx = 0;
+    int whereIdx = -1;
+
+    std::vector<int> idx;
+
+    idx.push_back(0);
+    for(int i = selectIdx + 1; i < seq.size(); i++) {
+        if(seq[i] == "where") whereIdx = idx.size(), idx.push_back(i);
+    }
+    idx.push_back(seq.size());
+
+    // data
+    std::vector<std::tuple<std::string, std::string, int>> conditions;
+
+
+    // conditions
+    if(whereIdx != -1) {
+        if((idx[whereIdx + 1] - idx[whereIdx] - 1) % 3 != 0) return error + statementError + "(conditions statement is incompatible)";
+
+        for(int i = idx[whereIdx] + 1; i < idx[whereIdx + 1]; i += 3) {
+            if(seq[i + 1] != "=") return error + statementError + "(conditions statement is error)";
+
+            // TODO: 缺少了其他关系条件
+            conditions.push_back({seq[i], seq[i + 2], kEqualConditon});
+        }
+    }
+
+    // data processor
+
+    int ret = DataProcessor::GetInstance().Delete(tableName, conditions);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret); // TODO: error information
+    }
+
+    return success;
 }
 
 std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
