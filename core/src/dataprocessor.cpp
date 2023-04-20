@@ -85,9 +85,14 @@ int DataProcessor::CreateDatabase(std::string database_name) {
     return kSuccess;
 }
 
-int DataProcessor::UseDatabase(std::string database_name) {
+int DataProcessor::UseDatabase(std::string database_name = "") { 
     if(current_user == nullptr) {
         return kUserNotLogin;
+    }
+    if(database_name == "") {
+        current_database = nullptr;
+        current_database_name = "";
+        return kSuccess;
     }
     for(auto& database : databases) {
         if(database.GetDatabaseName() == database_name) {
