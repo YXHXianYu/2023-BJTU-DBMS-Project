@@ -1,3 +1,6 @@
+release/command_processor.o
+release/main.o
+release/my_parser.o
 release/colasqltool.o
 release/database.o
 release/dataprocessor.o
