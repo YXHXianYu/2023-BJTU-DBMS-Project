@@ -106,6 +106,9 @@ public:
 
         textBrowser = new QTextBrowser(groupBox_2);
         textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
+        QFont font;
+        font.setPointSize(15);
+        textBrowser->setFont(font);
 
         gridLayout_2->addWidget(textBrowser, 0, 1, 1, 1);
 
@@ -150,8 +153,8 @@ public:
         actionrow->setText(QApplication::translate("MainWindow", "row", nullptr));
         action->setText(QApplication::translate("MainWindow", "\350\241\250", nullptr));
         action_table->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\350\241\250", nullptr));
-        action_row->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\350\241\214", nullptr));
-        action_column->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\345\210\227", nullptr));
+        action_row->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\350\256\260\345\275\225", nullptr));
+        action_column->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\345\255\227\346\256\265", nullptr));
         action_database->setText(QApplication::translate("MainWindow", "\346\226\260\345\273\272\346\225\260\346\215\256\345\272\223", nullptr));
         QTreeWidgetItem *___qtreewidgetitem = treeWidget->headerItem();
         ___qtreewidgetitem->setText(1, QApplication::translate("MainWindow", "using", nullptr));
