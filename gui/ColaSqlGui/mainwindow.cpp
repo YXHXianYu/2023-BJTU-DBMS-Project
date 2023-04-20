@@ -55,31 +55,47 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
               qDebug() << "You clicked on item: " << clickedItem->text(column);
               clickedItem->setSelected(true);
               clickedItem->setText(1, "Selected");
-              int ret = DataProcessor::GetInstance().UseDatabase(
-                  clickedItem->text(column).toStdString());
-              qDebug() << "use" + clickedItem->text(column) << ret << endl;
+              std::string dbName = clickedItem->text(0).toStdString();
+              int ret = DataProcessor::GetInstance().UseDatabase(dbName);
+              qDebug() << "use" + clickedItem->text(0) << ret << endl;
             }
             if (clickedItem == item && getLevel(item) == 1) {
-              qDebug() << "You clicked on item: " << clickedItem->text(column);
+              // 点击table
+              qDebug() << "You clicked on item: " << clickedItem->text(column)
+                       << column;
               clickedItem->setSelected(true);
+              QTreeWidgetItem *parentItem = item->parent();
+              parentItem->setText(1, "Selected");
+              for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) {
+                QTreeWidgetItem *item = ui->treeWidget->topLevelItem(i);
+                // 将其他数据库的第二列设置为空
+                if (item != parentItem) {
+                  item->setText(1, "");
+                }
+              }
+              std::string dbName = parentItem->text(0).toStdString();
+              int use_db_ret = DataProcessor::GetInstance().UseDatabase(dbName);
+              qDebug() << "use" + parentItem->text(0) << use_db_ret << endl;
               std::vector<std::string> fields;
               fields.push_back("*");
+              std::string tbName = clickedItem->text(0).toStdString();
               std::vector<std::tuple<std::string, std::string, int>> conditions;
               std::vector<std::vector<std::any>> return_records;
-              DataProcessor::GetInstance().Select(
-                  clickedItem->text(column).toStdString(), fields, conditions,
-                  return_records);
+              DataProcessor::GetInstance().Select(tbName, fields, conditions,
+                                                  return_records);
+              //              qDebug() << "im here1" << endl;
               std::string ret = ColasqlTool::OutputSelectResult(return_records);
+              //              qDebug() << "im here2" << endl;
               ui->textBrowser->setText(QString::fromStdString(ret));
+              //              qDebug() << "im here3" << endl;
             }
           });
 }
 
 void MainWindow::addTreeItem() {
+  // 将databases中的数据添加到树形控件中
   DataProcessor::GetInstance().ShowDatabases(databases);
   ui->treeWidget->clear();
-  // 将std::vector<std::pair<std::string,
-  // std::string>>中的数据添加到树形控件中
   for (const auto &database : databases) {
     QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
     setConnectTreeItem(item, QString::fromStdString(database));
@@ -121,6 +137,7 @@ void MainWindow::click_action_table() {
     std::vector<Constraint *> constraints;
     int ret = DataProcessor::GetInstance().CreateTable(tbName.toStdString(),
                                                        fields, constraints);
+    qDebug() << ret << endl;
     if (!ret) {
       QTreeWidgetItem *faterItem;
       for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) {
@@ -136,10 +153,88 @@ void MainWindow::click_action_table() {
     } else if (ret == kDatabaseNotUse) {
       QMessageBox::warning(this, "错误", "未选用数据库\n");
       return;
+    } else {
+      qDebug() << ret << endl;
     }
   }
 }
 
-void MainWindow::click_action_column() {}
+void MainWindow::click_action_column() {
+  qDebug() << "add column\n";
+  ColumnDialog dialog;
+  if (dialog.exec() == QDialog::Accepted) {
+    QString tbName = dialog.lineEdit1->text();
+    QString columnName = dialog.lineEdit2->text();
+    QString columnType = dialog.lineEdit3->text();
+    columnType = columnType.toLower();
+    qDebug() << QString("Info1: %1, Info2: %2, Info3: %3")
+                    .arg(tbName)
+                    .arg(columnName)
+                    .arg(columnType);
+    if (columnType != "int" && columnType != "float" &&
+        columnType != "string") {
+      QMessageBox::warning(this, "错误", "类型只能为int、float或string\n");
+      return;
+    }
+    std::pair<std::string, std::string> field;
+    field = std::make_pair(columnName.toStdString(), columnType.toStdString());
+    int ret =
+        DataProcessor::GetInstance().AlterTableAdd(tbName.toStdString(), field);
+    if (!ret) {
+      QMessageBox::information(this, "通知", "新建列成功\n");
+    } else if (ret == kDatabaseNotUse) {
+      QMessageBox::warning(this, "错误", "未选用数据库\n");
+    } else if (ret == kTableNotFound) {
+      QMessageBox::warning(this, "错误", "未找到该表\n");
+    }
+  }
+}
 
-void MainWindow::click_action_row() {}
+void MainWindow::click_action_row() {
+  qDebug() << "add row\n";
+  QString tbName =
+      QInputDialog::getText(this, "输入", "表名:", QLineEdit::Normal);
+  QStringList fieldName =
+      QInputDialog::getText(this, "输入",
+                            "请输入要插入的字段名，每个字段用','隔开",
+                            QLineEdit::Normal, "Info1,Info2,......")
+          .split(",");
+  QStringList input =
+      QInputDialog::getText(this, "输入", "请输入一条记录，每个字段用','隔开",
+                            QLineEdit::Normal, "Info1,Info2,......")
+          .split(",");
+  qDebug() << input << endl;
+  std::vector<std::pair<std::string, std::string>> record_in;
+  if (fieldName.at(0) == '*') {
+    for (int i = 0; i < input.length(); ++i) {
+      record_in.push_back({"*", input.at(i).toStdString()});
+    }
+  } else if (fieldName.length() == input.length()) {
+    for (int i = 0; i < input.length(); ++i) {
+      record_in.push_back(
+          {fieldName.at(i).toStdString(), input.at(i).toStdString()});
+    }
+  } else {
+    QMessageBox::warning(this, "错误", "插入字段与输入数据长度不同\n");
+    return;
+  }
+  int ret =
+      DataProcessor::GetInstance().Insert(tbName.toStdString(), record_in);
+  if (!ret) {
+    QMessageBox::information(this, "通知", "新建记录成功\n");
+    return;
+  } else if (ret == kDatabaseNotUse) {
+    QMessageBox::warning(this, "错误", "未选用数据库\n");
+    return;
+  } else if (ret == kTableNotFound) {
+    QMessageBox::warning(this, "错误", "未找到该表\n");
+    return;
+  } else if (ret == kDataTypeWrong) {
+    QMessageBox::warning(this, "错误", "数据与字段类型不符\n");
+    return;
+
+  } else if (ret == kFieldNotFound) {
+    QMessageBox::warning(this, "错误", "未找到该字段\n");
+    return;
+  }
+}

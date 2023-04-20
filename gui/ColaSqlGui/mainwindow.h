@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QTreeWidget>
 
+#include "columndialog.h"
 #include "dataprocessor.h"
 
 QT_BEGIN_NAMESPACE

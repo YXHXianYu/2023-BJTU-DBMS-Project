@@ -73,7 +73,13 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QTextBrowser" name="textBrowser"/>
+        <widget class="QTextBrowser" name="textBrowser">
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -140,12 +146,12 @@
   </action>
   <action name="action_row">
    <property name="text">
-    <string>新建行</string>
+    <string>新建记录</string>
    </property>
   </action>
   <action name="action_column">
    <property name="text">
-    <string>新建列</string>
+    <string>新建字段</string>
    </property>
   </action>
   <action name="action_database">
