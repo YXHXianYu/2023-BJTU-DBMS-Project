@@ -18,6 +18,8 @@ private:
     std::vector<User> users;
     Database* current_database;
     User* current_user;
+    std::string current_database_name;
+    std::string current_user_name;
 private:
     DataProcessor();
 public:

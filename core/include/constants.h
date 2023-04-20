@@ -31,4 +31,7 @@ const int kLess = 22;
 const int kIdentifiedFail = 24;
 const int kDatabaseNotUse = 25;
 const int kFieldExisted = 25;
+const int kErrorCurrentUser = 26;
+const int kErrorCurrentDatabase = 27;
+const int kSizeNotProper = 28;
 #endif
