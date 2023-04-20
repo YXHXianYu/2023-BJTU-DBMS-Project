@@ -7,16 +7,18 @@ int main() {
     std::cout<< DataProcessor::GetInstance().CreateUser(std::string("admin"),std::string("123456"))<<std::endl;
     std::cout<< DataProcessor::GetInstance().Login(std::string("admin"),std::string("123456"))<<std::endl;
     std::cout<< DataProcessor::GetInstance().CreateDatabase("test")<<std::endl;
+    std::cout<< DataProcessor::GetInstance().UseDatabase("test")<<std::endl;
     std::cout<< DataProcessor::GetInstance().CreateDatabase("test2")<<std::endl;
     
-    std::cout<<DataProcessor::GetInstance().UseDatabase("test")<<std::endl;
+    
     //测试建表
     std::vector<std::pair<std::string, std::string>> fields;
-    fields.push_back({"Sno", "string"});
-    fields.push_back({"Sname", "string"});
-    fields.push_back({"Age", "int"});
+     fields.push_back({"Sno", "string"});
+     fields.push_back({"Sname", "string"});
+     fields.push_back({"Age", "int"});
     std::vector<Constraint*> constraints;
     std::cout<<DataProcessor::GetInstance().CreateTable("student",fields,constraints)<<std::endl;
+
     
     fields.clear();
     fields.push_back({"Cno", "string"});
@@ -103,7 +105,7 @@ int main() {
     std::vector<Constraint*> table_constraints;
     std::cout<<DataProcessor::GetInstance().DescribeTable("student",table_fields,table_constraints)<<std::endl;
     ColasqlTool::OutputSelectResult(ColasqlTool::ChangeDescriptionToRecords(table_fields,table_constraints));
-
+    
     
 
     return 0;

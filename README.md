@@ -199,6 +199,22 @@
   [WHERE 筛选条件1 筛选条件2 ...];
   ```
 
+#### 2.7 文件
+
+* 储存 & 提交
+
+  ```mysql
+  SAVE;
+  COMMIT;
+  ```
+
+* 回滚 & 读取
+
+  ```mysql
+  READ;
+  ROLLBACK;
+  ```
+
 ***
 
 ### 3. C++函数接口
@@ -215,18 +231,9 @@
 #### 3.2 数据载体
 
 * ```c++
-  // 旧版本
-  // Struct Field {
-  //     std::string name;
-  //     std::any value; // any见https://en.cppreference.com/w/cpp/utility/any
-  // };
-  
   // 属性（字段）
-  //  - 该类既可以表示属性的类型，也可以表示属性的值
-  Class Field { std::string name; };
-  Class IntField: public Field { int value; };
-  Class FloatField: public Field { float value; };
-  Class StringField: public Field { std::string value; };
+  std::pair<std::string, std::string> field;
+  std::unordered_map<std::string, std::any> records;
   
   // 约束条件
   Class Constraint {};

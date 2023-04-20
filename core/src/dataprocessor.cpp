@@ -8,8 +8,9 @@ DataProcessor& DataProcessor::GetInstance() {
 DataProcessor::DataProcessor() {
     current_user = nullptr;
     current_database = nullptr;
-    //to do: read files into data
 
+    // read files into data
+    Read();
 }
 
 int DataProcessor::CreateUser(std::string user_name, std::string user_password) {
@@ -18,7 +19,16 @@ int DataProcessor::CreateUser(std::string user_name, std::string user_password) 
             return kUserNameExisted;
         }
     }
-    
+    if(current_user != nullptr) {
+        users.push_back(User(user_name, user_password));
+        for(auto& user:users) {
+            if(user.GetUserName() == current_user_name) {
+                current_user = &user;
+                return kSuccess;
+            }
+        }
+        return kErrorCurrentUser;
+    }
     users.push_back(User(user_name, user_password));
     
     return kSuccess;
@@ -30,6 +40,7 @@ int DataProcessor::Login(std::string user_name, std::string user_password) {
         if(user.GetUserName() == user_name) {
             if(user.Identify(user_password) == kSuccess) {
                 current_user = &user;
+                current_user_name = user_name;
                 return kSuccess;
             }
             else {
@@ -60,6 +71,16 @@ int DataProcessor::CreateDatabase(std::string database_name) {
             return kDatabaseExisted;
         }
     }
+    if(current_database != nullptr) {
+        databases.push_back(Database(database_name, current_user->GetUserName()));
+        for(auto& database:databases) {
+            if(database.GetDatabaseName() == current_database_name) {
+                current_database = &database;
+                return kSuccess;
+            }
+        }
+        return kErrorCurrentDatabase;
+    }
     databases.push_back(Database(database_name, current_user->GetUserName()));
     return kSuccess;
 }
@@ -71,6 +92,7 @@ int DataProcessor::UseDatabase(std::string database_name) {
     for(auto& database : databases) {
         if(database.GetDatabaseName() == database_name) {
             current_database = &database;
+            current_database_name = database_name;
             return kSuccess;
         }
     }
@@ -190,11 +212,54 @@ int DataProcessor::Update(std::string table_name, const std::vector<std::pair<st
     return current_database->Update(table_name,values,conditions);
 }
 
-const std::vector<Database>& DataProcessor::GetDatabases() const {
-    return databases;
+int DataProcessor::Read(bool debug) {
+
+    FileManager::GetInstance().ReadDatabasesFile(databases);
+
+    if(debug) {
+        std::cout << databases.size() << std::endl;
+    }
+
+    for(auto& database: databases) {
+        std::vector<Table> tables;
+        FileManager::GetInstance().ReadTablesFile(database.GetDatabaseName(), tables);
+        database.SetTables(tables);
+
+        if(debug) {
+            std::cout << " - " << tables.size() << std::endl;
+            for(const auto& table: tables) {
+                std::cout << " - - " << table.GetTableName() << std::endl;
+
+                std::cout << " - - - ";
+                for(const auto& field: table.GetFields()) {
+                    std::cout << "(" << field.first << ", " << field.second << ") ";
+                }
+                std::cout << std::endl;
+
+                std::cout << " - - - ";
+                for(const auto& record: table.GetRecords()) {
+                    std::cout << "[";
+                    for(const auto& [name, value]: record) {
+                        std::cout << name << ": " << ColasqlTool::AnyToString(value) << " ";
+                    }
+                    std::cout << "]    ";
+                }
+                std::cout << std::endl;
+
+                std::cout << std::endl;
+            }
+        }
+
+    }
+
+    return 0;
 }
 
+int DataProcessor::Write() {
+    FileManager::GetInstance().WriteDatabasesFile(databases);
+    for(const auto& database: databases) {
+        FileManager::GetInstance().WriteTablesFile(database.GetDatabaseName(), database.GetTables());
+    }
 
-void DataProcessor::SetDatabases(const std::vector<Database>& databases) {
-    this->databases = databases;
+    return 0;
 }

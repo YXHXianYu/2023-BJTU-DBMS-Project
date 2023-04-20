@@ -17,7 +17,10 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
 
     // ----- Save & Read -----
     if(seq[0] == "save" && seq.size() == 1) return Save();
+    if(seq[0] == "commit" && seq.size() == 1) return Save();
+
     if(seq[0] == "read" && seq.size() == 1) return Read();
+    if(seq[0] == "rollback" && seq.size() == 1) return Read();
 
     // ----- size 1 -----
     if(seq.size() <= 1) return error + statementIncomplete;
@@ -346,12 +349,15 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
         }
     }
 
+
     // TODO: group by
     // TODO: having
 
     // order by
-    for(int i = idx[orderIdx] + 2; i < idx[orderIdx + 1]; i++) {
-        orderField.push_back(seq[i]);
+    if(orderIdx != -1) {
+        for(int i = idx[orderIdx] + 2; i < idx[orderIdx + 1]; i++) {
+            orderField.push_back(seq[i]);
+        }
     }
 
     // output for testing
@@ -375,6 +381,7 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
 
     std::vector<std::vector<std::any>> result;
 
+
     int ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
 
     if(ret != 0) {
@@ -391,56 +398,19 @@ std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::Read(bool debug) {
-    std::vector<Database> databases;
 
-    FileManager::GetInstance().ReadDatabasesFile(databases);
+    int ret = DataProcessor::GetInstance().Read(debug);
 
-    if(debug) {
-        std::cout << databases.size() << std::endl;
-    }
-
-    for(auto& database: databases) {
-        std::vector<Table> tables;
-        FileManager::GetInstance().ReadTablesFile(database.GetDatabaseName(), tables);
-        database.SetTables(tables);
-
-        if(debug) {
-            std::cout << " - " << tables.size() << std::endl;
-            for(const auto& table: tables) {
-                std::cout << " - - " << table.GetTableName() << std::endl;
-
-                std::cout << " - - - ";
-                for(const auto& field: table.GetFields()) {
-                    std::cout << "(" << field.first << ", " << field.second << ") ";
-                }
-                std::cout << std::endl;
-
-                std::cout << " - - - ";
-                for(const auto& record: table.GetRecords()) {
-                    std::cout << "[";
-                    for(const auto& [name, value]: record) {
-                        std::cout << name << ": " << ColasqlTool::AnyToString(value) << " ";
-                    }
-                    std::cout << "]    ";
-                }
-                std::cout << std::endl;
-
-                std::cout << std::endl;
-            }
-        }
-
-    }
-
-    DataProcessor::GetInstance().SetDatabases(databases);
+    if(ret != 0) return error + GetErrorMessage(ret);
 
     return success + "Readed";
 }
 
 std::string Parser::Save() {
-    FileManager::GetInstance().WriteDatabasesFile(DataProcessor::GetInstance().GetDatabases());
-    for(const auto& database: DataProcessor::GetInstance().GetDatabases()) {
-        FileManager::GetInstance().WriteTablesFile(database.GetDatabaseName(), database.GetTables());
-    }
+
+    int ret = DataProcessor::GetInstance().Write();
+    
+    if(ret != 0) return error + GetErrorMessage(ret);
 
     return success + "Saved";
 }
