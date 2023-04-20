@@ -109,7 +109,15 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
 
 void MainWindow::addTreeItem() {
   // 将databases中的数据添加到树形控件中
-  DataProcessor::GetInstance().ShowDatabases(databases);
+  int ret = DataProcessor::GetInstance().ShowDatabases(databases);
+  
+  if(ret != 0) {
+      std::cout << ret << std::endl;
+      assert(false);
+  }
+  
+//  std::cout<<"databases_size: "<<databases.size()<<std::endl;
+  
   ui->treeWidget->clear();
   for (const auto &database : databases) {
     QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);

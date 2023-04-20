@@ -132,10 +132,12 @@ std::string Parser::ShowDatabases(const std::vector<std::string>& seq) {
         return error + GetErrorMessage(ret);
     }
 
-    std::cout << "The number of databases: " << databaseNames.size() << std::endl;
-    for(const auto& databaseName: databaseNames) {
-        std::cout << " - " << databaseName << std::endl;
-    }
+    // std::cout << "The number of databases: " << databaseNames.size() << std::endl;
+    // for(const auto& databaseName: databaseNames) {
+    //     std::cout << " - " << databaseName << std::endl;
+    // }
+
+    ColasqlTool::OutputSelectResult(ColasqlTool::ChangeStringsToRecords(databaseNames, "Databases"));
 
     return success;
 }
@@ -320,14 +322,15 @@ std::string Parser::QueryTable(const std::vector<std::string>& seq) {
         return error + GetErrorMessage(ret);
     }
 
-    std::cout << tableName << " have " << fields.size() << " fields and " << constraints.size() << " constraints" << std::endl;
-    std::cout << std::endl;
+    // std::cout << tableName << " have " << fields.size() << " fields and " << constraints.size() << " constraints" << std::endl;
+    // std::cout << std::endl;
+    // std::cout << " - FIELD NAME, FIELD TYPE" << std::endl;
+    // for(const auto& field: fields) {
+    //     std::cout << " - " << field.first << ", " << field.second << std::endl;
+    // }
+    // std::cout << std::endl;
 
-    std::cout << " - FIELD NAME, FIELD TYPE" << std::endl;
-    for(const auto& field: fields) {
-        std::cout << " - " << field.first << ", " << field.second << std::endl;
-    }
-    std::cout << std::endl;
+    ColasqlTool::OutputSelectResult(ColasqlTool::ChangeDescriptionToRecords(fields, constraints));
 
     // ColasqlTool::OutputConstraints(constraints);
 
@@ -347,10 +350,12 @@ std::string Parser::ShowTables(const std::vector<std::string>& seq) {
         return error + GetErrorMessage(ret);
     }
 
-    std::cout << "The Number of tables: " << tableNames.size() << std::endl;
-    for(const auto& tableName: tableNames) {
-        std::cout << " - " << tableName << std::endl;
-    }
+    // std::cout << "The Number of tables: " << tableNames.size() << std::endl;
+    // for(const auto& tableName: tableNames) {
+    //     std::cout << " - " << tableName << std::endl;
+    // }
+
+    ColasqlTool::OutputSelectResult(ColasqlTool::ChangeStringsToRecords(tableNames, "Tables"));
 
     return success;
 }

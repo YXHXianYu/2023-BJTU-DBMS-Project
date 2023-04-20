@@ -124,9 +124,6 @@ void ColasqlTool::OutputConstraints(const std::vector<Constraint*> constraints) 
 std::vector<std::vector<std::any>> ColasqlTool::ChangeDescriptionToRecords(const std::vector<std::pair<std::string, std::string>>& fields,const std::vector<Constraint*>&constraints) {
     std::vector<std::vector<std::any>> ret;
     std::vector<std::any> inner;
-    for(auto x : fields) {
-        std::cout<<"Che: "<<x.first<<" "<<x.second<<std::endl;
-    }
     inner.push_back(std::string("Field"));
     inner.push_back(std::string("Type"));
     inner.push_back(std::string("Null"));
@@ -191,10 +188,17 @@ std::vector<std::vector<std::any>> ColasqlTool::ChangeStringsToRecords(std::vect
 }
 
 std::string ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::any>> result) {
+    
     std::string out_result;
+    if(result.size() <= 1) {
+        out_result = "Empty set\n";
+        std::cout<<"Empty set\n";
+        return out_result;
+    }
     int count_field = 0;
     int count_record = 0;
     std::vector<int> len;
+    
     for(auto field_name : result[0]) {
         count_record++;
         len.push_back(ColasqlTool::AnyToString(field_name).length());
