@@ -19,7 +19,16 @@ int DataProcessor::CreateUser(std::string user_name, std::string user_password) 
             return kUserNameExisted;
         }
     }
-    
+    if(current_user != nullptr) {
+        users.push_back(User(user_name, user_password));
+        for(auto& user:users) {
+            if(user.GetUserName() == current_user_name) {
+                current_user = &user;
+                return kSuccess;
+            }
+        }
+        return kErrorCurrentUser;
+    }
     users.push_back(User(user_name, user_password));
     
     return kSuccess;
@@ -31,6 +40,7 @@ int DataProcessor::Login(std::string user_name, std::string user_password) {
         if(user.GetUserName() == user_name) {
             if(user.Identify(user_password) == kSuccess) {
                 current_user = &user;
+                current_user_name = user_name;
                 return kSuccess;
             }
             else {
@@ -61,6 +71,16 @@ int DataProcessor::CreateDatabase(std::string database_name) {
             return kDatabaseExisted;
         }
     }
+    if(current_database != nullptr) {
+        databases.push_back(Database(database_name, current_user->GetUserName()));
+        for(auto& database:databases) {
+            if(database.GetDatabaseName() == current_database_name) {
+                current_database = &database;
+                return kSuccess;
+            }
+        }
+        return kErrorCurrentDatabase;
+    }
     databases.push_back(Database(database_name, current_user->GetUserName()));
     return kSuccess;
 }
@@ -72,6 +92,7 @@ int DataProcessor::UseDatabase(std::string database_name) {
     for(auto& database : databases) {
         if(database.GetDatabaseName() == database_name) {
             current_database = &database;
+            current_database_name = database_name;
             return kSuccess;
         }
     }

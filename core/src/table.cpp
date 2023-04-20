@@ -44,6 +44,14 @@ const std::vector<Constraint*>& Table::GetConstraints() const {
 
 int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
     std::unordered_map<std::string, std::any> record;
+    if(record_in[0].first == "*") {
+        if(fields.size() != record_in.size()) {
+            return kSizeNotProper;
+        }
+        for(int i = 0; i < fields.size(); ++i) {
+            record_in[i].first = fields[i].first;
+        }
+    }
     for(const auto& field : record_in) {
         if(!field_map.count(field.first)) {
             return kFieldNotFound;
