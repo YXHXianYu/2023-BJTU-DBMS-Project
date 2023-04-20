@@ -31,7 +31,7 @@ public:
     // 用stdout输出constraints内的信息
     static void OutputConstraints(const std::vector<Constraint*> constraints);
 
-
+    // 输出选择结果
     static std::string OutputSelectResult(const std::vector<std::vector<std::any>> result);
 
     //把string 转换成表结构, head为表头, 默认为空

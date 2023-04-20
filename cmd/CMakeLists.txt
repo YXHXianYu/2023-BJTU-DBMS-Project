@@ -12,6 +12,8 @@ aux_source_directory(./../file/src/ SOURCE_FILE)
 add_executable(
     colasql
 
+    main.cpp
+
     # cmd
     ${SOURCE_SRC}
 

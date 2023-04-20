@@ -120,13 +120,29 @@ std::string Parser::UseDatabase(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::ShowDatabases(const std::vector<std::string>& seq) {
-    return "Warning: ShowDatabases Under development";
+    if(seq.size() != 2) {
+        return error + statementRedundant;
+    }
+
+    std::vector<std::string> databaseNames;
+
+    int ret = DataProcessor::GetInstance().ShowDatabases(databaseNames);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+
+    std::cout << "The number of databases: " << databaseNames.size() << std::endl;
+    for(const auto& databaseName: databaseNames) {
+        std::cout << " - " << databaseName << std::endl;
+    }
+
+    return success;
 }
 
 // ----- Table -----
 
 std::string Parser::CreateTable(const std::vector<std::string>& seq) {
-
     if (seq.size() < 5) {
         return error + statementIncomplete;
     }
@@ -228,15 +244,56 @@ std::string Parser::DeleteTable(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::AlterTableAdd(const std::vector<std::string>& seq) {
-    return "Warning: AlterTableAdd Under development";
+    if(seq.size() != 6) {
+        return error + statementRedundant;
+    }
+
+    std::string tableName = seq[2];
+    std::string fieldName = seq[4];
+    std::string fieldType = seq[5];
+
+    int ret = DataProcessor::GetInstance().AlterTableAdd(tableName, {fieldName, fieldType});
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+
+    return success;
 }
 
 std::string Parser::AlterTableDrop(const std::vector<std::string>& seq) {
-    return "Warning: AlterTableDrop Under development";
+    if(seq.size() != 5) {
+        return error + statementRedundant;
+    }
+
+    std::string tableName = seq[2];
+    std::string fieldName = seq[4];
+
+    int ret = DataProcessor::GetInstance().AlterTableDrop(tableName, fieldName);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+
+    return success;
 }
 
 std::string Parser::AlterTableModify(const std::vector<std::string>& seq) {
-    return "Warning: AlterTableModify Under development";
+    if(seq.size() != 6) {
+        return error + statementRedundant;
+    }
+
+    std::string tableName = seq[2];
+    std::string fieldName = seq[4];
+    std::string fieldType = seq[5];
+
+    int ret = DataProcessor::GetInstance().AlterTableModify(tableName, {fieldName, fieldType});
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+
+    return success;
 }
 
 std::string Parser::AlterTableConstraint(const std::vector<std::string>& seq) {
@@ -248,11 +305,54 @@ std::string Parser::AlterTableDeleteConstraint(const std::vector<std::string>& s
 }
 
 std::string Parser::QueryTable(const std::vector<std::string>& seq) {
-    return "Warning: QueryTable Under development";
+    if(seq.size() != 3) {
+        return error + statementRedundant;
+    }
+
+    std::string tableName = seq[2];
+
+    std::vector<std::pair<std::string, std::string>> fields;
+    std::vector<Constraint*> constraints;
+
+    int ret = DataProcessor::GetInstance().DescribeTable(tableName, fields, constraints);
+    
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+
+    std::cout << tableName << " have " << fields.size() << " fields and " << constraints.size() << " constraints" << std::endl;
+    std::cout << std::endl;
+
+    std::cout << " - FIELD NAME, FIELD TYPE" << std::endl;
+    for(const auto& field: fields) {
+        std::cout << " - " << field.first << ", " << field.second << std::endl;
+    }
+    std::cout << std::endl;
+
+    // ColasqlTool::OutputConstraints(constraints);
+
+    return success;
 }
 
 std::string Parser::ShowTables(const std::vector<std::string>& seq) {
-    return "Warning: ShowTables Under development";
+    if(seq.size() != 2) {
+        return error + statementRedundant;
+    }
+
+    std::vector<std::string> tableNames;
+
+    int ret = DataProcessor::GetInstance().ShowTables(tableNames);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+
+    std::cout << "The Number of tables: " << tableNames.size() << std::endl;
+    for(const auto& tableName: tableNames) {
+        std::cout << " - " << tableName << std::endl;
+    }
+
+    return success;
 }
 
 // ----- Record -----
@@ -379,8 +479,10 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
         std::cout << std::endl;
     }
 
-    std::vector<std::vector<std::any>> result;
 
+    // data processor
+
+    std::vector<std::vector<std::any>> result;
 
     int ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
 
@@ -394,7 +496,65 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
-    return "Warning: UpdateRecord Under development";
+    if(seq.size() < 6 || seq[2] != "set") {
+        return error + statementError;
+    }
+
+    std::string tableName = seq[1];
+
+    // get index
+    int selectIdx = 0;
+    int whereIdx = -1;
+
+    std::vector<int> idx;
+
+    idx.push_back(2);
+    for(int i = selectIdx + 1; i < seq.size(); i++) {
+        if(seq[i] == "where") whereIdx = idx.size(), idx.push_back(i);
+    }
+    idx.push_back(seq.size());
+
+    // data
+    std::vector<std::pair<std::string, std::string>> values;
+    std::vector<std::tuple<std::string, std::string, int>> conditions;
+
+    // values
+    for(int i = idx[selectIdx] + 1; i < idx[selectIdx + 1]; i += 3) {
+        if(i + 2 >= idx[selectIdx + 1] || seq[i + 1] != "=") {
+            return error + statementError;
+        }
+
+        values.push_back({seq[i], seq[i + 2]});
+    }
+
+    // conditions
+    if(whereIdx != -1) {
+        if((idx[whereIdx + 1] - idx[whereIdx] - 1) % 3 != 0) return error + statementError + "(conditions statement is incompatible)";
+
+        for(int i = idx[whereIdx] + 1; i < idx[whereIdx + 1]; i += 3) {
+            if(seq[i + 1] != "=") return error + statementError + "(conditions statement is error)";
+
+            // TODO: 缺少了其他关系条件
+            conditions.push_back({seq[i], seq[i + 2], kEqualConditon});
+        }
+    }
+
+    // output
+
+    // std::cout << values.size() << std::endl;
+    // for(const auto& value: values) {
+    //     std::cout << " - " << value.first << ", " << value.second << std::endl;
+    // }
+
+    // data processor
+
+    int ret = DataProcessor::GetInstance().Update(tableName, values, conditions);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret); // TODO: error information
+    }
+
+    return success;
 }
 
 std::string Parser::Read(bool debug) {
