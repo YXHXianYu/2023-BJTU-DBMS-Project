@@ -14,7 +14,7 @@ cmd/data/
 core/build/
 
 # Gui
-gui/build*/
+gui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/
 
 ### C++ ###
 # Prerequisites
@@ -85,7 +85,6 @@ object_script.*.Debug
 moc_*.cpp
 moc_*.h
 qrc_*.cpp
-ui_*.h
 *.qmlc
 *.jsc
 Makefile*
