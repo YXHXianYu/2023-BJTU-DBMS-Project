@@ -32,7 +32,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     ui_login.cpp \
-    ui_register.cpp
+    ui_register.cpp \
+    columndialog.cpp
 
 HEADERS += \
     columndialog.h \

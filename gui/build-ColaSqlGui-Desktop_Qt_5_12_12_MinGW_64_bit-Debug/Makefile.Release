@@ -16,7 +16,7 @@ CXX           = g++
 DEFINES       = -DUNICODE -D_UNICODE -DWIN32 -DMINGW_HAS_SECURE_API=1 -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
 CFLAGS        = -fno-keep-inline-dllexport -O2 -Wall -W -Wextra $(DEFINES)
 CXXFLAGS      = -fno-keep-inline-dllexport -O2 -std=gnu++1z -Wall -W -Wextra -fexceptions -mthreads $(DEFINES)
-INCPATH       = -I..\ColaSqlGui -I. -I..\..\..\core\include -I..\..\..\core\include\constraint -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtWidgets -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtGui -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtANGLE -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtSql -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtCore -Irelease -I. -I/include -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\win32-g++ 
+INCPATH       = -I..\ColaSqlGui -I. -I..\..\core\include -I..\..\core\include\constraint -I..\..\file\include -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtWidgets -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtGui -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtANGLE -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtSql -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\include\QtCore -Irelease -I. -I/include -ID:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-s -Wl,-subsystem,windows -mthreads
 LIBS        =        D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\libQt5Widgets.a D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\libQt5Gui.a D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\libQt5Sql.a D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\libQt5Core.a  -lmingw32 D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\libqtmain.a -LC:\openssl\lib -LC:\Utils\my_sql\mysql-5.6.11-winx64\lib -LC:\Utils\postgresql\pgsql\lib -lshell32 
@@ -47,22 +47,23 @@ OBJECTS_DIR   = release
 
 ####### Files
 
-SOURCES       = ..\..\..\core\src\colasqltool.cpp \
-		..\..\..\core\src\database.cpp \
-		..\..\..\core\src\dataprocessor.cpp \
-		..\..\..\core\src\table.cpp \
-		..\..\..\core\src\user.cpp \
-		..\..\..\core\src\constraint\constraint.cpp \
-		..\..\..\core\src\constraint\default_constraint.cpp \
-		..\..\..\core\src\constraint\foreign_key_constraint.cpp \
-		..\..\..\core\src\constraint\not_null_constraint.cpp \
-		..\..\..\core\src\constraint\primary_key_constraint.cpp \
-		..\..\..\core\src\constraint\unique_constraint.cpp \
-		..\ColaSqlGui\columndialog.cpp \
+SOURCES       = ..\..\core\src\colasqltool.cpp \
+		..\..\core\src\database.cpp \
+		..\..\core\src\dataprocessor.cpp \
+		..\..\core\src\table.cpp \
+		..\..\core\src\user.cpp \
+		..\..\core\src\constraint\constraint.cpp \
+		..\..\core\src\constraint\default_constraint.cpp \
+		..\..\core\src\constraint\foreign_key_constraint.cpp \
+		..\..\core\src\constraint\not_null_constraint.cpp \
+		..\..\core\src\constraint\primary_key_constraint.cpp \
+		..\..\core\src\constraint\unique_constraint.cpp \
+		..\..\file\src\filemanager.cpp \
 		..\ColaSqlGui\main.cpp \
 		..\ColaSqlGui\mainwindow.cpp \
 		..\ColaSqlGui\ui_login.cpp \
-		..\ColaSqlGui\ui_register.cpp release\moc_columndialog.cpp \
+		..\ColaSqlGui\ui_register.cpp \
+		..\ColaSqlGui\columndialog.cpp release\moc_columndialog.cpp \
 		release\moc_mainwindow.cpp \
 		release\moc_ui_login.cpp \
 		release\moc_ui_register.cpp
@@ -77,11 +78,12 @@ OBJECTS       = release/colasqltool.o \
 		release/not_null_constraint.o \
 		release/primary_key_constraint.o \
 		release/unique_constraint.o \
-		release/columndialog.o \
+		release/filemanager.o \
 		release/main.o \
 		release/mainwindow.o \
 		release/ui_login.o \
 		release/ui_register.o \
+		release/columndialog.o \
 		release/moc_columndialog.o \
 		release/moc_mainwindow.o \
 		release/moc_ui_login.o \
@@ -90,22 +92,23 @@ OBJECTS       = release/colasqltool.o \
 DIST          =  ..\ColaSqlGui\columndialog.h \
 		..\ColaSqlGui\mainwindow.h \
 		..\ColaSqlGui\ui_login.h \
-		..\ColaSqlGui\ui_register.h ..\..\..\core\src\colasqltool.cpp \
-		..\..\..\core\src\database.cpp \
-		..\..\..\core\src\dataprocessor.cpp \
-		..\..\..\core\src\table.cpp \
-		..\..\..\core\src\user.cpp \
-		..\..\..\core\src\constraint\constraint.cpp \
-		..\..\..\core\src\constraint\default_constraint.cpp \
-		..\..\..\core\src\constraint\foreign_key_constraint.cpp \
-		..\..\..\core\src\constraint\not_null_constraint.cpp \
-		..\..\..\core\src\constraint\primary_key_constraint.cpp \
-		..\..\..\core\src\constraint\unique_constraint.cpp \
-		..\ColaSqlGui\columndialog.cpp \
+		..\ColaSqlGui\ui_register.h ..\..\core\src\colasqltool.cpp \
+		..\..\core\src\database.cpp \
+		..\..\core\src\dataprocessor.cpp \
+		..\..\core\src\table.cpp \
+		..\..\core\src\user.cpp \
+		..\..\core\src\constraint\constraint.cpp \
+		..\..\core\src\constraint\default_constraint.cpp \
+		..\..\core\src\constraint\foreign_key_constraint.cpp \
+		..\..\core\src\constraint\not_null_constraint.cpp \
+		..\..\core\src\constraint\primary_key_constraint.cpp \
+		..\..\core\src\constraint\unique_constraint.cpp \
+		..\..\file\src\filemanager.cpp \
 		..\ColaSqlGui\main.cpp \
 		..\ColaSqlGui\mainwindow.cpp \
 		..\ColaSqlGui\ui_login.cpp \
-		..\ColaSqlGui\ui_register.cpp
+		..\ColaSqlGui\ui_register.cpp \
+		..\ColaSqlGui\columndialog.cpp
 QMAKE_TARGET  = ColaSqlGui
 DESTDIR        = release\ #avoid trailing-slash linebreak
 TARGET         = ColaSqlGui.exe
@@ -125,10 +128,10 @@ qmake: FORCE
 qmake_all: FORCE
 
 dist:
-	$(ZIP) ColaSqlGui.zip $(SOURCES) $(DIST) ..\ColaSqlGui\ColaSqlGui.pro D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\spec_pre.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\qdevice.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\device_config.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\sanitize.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\gcc-base.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\g++-base.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\angle.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\win32\windows_vulkan_sdk.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\windows-vulkan.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\g++-win32.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\qconfig.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3danimation.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3danimation_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dcore.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dcore_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dextras.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dextras_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dinput.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dinput_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dlogic.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dlogic_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquick.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquick_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickanimation.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickanimation_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickextras.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickextras_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickinput.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickinput_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickrender.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickrender_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickscene2d.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickscene2d_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3drender.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3drender_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_accessibility_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axbase.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axbase_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axcontainer.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axcontainer_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axserver.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axserver_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_bluetooth.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_bluetooth_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_bootstrap_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_charts.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_charts_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_concurrent.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_concurrent_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_core.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_core_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_datavisualization.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_datavisualization_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_dbus.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_dbus_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_designer.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_designer_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_designercomponents_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_devicediscovery_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_edid_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_egl_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_eventdispatcher_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_fb_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_fontdatabase_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_gamepad.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_gamepad_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_gui.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_gui_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_help.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_help_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_location.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_location_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_multimedia.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_multimedia_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_multimediawidgets.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_network.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_network_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_networkauth.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_networkauth_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_nfc.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_nfc_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_opengl.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_opengl_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_openglextensions.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_openglextensions_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_packetprotocol_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_platformcompositor_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_positioning.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_positioning_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_positioningquick.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_positioningquick_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_printsupport.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_printsupport_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_purchasing.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_purchasing_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qml.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qml_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qmldebug_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qmldevtools_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qmltest.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qmltest_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quick.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quick_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickcontrols2.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickparticles_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickshapes_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quicktemplates2.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickwidgets.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickwidgets_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_remoteobjects.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_remoteobjects_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_repparser.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_repparser_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_script.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_script_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_scripttools.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_scripttools_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_scxml.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_scxml_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_sensors.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_sensors_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_serialbus.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_serialbus_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_serialport.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_serialport_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_sql.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_sql_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_svg.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_svg_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_testlib.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_testlib_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_texttospeech.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_texttospeech_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_theme_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_uiplugin.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_uitools.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_uitools_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_virtualkeyboard.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_virtualkeyboard_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_vulkan_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_webchannel.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_webchannel_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_websockets.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_websockets_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_widgets.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_widgets_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_windowsuiautomation_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_winextras.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_winextras_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_xml.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_xml_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_xmlpatterns.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qt_functions.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qt_config.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\win32-g++\qmake.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\spec_post.prf .qmake.stash D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\exclusive_builds.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\toolchain.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\default_pre.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\win32\default_pre.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\resolve_config.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\exclusive_builds_post.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\default_post.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\build_pass.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qml_debug.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\precompile_header.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\warn_on.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qt.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\resources.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\moc.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\win32\opengl.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\uic.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qmake_use.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\file_copies.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\win32\windows.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\testcase_targets.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\exceptions.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\yacc.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\lex.prf ..\ColaSqlGui\ColaSqlGui.pro D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\Qt5Widgets.prl D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\Qt5Gui.prl D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\Qt5Sql.prl D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\Qt5Core.prl D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\qtmain.prl    D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\data\dummy.cpp ..\ColaSqlGui\columndialog.h ..\ColaSqlGui\mainwindow.h ..\ColaSqlGui\ui_login.h ..\ColaSqlGui\ui_register.h  ..\..\..\core\src\colasqltool.cpp ..\..\..\core\src\database.cpp ..\..\..\core\src\dataprocessor.cpp ..\..\..\core\src\table.cpp ..\..\..\core\src\user.cpp ..\..\..\core\src\constraint\constraint.cpp ..\..\..\core\src\constraint\default_constraint.cpp ..\..\..\core\src\constraint\foreign_key_constraint.cpp ..\..\..\core\src\constraint\not_null_constraint.cpp ..\..\..\core\src\constraint\primary_key_constraint.cpp ..\..\..\core\src\constraint\unique_constraint.cpp ..\ColaSqlGui\columndialog.cpp ..\ColaSqlGui\main.cpp ..\ColaSqlGui\mainwindow.cpp ..\ColaSqlGui\ui_login.cpp ..\ColaSqlGui\ui_register.cpp ..\ColaSqlGui\mainwindow.ui ..\ColaSqlGui\ui_login.ui ..\ColaSqlGui\ui_register.ui    
+	$(ZIP) ColaSqlGui.zip $(SOURCES) $(DIST) ..\ColaSqlGui\ColaSqlGui.pro D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\spec_pre.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\qdevice.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\device_config.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\sanitize.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\gcc-base.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\g++-base.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\angle.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\win32\windows_vulkan_sdk.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\windows-vulkan.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\common\g++-win32.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\qconfig.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3danimation.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3danimation_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dcore.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dcore_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dextras.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dextras_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dinput.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dinput_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dlogic.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dlogic_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquick.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquick_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickanimation.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickanimation_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickextras.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickextras_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickinput.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickinput_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickrender.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickrender_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickscene2d.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3dquickscene2d_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3drender.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_3drender_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_accessibility_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axbase.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axbase_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axcontainer.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axcontainer_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axserver.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_axserver_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_bluetooth.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_bluetooth_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_bootstrap_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_charts.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_charts_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_concurrent.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_concurrent_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_core.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_core_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_datavisualization.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_datavisualization_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_dbus.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_dbus_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_designer.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_designer_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_designercomponents_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_devicediscovery_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_edid_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_egl_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_eventdispatcher_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_fb_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_fontdatabase_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_gamepad.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_gamepad_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_gui.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_gui_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_help.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_help_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_location.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_location_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_multimedia.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_multimedia_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_multimediawidgets.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_network.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_network_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_networkauth.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_networkauth_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_nfc.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_nfc_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_opengl.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_opengl_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_openglextensions.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_openglextensions_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_packetprotocol_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_platformcompositor_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_positioning.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_positioning_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_positioningquick.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_positioningquick_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_printsupport.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_printsupport_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_purchasing.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_purchasing_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qml.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qml_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qmldebug_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qmldevtools_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qmltest.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qmltest_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quick.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quick_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickcontrols2.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickparticles_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickshapes_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quicktemplates2.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickwidgets.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_quickwidgets_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_remoteobjects.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_remoteobjects_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_repparser.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_repparser_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_script.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_script_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_scripttools.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_scripttools_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_scxml.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_scxml_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_sensors.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_sensors_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_serialbus.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_serialbus_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_serialport.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_serialport_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_sql.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_sql_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_svg.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_svg_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_testlib.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_testlib_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_texttospeech.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_texttospeech_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_theme_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_uiplugin.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_uitools.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_uitools_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_virtualkeyboard.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_virtualkeyboard_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_vulkan_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_webchannel.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_webchannel_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_websockets.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_websockets_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_widgets.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_widgets_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_windowsuiautomation_support_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_winextras.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_winextras_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_xml.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_xml_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_xmlpatterns.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qt_functions.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qt_config.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\win32-g++\qmake.conf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\spec_post.prf .qmake.stash D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\exclusive_builds.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\toolchain.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\default_pre.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\win32\default_pre.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\resolve_config.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\exclusive_builds_post.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\default_post.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\build_pass.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qml_debug.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\precompile_header.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\warn_on.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qt.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\resources.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\moc.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\win32\opengl.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\uic.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\qmake_use.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\file_copies.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\win32\windows.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\testcase_targets.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\exceptions.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\yacc.prf D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\lex.prf ..\ColaSqlGui\ColaSqlGui.pro D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\Qt5Widgets.prl D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\Qt5Gui.prl D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\Qt5Sql.prl D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\Qt5Core.prl D:\Qt\Qt5.12.12\5.12.12\mingw73_64\lib\qtmain.prl    D:\Qt\Qt5.12.12\5.12.12\mingw73_64\mkspecs\features\data\dummy.cpp ..\ColaSqlGui\columndialog.h ..\ColaSqlGui\mainwindow.h ..\ColaSqlGui\ui_login.h ..\ColaSqlGui\ui_register.h  ..\..\core\src\colasqltool.cpp ..\..\core\src\database.cpp ..\..\core\src\dataprocessor.cpp ..\..\core\src\table.cpp ..\..\core\src\user.cpp ..\..\core\src\constraint\constraint.cpp ..\..\core\src\constraint\default_constraint.cpp ..\..\core\src\constraint\foreign_key_constraint.cpp ..\..\core\src\constraint\not_null_constraint.cpp ..\..\core\src\constraint\primary_key_constraint.cpp ..\..\core\src\constraint\unique_constraint.cpp ..\..\file\src\filemanager.cpp ..\ColaSqlGui\main.cpp ..\ColaSqlGui\mainwindow.cpp ..\ColaSqlGui\ui_login.cpp ..\ColaSqlGui\ui_register.cpp ..\ColaSqlGui\columndialog.cpp ..\ColaSqlGui\mainwindow.ui ..\ColaSqlGui\ui_login.ui ..\ColaSqlGui\ui_register.ui    
 
 clean: compiler_clean 
-	-$(DEL_FILE) release\colasqltool.o release\database.o release\dataprocessor.o release\table.o release\user.o release\constraint.o release\default_constraint.o release\foreign_key_constraint.o release\not_null_constraint.o release\primary_key_constraint.o release\unique_constraint.o release\columndialog.o release\main.o release\mainwindow.o release\ui_login.o release\ui_register.o release\moc_columndialog.o release\moc_mainwindow.o release\moc_ui_login.o release\moc_ui_register.o
+	-$(DEL_FILE) release\colasqltool.o release\database.o release\dataprocessor.o release\table.o release\user.o release\constraint.o release\default_constraint.o release\foreign_key_constraint.o release\not_null_constraint.o release\primary_key_constraint.o release\unique_constraint.o release\filemanager.o release\main.o release\mainwindow.o release\ui_login.o release\ui_register.o release\columndialog.o release\moc_columndialog.o release\moc_mainwindow.o release\moc_ui_login.o release\moc_ui_register.o
 
 distclean: clean 
 	-$(DEL_FILE) .qmake.stash
@@ -261,6 +264,11 @@ release/moc_columndialog.cpp: ../ColaSqlGui/columndialog.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qfiledevice.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qvector2d.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtouchdevice.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialogButtonBox \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialogbuttonbox.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLabel \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlabel.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qframe.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLayout \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayoutitem.h \
@@ -268,15 +276,18 @@ release/moc_columndialog.cpp: ../ColaSqlGui/columndialog.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgridlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLineEdit \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlineedit.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qframe.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextcursor.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextformat.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpen.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextoption.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QPushButton \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qpushbutton.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qabstractbutton.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qicon.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QWidget \
 		release/moc_predefs.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/bin/moc.exe
-	D:\Qt\Qt5.12.12\5.12.12\mingw73_64\bin\moc.exe $(DEFINES) --include D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/DBMSgui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/mkspecs/win32-g++ -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/DBMSgui/ColaSqlGui -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include/constraint -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtANGLE -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtSql -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore -I. -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -ID:/Qt/Qt5.12.12/Tools/mingw730_64/x86_64-w64-mingw32/include ..\ColaSqlGui\columndialog.h -o release\moc_columndialog.cpp
+	D:\Qt\Qt5.12.12\5.12.12\mingw73_64\bin\moc.exe $(DEFINES) --include D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/mkspecs/win32-g++ -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/ColaSqlGui -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include/constraint -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/file/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtANGLE -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtSql -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore -I. -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -ID:/Qt/Qt5.12.12/Tools/mingw730_64/x86_64-w64-mingw32/include ..\ColaSqlGui\columndialog.h -o release\moc_columndialog.cpp
 
 release/moc_mainwindow.cpp: ../ColaSqlGui/mainwindow.h \
 		../ColaSqlGui/ui_login.h \
@@ -390,19 +401,20 @@ release/moc_mainwindow.cpp: ../ColaSqlGui/mainwindow.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMessageBox \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmessagebox.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
-		../../../core/include/dataprocessor.h \
-		../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h \
-		../../../core/include/user.h \
+		../../core/include/dataprocessor.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h \
+		../../file/include/filemanager.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/QDebug \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QInputDialog \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qinputdialog.h \
@@ -432,16 +444,23 @@ release/moc_mainwindow.cpp: ../ColaSqlGui/mainwindow.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtreewidgetitemiterator.h \
 		../ColaSqlGui/columndialog.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialog \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialogButtonBox \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialogbuttonbox.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLabel \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlabel.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLayout \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayoutitem.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qboxlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgridlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLineEdit \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QPushButton \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qpushbutton.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qabstractbutton.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QWidget \
 		release/moc_predefs.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/bin/moc.exe
-	D:\Qt\Qt5.12.12\5.12.12\mingw73_64\bin\moc.exe $(DEFINES) --include D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/DBMSgui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/mkspecs/win32-g++ -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/DBMSgui/ColaSqlGui -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include/constraint -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtANGLE -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtSql -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore -I. -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -ID:/Qt/Qt5.12.12/Tools/mingw730_64/x86_64-w64-mingw32/include ..\ColaSqlGui\mainwindow.h -o release\moc_mainwindow.cpp
+	D:\Qt\Qt5.12.12\5.12.12\mingw73_64\bin\moc.exe $(DEFINES) --include D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/mkspecs/win32-g++ -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/ColaSqlGui -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include/constraint -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/file/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtANGLE -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtSql -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore -I. -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -ID:/Qt/Qt5.12.12/Tools/mingw730_64/x86_64-w64-mingw32/include ..\ColaSqlGui\mainwindow.h -o release\moc_mainwindow.cpp
 
 release/moc_ui_login.cpp: ../ColaSqlGui/ui_login.h \
 		../ColaSqlGui/ui_register.h \
@@ -554,22 +573,23 @@ release/moc_ui_login.cpp: ../ColaSqlGui/ui_login.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMessageBox \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmessagebox.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
-		../../../core/include/dataprocessor.h \
-		../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h \
-		../../../core/include/user.h \
+		../../core/include/dataprocessor.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h \
+		../../file/include/filemanager.h \
 		release/moc_predefs.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/bin/moc.exe
-	D:\Qt\Qt5.12.12\5.12.12\mingw73_64\bin\moc.exe $(DEFINES) --include D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/DBMSgui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/mkspecs/win32-g++ -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/DBMSgui/ColaSqlGui -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include/constraint -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtANGLE -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtSql -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore -I. -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -ID:/Qt/Qt5.12.12/Tools/mingw730_64/x86_64-w64-mingw32/include ..\ColaSqlGui\ui_login.h -o release\moc_ui_login.cpp
+	D:\Qt\Qt5.12.12\5.12.12\mingw73_64\bin\moc.exe $(DEFINES) --include D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/mkspecs/win32-g++ -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/ColaSqlGui -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include/constraint -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/file/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtANGLE -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtSql -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore -I. -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -ID:/Qt/Qt5.12.12/Tools/mingw730_64/x86_64-w64-mingw32/include ..\ColaSqlGui\ui_login.h -o release\moc_ui_login.cpp
 
 release/moc_ui_register.cpp: ../ColaSqlGui/ui_register.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMainWindow \
@@ -681,22 +701,23 @@ release/moc_ui_register.cpp: ../ColaSqlGui/ui_register.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMessageBox \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmessagebox.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
-		../../../core/include/dataprocessor.h \
-		../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h \
-		../../../core/include/user.h \
+		../../core/include/dataprocessor.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h \
+		../../file/include/filemanager.h \
 		release/moc_predefs.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/bin/moc.exe
-	D:\Qt\Qt5.12.12\5.12.12\mingw73_64\bin\moc.exe $(DEFINES) --include D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/DBMSgui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/mkspecs/win32-g++ -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/DBMSgui/ColaSqlGui -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include/constraint -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtANGLE -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtSql -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore -I. -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -ID:/Qt/Qt5.12.12/Tools/mingw730_64/x86_64-w64-mingw32/include ..\ColaSqlGui\ui_register.h -o release\moc_ui_register.cpp
+	D:\Qt\Qt5.12.12\5.12.12\mingw73_64\bin\moc.exe $(DEFINES) --include D:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/build-ColaSqlGui-Desktop_Qt_5_12_12_MinGW_64_bit-Debug/release/moc_predefs.h -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/mkspecs/win32-g++ -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/gui/ColaSqlGui -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/core/include/constraint -ID:/QtPrograms/DBMS/2023-BJTU-DBMS-Project/file/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtANGLE -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtSql -ID:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore -I. -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -ID:/Qt/Qt5.12.12/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -ID:/Qt/Qt5.12.12/Tools/mingw730_64/x86_64-w64-mingw32/include ..\ColaSqlGui\ui_register.h -o release\moc_ui_register.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -729,203 +750,99 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
-release/colasqltool.o: ../../../core/src/colasqltool.cpp ../../../core/include/colasqltool.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/constants.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\colasqltool.o ..\..\..\core\src\colasqltool.cpp
+release/colasqltool.o: ../../core/src/colasqltool.cpp ../../core/include/colasqltool.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/constants.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\colasqltool.o ..\..\core\src\colasqltool.cpp
 
-release/database.o: ../../../core/src/database.cpp ../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\database.o ..\..\..\core\src\database.cpp
+release/database.o: ../../core/src/database.cpp ../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\database.o ..\..\core\src\database.cpp
 
-release/dataprocessor.o: ../../../core/src/dataprocessor.cpp ../../../core/include/dataprocessor.h \
-		../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h \
-		../../../core/include/user.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\dataprocessor.o ..\..\..\core\src\dataprocessor.cpp
+release/dataprocessor.o: ../../core/src/dataprocessor.cpp ../../core/include/dataprocessor.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h \
+		../../file/include/filemanager.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\dataprocessor.o ..\..\core\src\dataprocessor.cpp
 
-release/table.o: ../../../core/src/table.cpp ../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\table.o ..\..\..\core\src\table.cpp
+release/table.o: ../../core/src/table.cpp ../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\table.o ..\..\core\src\table.cpp
 
-release/user.o: ../../../core/src/user.cpp ../../../core/include/user.h \
-		../../../core/include/constants.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\user.o ..\..\..\core\src\user.cpp
+release/user.o: ../../core/src/user.cpp ../../core/include/user.h \
+		../../core/include/constants.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\user.o ..\..\core\src\user.cpp
 
-release/constraint.o: ../../../core/src/constraint/constraint.cpp ../../../core/include/constraint/constraint.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\constraint.o ..\..\..\core\src\constraint\constraint.cpp
+release/constraint.o: ../../core/src/constraint/constraint.cpp ../../core/include/constraint/constraint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\constraint.o ..\..\core\src\constraint\constraint.cpp
 
-release/default_constraint.o: ../../../core/src/constraint/default_constraint.cpp ../../../core/include/constraint/default_constraint.h \
-		../../../core/include/constraint/constraint.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\default_constraint.o ..\..\..\core\src\constraint\default_constraint.cpp
+release/default_constraint.o: ../../core/src/constraint/default_constraint.cpp ../../core/include/constraint/default_constraint.h \
+		../../core/include/constraint/constraint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\default_constraint.o ..\..\core\src\constraint\default_constraint.cpp
 
-release/foreign_key_constraint.o: ../../../core/src/constraint/foreign_key_constraint.cpp ../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/constraint.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\foreign_key_constraint.o ..\..\..\core\src\constraint\foreign_key_constraint.cpp
+release/foreign_key_constraint.o: ../../core/src/constraint/foreign_key_constraint.cpp ../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/constraint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\foreign_key_constraint.o ..\..\core\src\constraint\foreign_key_constraint.cpp
 
-release/not_null_constraint.o: ../../../core/src/constraint/not_null_constraint.cpp ../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/constraint.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\not_null_constraint.o ..\..\..\core\src\constraint\not_null_constraint.cpp
+release/not_null_constraint.o: ../../core/src/constraint/not_null_constraint.cpp ../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/constraint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\not_null_constraint.o ..\..\core\src\constraint\not_null_constraint.cpp
 
-release/primary_key_constraint.o: ../../../core/src/constraint/primary_key_constraint.cpp ../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/constraint.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\primary_key_constraint.o ..\..\..\core\src\constraint\primary_key_constraint.cpp
+release/primary_key_constraint.o: ../../core/src/constraint/primary_key_constraint.cpp ../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/constraint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\primary_key_constraint.o ..\..\core\src\constraint\primary_key_constraint.cpp
 
-release/unique_constraint.o: ../../../core/src/constraint/unique_constraint.cpp ../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/constraint.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\unique_constraint.o ..\..\..\core\src\constraint\unique_constraint.cpp
+release/unique_constraint.o: ../../core/src/constraint/unique_constraint.cpp ../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/constraint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\unique_constraint.o ..\..\core\src\constraint\unique_constraint.cpp
 
-release/columndialog.o: ../ColaSqlGui/columndialog.cpp ../ColaSqlGui/columndialog.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialog \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtwidgetsglobal.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtguiglobal.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qglobal.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qconfig-bootstrapped.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qconfig.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qtcore-config.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsystemdetection.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qprocessordetection.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcompilerdetection.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qtypeinfo.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsysinfo.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qlogging.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qflags.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qatomic.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qbasicatomic.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qatomic_bootstrap.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qgenericatomic.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qatomic_cxx11.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qatomic_msvc.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qglobalstatic.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qmutex.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qnumeric.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qversiontagging.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtgui-config.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtwidgets-config.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qwidget.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qwindowdefs.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qobjectdefs.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qnamespace.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qobjectdefs_impl.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qwindowdefs_win.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qobject.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstring.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qchar.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qbytearray.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qrefcount.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qarraydata.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringliteral.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringalgorithms.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringview.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringbuilder.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qlist.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qalgorithms.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qiterator.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qhashfunctions.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qpair.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qbytearraylist.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringlist.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qregexp.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringmatcher.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcoreevent.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qscopedpointer.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qmetatype.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qvarlengtharray.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcontainerfwd.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qobject_impl.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qmargins.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpaintdevice.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qrect.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsize.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qpoint.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpalette.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qcolor.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qrgb.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qrgba64.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qbrush.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qvector.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qmatrix.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpolygon.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qregion.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qdatastream.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qiodevice.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qline.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtransform.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpainterpath.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qimage.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpixelformat.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpixmap.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsharedpointer.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qshareddata.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qhash.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsharedpointer_impl.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qfont.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qfontmetrics.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qfontinfo.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qsizepolicy.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qcursor.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qkeysequence.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qevent.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qvariant.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qmap.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qdebug.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qtextstream.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qlocale.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qset.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcontiguouscache.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qurl.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qurlquery.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qfile.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qfiledevice.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qvector2d.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtouchdevice.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLayout \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayout.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayoutitem.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qboxlayout.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgridlayout.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLineEdit \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlineedit.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qframe.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextcursor.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextformat.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpen.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextoption.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QWidget
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\columndialog.o ..\ColaSqlGui\columndialog.cpp
+release/filemanager.o: ../../file/src/filemanager.cpp ../../file/include/filemanager.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\filemanager.o ..\..\file\src\filemanager.cpp
 
 release/main.o: ../ColaSqlGui/main.cpp D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QApplication \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qapplication.h \
@@ -1046,19 +963,20 @@ release/main.o: ../ColaSqlGui/main.cpp D:/Qt/Qt5.12.12/5.12.12/mingw73_64/includ
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMessageBox \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmessagebox.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
-		../../../core/include/dataprocessor.h \
-		../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h \
-		../../../core/include/user.h \
+		../../core/include/dataprocessor.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h \
+		../../file/include/filemanager.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/QDebug \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QInputDialog \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qinputdialog.h \
@@ -1088,12 +1006,19 @@ release/main.o: ../ColaSqlGui/main.cpp D:/Qt/Qt5.12.12/5.12.12/mingw73_64/includ
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtreewidgetitemiterator.h \
 		../ColaSqlGui/columndialog.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialog \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialogButtonBox \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialogbuttonbox.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLabel \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlabel.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLayout \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayoutitem.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qboxlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgridlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLineEdit \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QPushButton \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qpushbutton.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qabstractbutton.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o ..\ColaSqlGui\main.cpp
 
@@ -1209,19 +1134,20 @@ release/mainwindow.o: ../ColaSqlGui/mainwindow.cpp ../ColaSqlGui/mainwindow.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMessageBox \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmessagebox.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
-		../../../core/include/dataprocessor.h \
-		../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h \
-		../../../core/include/user.h \
+		../../core/include/dataprocessor.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h \
+		../../file/include/filemanager.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/QDebug \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QInputDialog \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qinputdialog.h \
@@ -1251,42 +1177,21 @@ release/mainwindow.o: ../ColaSqlGui/mainwindow.cpp ../ColaSqlGui/mainwindow.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtreewidgetitemiterator.h \
 		../ColaSqlGui/columndialog.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialog \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialogButtonBox \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialogbuttonbox.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLabel \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlabel.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLayout \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayoutitem.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qboxlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgridlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLineEdit \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QWidget \
-		ui_mainwindow.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/QVariant \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QAction \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qaction.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qactiongroup.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QApplication \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcoreapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qeventloop.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdesktopwidget.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qguiapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qinputmethod.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QGridLayout \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QGroupBox \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgroupbox.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QHeaderView \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qheaderview.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMenu \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmenu.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMenuBar \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmenubar.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QPushButton \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qpushbutton.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qabstractbutton.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QTextBrowser \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtextbrowser.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtextedit.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextdocument.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QTextEdit
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QWidget \
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\mainwindow.o ..\ColaSqlGui\mainwindow.cpp
 
 release/ui_login.o: ../ColaSqlGui/ui_login.cpp ../ColaSqlGui/ui_login.h \
@@ -1400,50 +1305,21 @@ release/ui_login.o: ../ColaSqlGui/ui_login.cpp ../ColaSqlGui/ui_login.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMessageBox \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmessagebox.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
-		../../../core/include/dataprocessor.h \
-		../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h \
-		../../../core/include/user.h \
-		ui_ui_login.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/QVariant \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QApplication \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcoreapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qeventloop.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdesktopwidget.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qguiapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qinputmethod.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QFrame \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qframe.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QGridLayout \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgridlayout.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayout.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayoutitem.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qboxlayout.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QGroupBox \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgroupbox.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLabel \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlabel.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLineEdit \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlineedit.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextcursor.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextformat.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpen.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextoption.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QPushButton \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qpushbutton.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qabstractbutton.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QVBoxLayout \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QWidget
+		../../core/include/dataprocessor.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h \
+		../../file/include/filemanager.h \
+		ui_ui_login.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\ui_login.o ..\ColaSqlGui\ui_login.cpp
 
 release/ui_register.o: ../ColaSqlGui/ui_register.cpp ../ColaSqlGui/ui_register.h \
@@ -1556,37 +1432,138 @@ release/ui_register.o: ../ColaSqlGui/ui_register.cpp ../ColaSqlGui/ui_register.h
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QMessageBox \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qmessagebox.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
-		../../../core/include/dataprocessor.h \
-		../../../core/include/database.h \
-		../../../core/include/table.h \
-		../../../core/include/constraint/all_constraints.h \
-		../../../core/include/constraint/constraint.h \
-		../../../core/include/constraint/primary_key_constraint.h \
-		../../../core/include/constraint/foreign_key_constraint.h \
-		../../../core/include/constraint/unique_constraint.h \
-		../../../core/include/constraint/not_null_constraint.h \
-		../../../core/include/constraint/default_constraint.h \
-		../../../core/include/colasqltool.h \
-		../../../core/include/constants.h \
-		../../../core/include/user.h \
-		ui_ui_register.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/QVariant \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QApplication \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcoreapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qeventloop.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdesktopwidget.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qguiapplication.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qinputmethod.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QFrame \
+		../../core/include/dataprocessor.h \
+		../../core/include/database.h \
+		../../core/include/table.h \
+		../../core/include/constraint/all_constraints.h \
+		../../core/include/constraint/constraint.h \
+		../../core/include/constraint/primary_key_constraint.h \
+		../../core/include/constraint/foreign_key_constraint.h \
+		../../core/include/constraint/unique_constraint.h \
+		../../core/include/constraint/not_null_constraint.h \
+		../../core/include/constraint/default_constraint.h \
+		../../core/include/colasqltool.h \
+		../../core/include/constants.h \
+		../../core/include/user.h \
+		../../file/include/filemanager.h \
+		ui_ui_register.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\ui_register.o ..\ColaSqlGui\ui_register.cpp
+
+release/columndialog.o: ../ColaSqlGui/columndialog.cpp ../ColaSqlGui/columndialog.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialog \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialog.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtwidgetsglobal.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtguiglobal.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qglobal.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qconfig-bootstrapped.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qconfig.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qtcore-config.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsystemdetection.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qprocessordetection.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcompilerdetection.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qtypeinfo.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsysinfo.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qlogging.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qflags.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qatomic.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qbasicatomic.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qatomic_bootstrap.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qgenericatomic.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qatomic_cxx11.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qatomic_msvc.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qglobalstatic.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qmutex.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qnumeric.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qversiontagging.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtgui-config.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qtwidgets-config.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qwidget.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qwindowdefs.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qobjectdefs.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qnamespace.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qobjectdefs_impl.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qwindowdefs_win.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qobject.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstring.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qchar.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qbytearray.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qrefcount.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qarraydata.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringliteral.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringalgorithms.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringview.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringbuilder.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qlist.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qalgorithms.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qiterator.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qhashfunctions.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qpair.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qbytearraylist.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringlist.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qregexp.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qstringmatcher.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcoreevent.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qscopedpointer.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qmetatype.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qvarlengtharray.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcontainerfwd.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qobject_impl.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qmargins.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpaintdevice.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qrect.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsize.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qpoint.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpalette.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qcolor.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qrgb.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qrgba64.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qbrush.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qvector.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qmatrix.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpolygon.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qregion.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qdatastream.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qiodevice.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qline.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtransform.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpainterpath.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qimage.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpixelformat.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qpixmap.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsharedpointer.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qshareddata.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qhash.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qsharedpointer_impl.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qfont.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qfontmetrics.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qfontinfo.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qsizepolicy.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qcursor.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qkeysequence.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qevent.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qvariant.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qmap.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qdebug.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qtextstream.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qlocale.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qset.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qcontiguouscache.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qurl.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qurlquery.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qfile.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtCore/qfiledevice.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qvector2d.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtouchdevice.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QDialogButtonBox \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qdialogbuttonbox.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLabel \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlabel.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qframe.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QGridLayout \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgridlayout.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLayout \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlayoutitem.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qboxlayout.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QGroupBox \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgroupbox.h \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qgridlayout.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QLineEdit \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qlineedit.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qtextcursor.h \
@@ -1596,9 +1573,9 @@ release/ui_register.o: ../ColaSqlGui/ui_register.cpp ../ColaSqlGui/ui_register.h
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QPushButton \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qpushbutton.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/qabstractbutton.h \
-		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QVBoxLayout \
+		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtGui/qicon.h \
 		D:/Qt/Qt5.12.12/5.12.12/mingw73_64/include/QtWidgets/QWidget
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\ui_register.o ..\ColaSqlGui\ui_register.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\columndialog.o ..\ColaSqlGui\columndialog.cpp
 
 release/moc_columndialog.o: release/moc_columndialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\moc_columndialog.o release\moc_columndialog.cpp
