@@ -13,6 +13,17 @@ MainWindow::MainWindow(QWidget *parent)
 
   addTreeItem();
 
+  QTextBrowserStreamBuf *streamBuf = new QTextBrowserStreamBuf(ui->textBrowser);
+
+  // 保存原始缓冲区，以便在以后恢复
+  //  std::streambuf *originalCoutBuf = std::cout.rdbuf();
+
+  // 重定向 std::cout 到 QTextBrowser
+  std::cout.rdbuf(streamBuf);
+
+  // 现在，你可以使用 std::cout 输出到 QTextBrowser
+  std::cout << "Hello, I am Co1aSql!";
+
   connect(ui_log, SIGNAL(login()), this, SLOT(show()));
   connect(ui->action_database, SIGNAL(triggered()), this,
           SLOT(click_action_database()));
@@ -41,6 +52,8 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
   item->setText(1, "");
   connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this,
           [=](QTreeWidgetItem *clickedItem, int column) {
+            //            std::cout << "You clicked on item: "
+            //                      << clickedItem->text(column).toStdString();
             if (getLevel(clickedItem) == 0) {
               for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) {
                 QTreeWidgetItem *item = ui->treeWidget->topLevelItem(i);
@@ -86,7 +99,8 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
               //              qDebug() << "im here1" << endl;
               std::string ret = ColasqlTool::OutputSelectResult(return_records);
               //              qDebug() << "im here2" << endl;
-              ui->textBrowser->setText(QString::fromStdString(ret));
+              //              ui->textBrowser->append(QString::fromStdString(ret));
+              //              ui->textBrowser->setText(QString::fromStdString(ret));
               //              qDebug() << "im here3" << endl;
             }
           });

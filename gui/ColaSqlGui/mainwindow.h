@@ -11,6 +11,7 @@
 
 #include "columndialog.h"
 #include "dataprocessor.h"
+#include "qtbstreambuf.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
