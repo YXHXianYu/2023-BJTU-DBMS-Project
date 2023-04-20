@@ -1,6 +1,0 @@
-5
-sno int
-sname string
-ssex string
-sbirthday string
-totalcredit int

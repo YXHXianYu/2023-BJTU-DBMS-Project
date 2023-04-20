@@ -1,6 +1,18 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c++,windows,cmake,qt
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,windows,cmake,qt
 
+### Path ###
+# Added by. YXHXianYu
+# Cmd
+cmd/build/
+cmd/data/
+
+# Core
+core/build/
+
+# Gui
+gui/build*/
+
 ### C++ ###
 # Prerequisites
 *.d
@@ -60,8 +72,8 @@ _deps
 object_script.*.Release
 object_script.*.Debug
 *_plugin_import.cpp
-/.qmake.cache
-/.qmake.stash
+*.qmake.cache
+*.qmake.stash
 *.pro.user
 *.pro.user.*
 *.qbs.user
@@ -97,31 +109,5 @@ CMakeLists.txt.user*
 *creator.user*
 
 *_qmlcache.qrc
-
-### Windows ###
-# Windows thumbnail cache files
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-
-# Dump file
-*.stackdump
-
-# Folder config file
-[Dd]esktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,windows,cmake,qt
