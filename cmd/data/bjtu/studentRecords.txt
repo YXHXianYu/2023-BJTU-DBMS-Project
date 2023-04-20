@@ -1,0 +1,4 @@
+3
+3 sno 21301114 ssex male sname yxh_xianyu 
+3 sno 21301113 ssex male sname ylw 
+5 totalcredit 163 sbirthday 2002-03-16 sno 1 ssex female sname shirahanesuoh 
