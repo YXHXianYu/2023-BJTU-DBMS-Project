@@ -15,9 +15,6 @@
 #include "dataprocessor.h"
 #include "constants.h"
 
-// file
-#include "filemanager.h"
-
 namespace ColaSQLCommand {
 
 /**
@@ -32,7 +29,7 @@ public:
 private:
     const bool DEBUG = false;
 
-    const std::string success = "Success: ";
+    const std::string success = "Success!";
     const std::string error = "Error: ";
     const std::string statementIncomplete = "Statement is incomplete.";
     const std::string statementError = "Statement has errors.";

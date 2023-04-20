@@ -3,6 +3,9 @@
 
 ### Path ###
 # Added by. YXHXianYu
+# Vscode
+.vscode/
+
 # Cmd
 cmd/build/
 cmd/data/

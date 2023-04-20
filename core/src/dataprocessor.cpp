@@ -8,8 +8,9 @@ DataProcessor& DataProcessor::GetInstance() {
 DataProcessor::DataProcessor() {
     current_user = nullptr;
     current_database = nullptr;
-    //to do: read files into data
 
+    // read files into data
+    Read();
 }
 
 int DataProcessor::CreateUser(std::string user_name, std::string user_password) {
@@ -190,11 +191,54 @@ int DataProcessor::Update(std::string table_name, const std::vector<std::pair<st
     return current_database->Update(table_name,values,conditions);
 }
 
-const std::vector<Database>& DataProcessor::GetDatabases() const {
-    return databases;
+int DataProcessor::Read(bool debug) {
+
+    FileManager::GetInstance().ReadDatabasesFile(databases);
+
+    if(debug) {
+        std::cout << databases.size() << std::endl;
+    }
+
+    for(auto& database: databases) {
+        std::vector<Table> tables;
+        FileManager::GetInstance().ReadTablesFile(database.GetDatabaseName(), tables);
+        database.SetTables(tables);
+
+        if(debug) {
+            std::cout << " - " << tables.size() << std::endl;
+            for(const auto& table: tables) {
+                std::cout << " - - " << table.GetTableName() << std::endl;
+
+                std::cout << " - - - ";
+                for(const auto& field: table.GetFields()) {
+                    std::cout << "(" << field.first << ", " << field.second << ") ";
+                }
+                std::cout << std::endl;
+
+                std::cout << " - - - ";
+                for(const auto& record: table.GetRecords()) {
+                    std::cout << "[";
+                    for(const auto& [name, value]: record) {
+                        std::cout << name << ": " << ColasqlTool::AnyToString(value) << " ";
+                    }
+                    std::cout << "]    ";
+                }
+                std::cout << std::endl;
+
+                std::cout << std::endl;
+            }
+        }
+
+    }
+
+    return 0;
 }
 
+int DataProcessor::Write() {
+    FileManager::GetInstance().WriteDatabasesFile(databases);
+    for(const auto& database: databases) {
+        FileManager::GetInstance().WriteTablesFile(database.GetDatabaseName(), database.GetTables());
+    }
 
-void DataProcessor::SetDatabases(const std::vector<Database>& databases) {
-    this->databases = databases;
+    return 0;
 }

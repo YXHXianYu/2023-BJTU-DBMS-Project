@@ -6,7 +6,12 @@
 #include"database.h"
 #include"user.h"
 #include"constants.h"
+
 #include".\constraint\all_constraints.h"
+
+// file
+#include "filemanager.h"
+
 class DataProcessor {
 private:
     std::vector<Database> databases;
@@ -46,9 +51,11 @@ public:
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);                                                                                         // 删除记录
     int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
     //values: vector<>
+
+//文件
 public:
-    const std::vector<Database>& GetDatabases() const ;
-    void SetDatabases(const std::vector<Database>& databases);
+    int Read(bool debug = false);
+    int Write();
 
 };
 
