@@ -64,7 +64,7 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
               }
             }
             if (clickedItem == item && getLevel(item) == 0) {
-              // 如果点击此item则use this database
+              // 点击database
               qDebug() << "You clicked on item: " << clickedItem->text(column);
               clickedItem->setSelected(true);
               clickedItem->setText(1, "Selected");
@@ -94,6 +94,7 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
               std::string tbName = clickedItem->text(0).toStdString();
               std::vector<std::tuple<std::string, std::string, int>> conditions;
               std::vector<std::vector<std::any>> return_records;
+              std::cout << "Co1aSQL > ";
               DataProcessor::GetInstance().Select(tbName, fields, conditions,
                                                   return_records);
               //              qDebug() << "im here1" << endl;
