@@ -31,7 +31,7 @@ public:
 //数据库
 public:
     int CreateDatabase(std::string database_name);                              //创建数据库
-    int UseDatabase(std::string database_name);                                 //使用数据库
+    int UseDatabase(std::string database_name = "");                                 //使用数据库
     int ShowDatabases(std::vector<std::string>& return_databases);      //显示所有数据库
 //表
 public:

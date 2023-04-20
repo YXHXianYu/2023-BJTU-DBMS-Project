@@ -11,8 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
 
   setWindowTitle("ColaSql");
 
-  addTreeItem();
-
   QTextBrowserStreamBuf *streamBuf = new QTextBrowserStreamBuf(ui->textBrowser);
 
   // 保存原始缓冲区，以便在以后恢复
@@ -25,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
   std::cout << "Hello, I am Co1aSql!";
 
   connect(ui_log, SIGNAL(login()), this, SLOT(show()));
+  connect(ui_log, SIGNAL(login()), this, SLOT(addTreeItem()));
   connect(ui->action_database, SIGNAL(triggered()), this,
           SLOT(click_action_database()));
   connect(ui->action_table, SIGNAL(triggered()), this,
@@ -94,14 +93,14 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
               std::string tbName = clickedItem->text(0).toStdString();
               std::vector<std::tuple<std::string, std::string, int>> conditions;
               std::vector<std::vector<std::any>> return_records;
-              std::cout << "Co1aSQL > ";
+              //              std::cout << "Co1aSQL > ";
               DataProcessor::GetInstance().Select(tbName, fields, conditions,
                                                   return_records);
               //              qDebug() << "im here1" << endl;
               std::string ret = ColasqlTool::OutputSelectResult(return_records);
               //              qDebug() << "im here2" << endl;
               //              ui->textBrowser->append(QString::fromStdString(ret));
-              //              ui->textBrowser->setText(QString::fromStdString(ret));
+              ui->textBrowser->setText(QString::fromStdString(ret));
               //              qDebug() << "im here3" << endl;
             }
           });
@@ -110,19 +109,28 @@ void MainWindow::setConnectTreeItem(QTreeWidgetItem *item, QString Name) {
 void MainWindow::addTreeItem() {
   // 将databases中的数据添加到树形控件中
   int ret = DataProcessor::GetInstance().ShowDatabases(databases);
-  
-  if(ret != 0) {
-      std::cout << ret << std::endl;
-      assert(false);
+
+  if (ret != 0) {
+    std::cout << ret << std::endl;
+    assert(false);
   }
-  
-//  std::cout<<"databases_size: "<<databases.size()<<std::endl;
-  
+
+  std::cout << "databases_size: " << databases.size() << std::endl;
+
   ui->treeWidget->clear();
   for (const auto &database : databases) {
+    DataProcessor::GetInstance().UseDatabase(database);
+    std::cout << "using database:" << database;
     QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
     setConnectTreeItem(item, QString::fromStdString(database));
+    std::vector<std::string> tables;
+    DataProcessor::GetInstance().ShowTables(tables);
+    for (const auto &table : tables) {
+      QTreeWidgetItem *childItem = new QTreeWidgetItem(item);
+      setConnectTreeItem(childItem, QString::fromStdString(table));
+    }
   }
+  DataProcessor::GetInstance().UseDatabase();
 }
 
 void MainWindow::click_action_database() {
@@ -162,16 +170,21 @@ void MainWindow::click_action_table() {
                                                        fields, constraints);
     qDebug() << ret << endl;
     if (!ret) {
-      QTreeWidgetItem *faterItem;
+      QTreeWidgetItem *fatherItem = nullptr;
       for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) {
         QTreeWidgetItem *item = ui->treeWidget->topLevelItem(i);
         if (item->text(1) == "Selected") {
-          faterItem = item;
+          fatherItem = item;
           break;
         }
       }
-      QTreeWidgetItem *childItem = new QTreeWidgetItem(faterItem);
-      setConnectTreeItem(childItem, tbName);
+      if (fatherItem == nullptr) {
+        QMessageBox::warning(this, "错误", "未选用数据库\n");
+        return;
+      } else {
+        QTreeWidgetItem *childItem = new QTreeWidgetItem(fatherItem);
+        setConnectTreeItem(childItem, tbName);
+      }
 
     } else if (ret == kDatabaseNotUse) {
       QMessageBox::warning(this, "错误", "未选用数据库\n");
