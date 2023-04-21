@@ -390,19 +390,26 @@ std::string Parser::ShowTables(const std::vector<std::string>& seq) {
 
 std::string Parser::InsertRecord(const std::vector<std::string>& seq) {
 
-    if(seq.size() < 6) return error + statementError;
+    if(seq.size() < 5) return error + statementError;
 
     std::string tableName = seq[2];
     std::vector<std::pair<std::string, std::string>> values;
 
-    int mid = 4;
+    int mid = 3;
     while(mid < seq.size() - 1 && seq[mid] != "values") mid++;
 
-    int i = 3, j = mid + 1;
-    if(mid - i != seq.size() - j) return error + statementError + "(parameters are not incompatible)";
-
-    for(int i = 3, j = mid + 1; i < mid && j < seq.size(); i++, j++) {
-        values.push_back({seq[i], seq[j]});
+    if(mid == 3) {
+        // insert into table values (...);
+        for(int j = mid + 1; j < seq.size(); j++) {
+            values.push_back({"*", seq[j]});
+        }
+    } else {
+        // insert into table (...) values (...);
+        int i = 3, j = mid + 1;
+        if(mid - i != seq.size() - j) return error + statementError + "(parameters are not incompatible)";
+        for(int i = 3, j = mid + 1; i < mid && j < seq.size(); i++, j++) {
+            values.push_back({seq[i], seq[j]});
+        }
     }
 
     int ret = DataProcessor::GetInstance().Insert(tableName, values);
