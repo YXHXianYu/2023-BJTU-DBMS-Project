@@ -15,7 +15,7 @@ DataProcessor::DataProcessor() {
 
 int DataProcessor::CreateUser(std::string user_name,
                               std::string user_password) {
-  for (auto user : users) {
+  for (auto& user : users) {
     if (user.GetUserName() == user_name) {
       return kUserNameExisted;
     }
@@ -237,6 +237,7 @@ int DataProcessor::Update(
 }
 
 int DataProcessor::Read(bool debug) {
+  FileManager::GetInstance().ReadUsersFile(users);
   FileManager::GetInstance().ReadDatabasesFile(databases);
 
   if (debug) {
@@ -279,6 +280,7 @@ int DataProcessor::Read(bool debug) {
 }
 
 int DataProcessor::Write() {
+  FileManager::GetInstance().WriteUsersFile(users);
   FileManager::GetInstance().WriteDatabasesFile(databases);
   for (const auto& database : databases) {
     FileManager::GetInstance().WriteTablesFile(database.GetDatabaseName(),

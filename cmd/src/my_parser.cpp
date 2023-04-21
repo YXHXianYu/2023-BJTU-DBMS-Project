@@ -101,6 +101,20 @@ std::string Parser::CreateDatabase(const std::vector<std::string>& seq) {
 
 std::string Parser::DeleteDatabase(const std::vector<std::string>& seq) {
     return "Warning: DeleteDatabase Under development";
+
+    if(seq.size() != 3) {
+        return error + statementRedundant;
+    }
+
+    std::string databaseName = seq[2];
+
+    int ret /*=  DataProcessor::GetInstance().(databaseName)*/;
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret); // TODO: error information
+    }
+
+    return success;
 }
 
 std::string Parser::UseDatabase(const std::vector<std::string>& seq) {
@@ -242,7 +256,19 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::DeleteTable(const std::vector<std::string>& seq) {
-    return "Warning: DeleteTable Under development";
+    if(seq.size() != 3) {
+        return error + statementRedundant;
+    }
+
+    std::string tableName = seq[2];
+
+    int ret = DataProcessor::GetInstance().DropTable(tableName);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret); // TODO: error information
+    }
+
+    return success;
 }
 
 std::string Parser::AlterTableAdd(const std::vector<std::string>& seq) {

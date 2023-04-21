@@ -105,6 +105,24 @@ int FileManager::WriteTablesFile(const std::string& databaseName, const std::vec
 }
 
 
+int FileManager::WriteUsersFile(const std::vector<User>& users) {
+    // 创建新文件夹
+    mkdir("./data");
+
+    // c++ ofstream 必须要目录存在才可以创建新文件夹
+    std::ofstream out("./data/users.txt", std::ofstream::out | std::ofstream::trunc);
+
+    // out
+    if(out.is_open()) {
+        out << users.size() << std::endl;
+        for(const auto& user: users) {
+            out << user.GetUserName() << " " << user.GetUserPassword() << " " << int(user.GetAuthority()) << std::endl;
+        }
+        out.close();
+    }
+
+    return 0;
+}
 
 
 int FileManager::WriteLogFile(const std::string& databaseName, const std::string& log) {
@@ -114,21 +132,21 @@ int FileManager::WriteLogFile(const std::string& databaseName, const std::string
 // ----- Read -----
 
 int FileManager::ReadDatabasesFile(std::vector<Database>& databases) {
-
     // c++ ifstream
     std::ifstream in("./data/databases.txt", std::ifstream::in);
 
     // in
     databases.clear();
-    if(in.is_open()) {
-        int n;
-        in >> n;
-        for(int i = 1; i <= n; i++) {
-            std::string databaseName;
-            std::string ownerUser;
-            in >> databaseName >> ownerUser;
-            databases.push_back(Database(databaseName, ownerUser));
-        }
+
+    if(!in.is_open()) return -1;
+
+    int n;
+    in >> n;
+    for(int i = 1; i <= n; i++) {
+        std::string databaseName;
+        std::string ownerUser;
+        in >> databaseName >> ownerUser;
+        databases.push_back(Database(databaseName, ownerUser));
     }
 
     return 0;
@@ -210,6 +228,29 @@ int FileManager::ReadTablesFile(const std::string& databaseName, std::vector<Tab
         // construct table
         Table table(tableName, fields, constraints, records);
         tables.push_back(table);
+    }
+
+    return 0;
+}
+
+
+int FileManager::ReadUsersFile(std::vector<User>& users) {
+    // c++ ifstream
+    std::ifstream in("./data/users.txt", std::ifstream::in);
+
+    // in
+    users.clear();
+
+    if(!in.is_open()) return -1;
+
+    int n;
+    in >> n;
+    for(int i = 1; i <= n; i++) {
+        std::string name;
+        std::string password;
+        int x;
+        in >> name >> password >> x;
+        users.push_back(User(name, password, Authority(x)));
     }
 
     return 0;
