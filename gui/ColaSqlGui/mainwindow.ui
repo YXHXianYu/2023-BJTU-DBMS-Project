@@ -108,20 +108,17 @@
     <property name="title">
      <string>删除</string>
     </property>
-   </widget>
-   <widget class="QMenu" name="menu_update">
-    <property name="title">
-     <string>修改</string>
-    </property>
+    <addaction name="delete_database"/>
+    <addaction name="delete_table"/>
    </widget>
    <widget class="QMenu" name="menu_query">
     <property name="title">
      <string>查询</string>
     </property>
+    <addaction name="new_select"/>
    </widget>
    <addaction name="menu_create"/>
    <addaction name="menu_delete"/>
-   <addaction name="menu_update"/>
    <addaction name="menu_query"/>
   </widget>
   <action name="actiontable">
@@ -157,6 +154,21 @@
   <action name="action_database">
    <property name="text">
     <string>新建数据库</string>
+   </property>
+  </action>
+  <action name="delete_database">
+   <property name="text">
+    <string>删除数据库</string>
+   </property>
+  </action>
+  <action name="delete_table">
+   <property name="text">
+    <string>删除表</string>
+   </property>
+  </action>
+  <action name="new_select">
+   <property name="text">
+    <string>新建查询</string>
    </property>
   </action>
  </widget>
