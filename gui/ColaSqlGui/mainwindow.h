@@ -28,13 +28,19 @@ class MainWindow : public QMainWindow {
 
  private:
   int getLevel(QTreeWidgetItem *item);
-  void setConnectTreeItem(QTreeWidgetItem *item, QString dbName);
+  void ConnectTreeItem(QTreeWidgetItem *item, QString Name);
+  void handleDatabaseClick(QTreeWidgetItem *clickedItem);
+  void handleTableClick(QTreeWidgetItem *clickedItem);
+  void handleItemDoubleClick(QTreeWidgetItem *clickedItem,
+                             QTreeWidgetItem *item);
+  void deselectOtherTopLevelItems(QTreeWidgetItem *clickedItem);
+
  private slots:
   void click_action_database();
   void click_action_table();
   void click_action_column();
   void click_action_row();
-  void addTreeItem();
+  void addTreeItems();
 
  private:
   Ui::MainWindow *ui;
