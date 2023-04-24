@@ -27,12 +27,18 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private:
+  // 返回item在树状结构的第几层
   int getLevel(QTreeWidgetItem *item);
+  // 给item设置connect
   void ConnectTreeItem(QTreeWidgetItem *item, QString Name);
-  void handleDatabaseClick(QTreeWidgetItem *clickedItem);
-  void handleTableClick(QTreeWidgetItem *clickedItem);
+  // 处理双击树形结构
   void handleItemDoubleClick(QTreeWidgetItem *clickedItem,
                              QTreeWidgetItem *item);
+  // 处理双击数据库
+  void handleDatabaseClick(QTreeWidgetItem *clickedItem);
+  // 处理双击表
+  void handleTableClick(QTreeWidgetItem *clickedItem);
+  // 清空选择的数据库
   void deselectOtherTopLevelItems(QTreeWidgetItem *clickedItem);
 
  private slots:
