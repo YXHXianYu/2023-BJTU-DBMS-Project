@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 
+#include <memory>
+
 #include "ui_login.h"
 #include "ui_mainwindow.h"
 
@@ -11,16 +13,18 @@ MainWindow::MainWindow(QWidget *parent)
 
   setWindowTitle("ColaSql");
 
-  QTextBrowserStreamBuf *streamBuf = new QTextBrowserStreamBuf(ui->textBrowser);
+  //  auto streamBuf = std::make_unique<QTextBrowserStreamBuf>(ui->textBrowser);
+  QTextEditStreamBuf *streamBuf = new QTextEditStreamBuf(ui->textEdit_code);
 
   // 保存原始缓冲区，以便在以后恢复
   //  std::streambuf *originalCoutBuf = std::cout.rdbuf();
 
   // 重定向 std::cout 到 QTextBrowser
+  //  std::cout.rdbuf(streamBuf.get());
   std::cout.rdbuf(streamBuf);
 
   // 现在，你可以使用 std::cout 输出到 QTextBrowser
-  std::cout << "Hello, I am Co1aSql!";
+  ui->textBrowser->append("Hello, I am Co1aSql!\n");
 
   connect(ui_log, SIGNAL(login()), this, SLOT(show()));
   connect(ui_log, SIGNAL(login()), this, SLOT(addTreeItems()));
@@ -31,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->action_column, SIGNAL(triggered()), this,
           SLOT(click_action_column()));
   connect(ui->action_row, SIGNAL(triggered()), this, SLOT(click_action_row()));
+  ui->textEdit_code->installEventFilter(this);
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -304,4 +309,47 @@ void MainWindow::click_action_row() {
     QMessageBox::warning(this, "错误", "未找到该字段\n");
     return;
   }
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
+  if (watched == ui->textEdit_code && event->type() == QEvent::KeyPress) {
+    QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+    QTextCursor cursor = ui->textEdit_code->textCursor();
+
+    if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
+      // 当按下回车键时，触发槽函数
+      onEnterPressed();
+      return true;  // 返回 true 表示事件已被处理
+    } else if (keyEvent->key() == Qt::Key_Backspace) {
+      // 当按下退格键时
+      cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor,
+                          prefix.length());
+      QString textBeforeCursor = cursor.selectedText();
+
+      if (textBeforeCursor == prefix) {
+        return true;  // 如果光标前的字符串等于指定字符串，不允许删除
+      } else if (cursor.atBlockStart()) {
+        return true;  // 如果光标在行首，不允许删除
+      }
+    } else if (keyEvent->key() == Qt::Key_Delete) {
+      // 当按下删除键时
+      if (cursor.atBlockEnd()) {
+        return true;  // 如果光标在行尾，不允许删除
+      }
+    }
+  }
+  // 对于其他事件和对象，调用基类的事件过滤器
+  return QMainWindow::eventFilter(watched, event);
+}
+
+void MainWindow::onEnterPressed() {
+  QTextCursor cursor = ui->textEdit_code->textCursor();
+  cursor.select(QTextCursor::LineUnderCursor);
+  QString input = cursor.selectedText().mid(prefix.length());
+  qDebug() << "回车键被按下，当前行内容：" << input;
+  QString ret = QString::fromStdString(
+      ColaSQLCommand::CommandProcessor::GetInstance().Run(input.toStdString()));
+  qDebug() << ret;
+  if (ret != "") std::cout << ret.toStdString();
+  ui->textEdit_code->append("Co1aSQL > ");
 }

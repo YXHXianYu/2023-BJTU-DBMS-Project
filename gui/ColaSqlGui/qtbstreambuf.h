@@ -2,16 +2,17 @@
 #define QTBSTREAMBUF_H
 
 #include <QTextBrowser>
+#include <QTextEdit>
 #include <streambuf>
 
-class QTextBrowserStreamBuf : public std::streambuf {
+class QTextEditStreamBuf : public std::streambuf {
  public:
-  QTextBrowserStreamBuf(QTextBrowser *browser) : m_browser(browser) {}
+  QTextEditStreamBuf(QTextEdit *edit) : m_Edit(edit) {}
 
  protected:
   virtual std::streamsize xsputn(const char *s, std::streamsize n) override {
     QString text = QString::fromUtf8(s, static_cast<int>(n));
-    m_browser->append(text);
+    m_Edit->append(text);
     return n;
   }
 
@@ -24,7 +25,7 @@ class QTextBrowserStreamBuf : public std::streambuf {
   }
 
  private:
-  QTextBrowser *m_browser;
+  QTextEdit *m_Edit;
 };
 
 #endif  // QTBSTREAMBUF_H
