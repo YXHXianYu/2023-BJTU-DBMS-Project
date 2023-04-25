@@ -5,11 +5,14 @@
 
 #include <QDebug>
 #include <QInputDialog>
+#include <QKeyEvent>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QTextEdit>
 #include <QTreeWidget>
 
 #include "columndialog.h"
+#include "command_processor.h"
 #include "dataprocessor.h"
 #include "qtbstreambuf.h"
 
@@ -47,10 +50,15 @@ class MainWindow : public QMainWindow {
   void click_action_column();
   void click_action_row();
   void addTreeItems();
+  void onEnterPressed();
+
+ protected:
+  bool eventFilter(QObject *watched, QEvent *event) override;
 
  private:
   Ui::MainWindow *ui;
   ui_login *ui_log;
   std::vector<std::string> databases;
+  QString prefix = "Co1aSQL > ";
 };
 #endif  // MAINWINDOW_H
