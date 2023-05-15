@@ -24,13 +24,19 @@ private:
     DataProcessor();
 public:
     static DataProcessor& GetInstance();
+
+//更新指针
+public:
+    int UpdatePointer();
 //数据库
 public:
+    int GetCurrentDatabase(std::string& database_name);
     int CreateUser(std::string user_name, std::string user_password);           //创建用户
     int Login(std::string user_name, std::string user_password);                //登录用户
 //数据库
 public:
     int CreateDatabase(std::string database_name);                              //创建数据库
+    int DeleteDatabase(std::string database_name);
     int UseDatabase(std::string database_name = "");                                 //使用数据库
     int ShowDatabases(std::vector<std::string>& return_databases);      //显示所有数据库
 //表
@@ -53,6 +59,11 @@ public:
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);                                                                                         // 删除记录
     int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
     //values: vector<>
+
+//权限
+public:
+    int GrantAuthority(std::string database_name, std::string table_name, std::string authority_name);
+    int GrantAuthority(std::string database_name, std::string authority_name);
 
 //文件
 public:

@@ -24,6 +24,12 @@ const std::vector<Table>& Database::GetTables() const {
 void Database::SetTables(const std::vector<Table>& tables) {
     this->tables = tables;
 }
+int Database::FindTable(std::string table_name) {
+    for(const auto& table : tables) {
+        if(table.GetTableName() == table_name) return kSuccess;
+    }
+    return kTableNotFound;
+}
 
 int Database::CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints) {
     for(const auto& table : tables) {
