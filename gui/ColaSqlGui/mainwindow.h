@@ -8,11 +8,13 @@
 #include <QKeyEvent>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QStandardItemModel>
 #include <QTextEdit>
 #include <QTreeWidget>
 
 #include "columndialog.h"
 #include "command_processor.h"
+#include "createtable.h"
 #include "dataprocessor.h"
 #include "qtbstreambuf.h"
 
@@ -30,27 +32,17 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private:
-  // 返回item在树状结构的第几层
-  int getLevel(QTreeWidgetItem *item);
-  // 给item设置connect
-  void ConnectTreeItem(QTreeWidgetItem *item, QString Name);
-  // 处理双击树形结构
-  void handleItemDoubleClick(QTreeWidgetItem *clickedItem,
-                             QTreeWidgetItem *item);
-  // 处理双击数据库
-  void handleDatabaseClick(QTreeWidgetItem *clickedItem);
-  // 处理双击表
-  void handleTableClick(QTreeWidgetItem *clickedItem);
-  // 清空选择的数据库
-  void deselectOtherTopLevelItems(QTreeWidgetItem *clickedItem);
+  QString anyToQString(const std::any &value);
 
  private slots:
   void click_action_database();
   void click_action_table();
   void click_action_column();
   void click_action_row();
-  void addTreeItems();
   void onEnterPressed();
+  void init_treeview();
+  void on_treeView_doubleClicked(const QModelIndex &index);
+  void create_table(QString);
 
  protected:
   bool eventFilter(QObject *watched, QEvent *event) override;
@@ -58,6 +50,7 @@ class MainWindow : public QMainWindow {
  private:
   Ui::MainWindow *ui;
   ui_login *ui_log;
+  createtable *ui_create_table;
   std::vector<std::string> databases;
   QString prefix = "Co1aSQL > ";
 };
