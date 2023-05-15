@@ -1,6 +1,7 @@
 #ifndef CREATETABLE_H
 #define CREATETABLE_H
 
+#include <QDebug>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QStandardItemModel>
@@ -18,7 +19,7 @@ class createtable : public QMainWindow {
   ~createtable();
 
  signals:
-  void create_table_signal(QString);
+  void create_table_signal(QString, QString);
 
  private slots:
   void on_cancel_table_clicked();
@@ -32,10 +33,10 @@ class createtable : public QMainWindow {
   QStandardItemModel *model;
   QString database_name;
   QString table_name;
-  std::vector<QString> not_null;
-  std::vector<QString> prime;
-  std::vector<QString> unique;
-  std::vector<std::pair<QString, QString> > foreign;
+  std::vector<QString> not_nulls;
+  std::vector<QString> primes;
+  std::vector<QString> uniques;
+  std::vector<std::pair<QString, QString> > foreigns;
   std::vector<std::pair<QString, QString> > record;
 };
 
