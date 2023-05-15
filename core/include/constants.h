@@ -34,4 +34,8 @@ const int kFieldExisted = 25;
 const int kErrorCurrentUser = 26;
 const int kErrorCurrentDatabase = 27;
 const int kSizeNotProper = 28;
+
+const int kInsufficientAuthority = 29;
+const int kAuthorityNotFound = 30;
+const int kAuthorityExisted = 31;
 #endif
