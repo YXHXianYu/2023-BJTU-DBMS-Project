@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow {
   void onEnterPressed();
   void init_treeview();
   void on_treeView_doubleClicked(const QModelIndex &index);
-  void create_table(QString);
+  void create_table(QString, QString);
 
  protected:
   bool eventFilter(QObject *watched, QEvent *event) override;

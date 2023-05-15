@@ -116,12 +116,15 @@ void MainWindow::click_action_database() {
 void MainWindow::click_action_table() {
   // add table
   ui_create_table = new createtable();
-  connect(ui_create_table, SIGNAL(create_table_signal(QString)), this,
-          SLOT(create_table(QString)));
+  connect(ui_create_table, SIGNAL(create_table_signal(QString, QString)), this,
+          SLOT(create_table(QString, QString)));
   ui_create_table->show();
 }
 
-void MainWindow::create_table(QString cmd) { qDebug() << cmd; }
+void MainWindow::create_table(QString database, QString opt) {
+  qDebug() << database;
+  qDebug() << opt;
+}
 
 void MainWindow::click_action_column() {
   qDebug() << "add column\n";
