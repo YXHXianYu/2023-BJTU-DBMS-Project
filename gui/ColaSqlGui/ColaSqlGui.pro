@@ -21,6 +21,7 @@ SOURCES += \
     $${PWD}/../../core/src/*.cpp \
     $${PWD}/../../core/src/constraint/*.cpp \
     ../../file/src/filemanager.cpp \
+    createtable.cpp \
     main.cpp \
     mainwindow.cpp \
     ui_login.cpp \
@@ -29,12 +30,14 @@ SOURCES += \
 
 HEADERS += \
     columndialog.h \
+    createtable.h \
     mainwindow.h \
     qtbstreambuf.h \
     ui_login.h \
     ui_register.h
 
 FORMS += \
+    createtable.ui \
     mainwindow.ui \
     ui_login.ui \
     ui_register.ui

@@ -23,11 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
   //  std::cout.rdbuf(streamBuf.get());
   std::cout.rdbuf(streamBuf);
 
-  // 现在，你可以使用 std::cout 输出到 QTextBrowser
-  ui->textBrowser->append("Hello, I am Co1aSql!\n");
-
   connect(ui_log, SIGNAL(login()), this, SLOT(show()));
   connect(ui_log, SIGNAL(login()), this, SLOT(addTreeItems()));
+  connect(ui_log, SIGNAL(login()), this, SLOT(init_treeview()));
   connect(ui->action_database, SIGNAL(triggered()), this,
           SLOT(click_action_database()));
   connect(ui->action_table, SIGNAL(triggered()), this,
@@ -40,121 +38,36 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-int MainWindow::getLevel(QTreeWidgetItem *item) {
-  int level = 0;
-  QTreeWidgetItem *parentItem = item->parent();
-  while (parentItem) {
-    level++;
-    item = parentItem;
-    parentItem = item->parent();
-  }
-  return level;
-}
+void MainWindow::init_treeview() {
+  QStandardItemModel *model = new QStandardItemModel(this);
+  ui->treeView->header()->setSectionResizeMode(QHeaderView::Stretch);
+  model->setHorizontalHeaderLabels(QStringList(QStringLiteral("database")));
 
-void MainWindow::ConnectTreeItem(QTreeWidgetItem *item, QString Name) {
-  item->setText(0, Name);
-  item->setText(1, "");
+  ui->treeView->setModel(model);
 
-  connect(ui->treeWidget, &QTreeWidget::itemDoubleClicked, this,
-          [=](QTreeWidgetItem *clickedItem, int column) {
-            handleItemDoubleClick(clickedItem, item);
-          });
-}
+  // get current database
+  // todo
 
-void MainWindow::handleItemDoubleClick(QTreeWidgetItem *clickedItem,
-                                       QTreeWidgetItem *item) {
-  int level = getLevel(clickedItem);
-
-  if (level == 0) {
-    deselectOtherTopLevelItems(clickedItem);
-  }
-
-  if (clickedItem == item) {
-    if (level == 0) {
-      handleDatabaseClick(clickedItem);
-    } else if (level == 1) {
-      handleTableClick(clickedItem);
-    }
-  }
-}
-
-void MainWindow::deselectOtherTopLevelItems(QTreeWidgetItem *clickedItem) {
-  for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) {
-    QTreeWidgetItem *item = ui->treeWidget->topLevelItem(i);
-    if (item != clickedItem) {
-      item->setText(1, "");
-    }
-  }
-}
-
-void MainWindow::handleDatabaseClick(QTreeWidgetItem *clickedItem) {
-  qDebug() << "You clicked on item: " << clickedItem->text(0);
-  clickedItem->setSelected(true);
-  clickedItem->setText(1, "Selected");
-  std::string dbName = clickedItem->text(0).toStdString();
-  int use_db_ret = DataProcessor::GetInstance().UseDatabase(dbName);
-  if (use_db_ret != 0) {
-    qDebug() << "when click database Error using database"
-             << QString::fromStdString(dbName) << "error code:" << use_db_ret;
-    assert(false);
-  }
-  qDebug() << "use" + clickedItem->text(0) << use_db_ret << endl;
-}
-
-void MainWindow::handleTableClick(QTreeWidgetItem *clickedItem) {
-  qDebug() << "You clicked on item: " << clickedItem->text(0);
-  clickedItem->setSelected(true);
-  QTreeWidgetItem *parentItem = clickedItem->parent();
-  parentItem->setText(1, "Selected");
-  deselectOtherTopLevelItems(parentItem);
-
-  std::string dbName = parentItem->text(0).toStdString();
-  int use_db_ret = DataProcessor::GetInstance().UseDatabase(dbName);
-  if (use_db_ret != 0) {
-    qDebug() << "when click table Error using database"
-             << QString::fromStdString(dbName) << "error code:" << use_db_ret;
-    assert(false);
-  }
-  qDebug() << "use" + parentItem->text(0) << use_db_ret << endl;
-
-  std::vector<std::string> fields;
-  fields.push_back("*");
-  std::string tbName = clickedItem->text(0).toStdString();
-  std::vector<std::tuple<std::string, std::string, int>> conditions;
-  std::vector<std::vector<std::any>> return_records;
-  int select_ret = DataProcessor::GetInstance().Select(
-      tbName, fields, conditions, return_records);
-  if (select_ret != 0) {
-    qDebug() << "when click table select error";
-    assert(false);
-  }
-  std::string ret = ColasqlTool::OutputSelectResult(return_records);
-  ui->textBrowser->setText(QString::fromStdString(ret));
-}
-
-void MainWindow::addTreeItems() {
-  // Load databases
+  // get databases
   int ret = DataProcessor::GetInstance().ShowDatabases(databases);
   if (ret != 0) {
     qDebug() << "Error loading databases, error code:" << ret;
     return;
   }
 
-  // Clear the tree widget
-  ui->treeWidget->clear();
+  // add databases to treeview
+  for (auto const &database : databases) {
+    QStandardItem *item_database =
+        new QStandardItem(QString::fromStdString(database));
+    model->appendRow(item_database);
 
-  // Add databases and tables to the tree widget
-  for (const auto &database : databases) {
+    // get tables in current database
     ret = DataProcessor::GetInstance().UseDatabase(database);
     if (ret != 0) {
       qDebug() << "Error using database" << QString::fromStdString(database)
                << "error code:" << ret;
       assert(false);
     }
-
-    QTreeWidgetItem *databaseItem = new QTreeWidgetItem(ui->treeWidget);
-    ConnectTreeItem(databaseItem, QString::fromStdString(database));
-
     std::vector<std::string> tables;
     ret = DataProcessor::GetInstance().ShowTables(tables);
     if (ret != 0) {
@@ -162,15 +75,20 @@ void MainWindow::addTreeItems() {
                << QString::fromStdString(database) << "error code:" << ret;
       assert(false);
     }
-
+    // add tables to treeview under the current database
     for (const auto &table : tables) {
-      QTreeWidgetItem *tableItem = new QTreeWidgetItem(databaseItem);
-      ConnectTreeItem(tableItem, QString::fromStdString(table));
+      QStandardItem *item_table =
+          new QStandardItem(QString::fromStdString(table));
+      item_database->appendRow(item_table);
     }
   }
-
-  // Reset the current database
-  DataProcessor::GetInstance().UseDatabase();
+  // set current databases to null
+  ret = DataProcessor::GetInstance().UseDatabase();
+  if (ret != 0) {
+    qDebug() << "Error loading empty databases, error code:" << ret;
+    return;
+  }
+  ui->treeView->expandAll();
 }
 
 void MainWindow::click_action_database() {
@@ -184,9 +102,6 @@ void MainWindow::click_action_database() {
   qDebug() << dbName;
   int ret = DataProcessor::GetInstance().CreateDatabase(dbName.toStdString());
   if (!ret) {
-    // 将数据库添加到treeWidget中
-    QTreeWidgetItem *item = new QTreeWidgetItem(ui->treeWidget);
-    ConnectTreeItem(item, dbName);
     QMessageBox::information(this, "通知", "数据库已创建");
   } else if (ret == kDatabaseExisted) {
     QMessageBox::warning(this, "错误", "数据库已存在\n");
@@ -195,45 +110,18 @@ void MainWindow::click_action_database() {
     qDebug() << "Error create database" << dbName << "error code:" << ret;
     assert(false);
   }
+  init_treeview();
 }
 
 void MainWindow::click_action_table() {
-  //    新建表
-  qDebug() << "add table\n";
-  QString tbName =
-      QInputDialog::getText(this, "输入", "表名:", QLineEdit::Normal);
-  if (tbName.isEmpty()) {
-    return;
-  }
-  qDebug() << tbName;
-  std::vector<std::pair<std::string, std::string>> fields;
-  std::vector<Constraint *> constraints;
-  int ret = DataProcessor::GetInstance().CreateTable(tbName.toStdString(),
-                                                     fields, constraints);
-  if (!ret) {
-    QTreeWidgetItem *fatherItem = nullptr;
-    for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) {
-      QTreeWidgetItem *item = ui->treeWidget->topLevelItem(i);
-      if (item->text(1) == "Selected") {
-        fatherItem = item;
-        break;
-      }
-    }
-    if (fatherItem == nullptr) {
-      QMessageBox::warning(this, "错误", "未选用数据库\n");
-      return;
-    }
-    QTreeWidgetItem *childItem = new QTreeWidgetItem(fatherItem);
-    ConnectTreeItem(childItem, tbName);
-
-  } else if (ret == kDatabaseNotUse) {
-    QMessageBox::warning(this, "错误", "未选用数据库\n");
-    return;
-  } else {
-    qDebug() << "Error create table" << tbName << "error code:" << ret;
-    assert(false);
-  }
+  // add table
+  ui_create_table = new createtable();
+  connect(ui_create_table, SIGNAL(create_table_signal(QString)), this,
+          SLOT(create_table(QString)));
+  ui_create_table->show();
 }
+
+void MainWindow::create_table(QString cmd) { qDebug() << cmd; }
 
 void MainWindow::click_action_column() {
   qDebug() << "add column\n";
@@ -347,9 +235,75 @@ void MainWindow::onEnterPressed() {
   cursor.select(QTextCursor::LineUnderCursor);
   QString input = cursor.selectedText().mid(prefix.length());
   qDebug() << "回车键被按下，当前行内容：" << input;
-  QString ret = QString::fromStdString(
-      ColaSQLCommand::CommandProcessor::GetInstance().Run(input.toStdString()));
-  qDebug() << ret;
-  if (ret != "") std::cout << ret.toStdString();
+  if (input == "cls;") {
+    ui->textEdit_code->clear();
+  } else {
+    QString ret = QString::fromStdString(
+        ColaSQLCommand::CommandProcessor::GetInstance().Run(
+            input.toStdString()));
+    qDebug() << ret;
+    if (ret != "") {
+      std::cout << ret.toStdString();
+      //      init_treeview();
+    }
+  }
   ui->textEdit_code->append("Co1aSQL > ");
+}
+
+QString MainWindow::anyToQString(const std::any &value) {
+  QString result;
+  if (value.type() == typeid(std::string)) {
+    result = QString::fromStdString(std::any_cast<std::string>(value));
+  } else if (value.type() == typeid(int)) {
+    result = QString::number(std::any_cast<int>(value));
+  } else if (value.type() == typeid(double)) {
+    result = QString::number(std::any_cast<double>(value));
+  }
+  return result;
+}
+
+void MainWindow::on_treeView_doubleClicked(const QModelIndex &index) {
+  // click a table then display it
+  if (index.parent().isValid()) {
+    std::string database = index.parent().data().toString().toStdString();
+    std::string table = index.data().toString().toStdString();
+    qDebug() << "click on " + QString::fromStdString(table);
+    // use database
+    int ret = DataProcessor::GetInstance().UseDatabase(database);
+    if (ret != 0) {
+      qDebug() << "when click table Error using database"
+               << QString::fromStdString(database) << "error code:" << ret;
+      assert(false);
+    }
+    qDebug() << "use" + QString::fromStdString(database) << ret << endl;
+    // select * from table
+    std::vector<std::string> f;
+    f.push_back("*");
+    std::vector<std::tuple<std::string, std::string, int>> c;
+    std::vector<std::vector<std::any>> return_records;
+    ret = DataProcessor::GetInstance().Select(table, f, c, return_records);
+    if (ret != 0) {
+      qDebug() << "when click table select error";
+      assert(false);
+    }
+    // display table on tableview
+    std::vector<std::any> fields = return_records[0];
+    QStandardItemModel *model = new QStandardItemModel();
+    model->setColumnCount(fields.size());
+    for (size_t i = 0; i < fields.size(); ++i) {
+      model->setHeaderData(i, Qt::Horizontal, anyToQString(fields[i]));
+    }
+    for (size_t i = 1; i < return_records.size(); ++i) {
+      QList<QStandardItem *> item;  // add row
+      for (auto const &record : return_records[i]) {
+        item.append(new QStandardItem(anyToQString(record)));
+      }
+      model->appendRow(item);
+    }
+    ui->tableView->setModel(model);
+  }
+  // click a database
+  else {
+    qDebug() << "click database";
+  }
 }
