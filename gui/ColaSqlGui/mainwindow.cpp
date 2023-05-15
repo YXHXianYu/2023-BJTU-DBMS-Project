@@ -124,6 +124,21 @@ void MainWindow::click_action_table() {
 void MainWindow::create_table(QString database, QString opt) {
   qDebug() << database;
   qDebug() << opt;
+  QString ret = QString::fromStdString(
+      ColaSQLCommand::CommandProcessor::GetInstance().Run(
+          database.toStdString()));
+  if (ret != "Success!") {
+    QMessageBox::warning(this, "错误", "建表失败，错误信息：" + ret);
+    return;
+  }
+  ret = QString::fromStdString(
+      ColaSQLCommand::CommandProcessor::GetInstance().Run(opt.toStdString()));
+  if (ret != "success!") {
+    QMessageBox::warning(this, "错误", "建表失败，错误信息：" + ret);
+    return;
+  }
+  QMessageBox::information(this, "通知", "新建表成功\n");
+  init_treeview();
 }
 
 void MainWindow::click_action_column() {

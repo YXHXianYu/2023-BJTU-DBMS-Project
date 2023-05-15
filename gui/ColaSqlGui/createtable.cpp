@@ -6,9 +6,10 @@ createtable::createtable(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::createtable) {
   ui->setupUi(this);
   model = new QStandardItemModel();
-  model->setColumnCount(2);
+  model->setColumnCount(3);
   model->setHeaderData(0, Qt::Horizontal, "字段");
   model->setHeaderData(1, Qt::Horizontal, "类型");
+  model->setHeaderData(2, Qt::Horizontal, "约束");
   ui->tableView->setModel(model);
 }
 
@@ -20,6 +21,7 @@ void createtable::on_add_col_clicked() {
   ui->tableView->close();
   QString field = ui->col_name->text();
   QString type = ui->comboBox->currentText();
+  QString check = "";
   if (field == "") {
     QMessageBox::warning(this, "警告", "未输入字段名！");
     return;
@@ -30,30 +32,28 @@ void createtable::on_add_col_clicked() {
       QMessageBox::warning(this, "警告", "未输入参考表！");
       return;
     } else {
+      check = "FOREIGN KEY";
       foreigns.push_back({field, reference_table});
     }
   }
   if (ui->notnull_check->isChecked()) {
-    not_nulls.push_back("not null");
-  }
-  if (ui->pk_check->isChecked()) {
-    primes.push_back(field);
+    check = "NOT NULL";
+    not_nulls.push_back(field);
   }
   if (ui->unique_check->isChecked()) {
+    check = "UNIQUE";
     uniques.push_back(field);
+  }
+  if (ui->pk_check->isChecked()) {
+    check = "PRIMARY KEY";
+    primes.push_back(field);
   }
   record.push_back({field, type});
   QList<QStandardItem *> item;
   item.append(new QStandardItem(field));
   item.append(new QStandardItem(type));
+  item.append(new QStandardItem(check));
   model->appendRow(item);
-  // 展示所加如的列
-  //    for (int i = 0 ; i < col_ty.size(); ++i) {
-  //        QList<QStandardItem*> item;
-  //        item.append(new QStandardItem(col_ty[i].first));
-  //        item.append(new QStandardItem(col_ty[i].second));
-  //        model.appendRow(item);
-  //    }
 
   ui->tableView->show();
   ui->col_name->clear();
