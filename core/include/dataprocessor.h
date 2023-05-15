@@ -7,7 +7,7 @@
 #include"user.h"
 #include"constants.h"
 
-#include".\constraint\all_constraints.h"
+#include"./constraint/all_constraints.h"
 
 // file
 #include "filemanager.h"

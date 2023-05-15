@@ -2,7 +2,9 @@
 
 #include <cassert>
 #include <fstream>
-#include <direct.h>
+//#include <direct.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "colasqltool.h"
 
@@ -20,7 +22,7 @@ FileManager& FileManager::GetInstance() {
 int FileManager::WriteDatabasesFile(const std::vector<Database>& databases) {
     
     // 创建新文件夹
-    mkdir("./data");
+    mkdir("./data", S_IRWXU | S_IRWXG | S_IRWXO);
 
     // c++ ofstream 必须要目录存在才可以创建新文件夹
     std::ofstream out("./data/databases.txt", std::ofstream::out | std::ofstream::trunc);
@@ -43,7 +45,7 @@ int FileManager::WriteTablesFile(const std::string& databaseName, const std::vec
     std::string path = "./data/" + databaseName + "/";
 
     // mkdir
-    mkdir(path.c_str());
+    mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
 
     // tables.txt
     std::ofstream out(path + "tables.txt", std::ofstream::out | std::ofstream::trunc);
@@ -107,7 +109,7 @@ int FileManager::WriteTablesFile(const std::string& databaseName, const std::vec
 
 int FileManager::WriteUsersFile(const std::vector<User>& users) {
     // 创建新文件夹
-    mkdir("./data");
+    mkdir("./data", S_IRWXU | S_IRWXG | S_IRWXO);
 
     // c++ ofstream 必须要目录存在才可以创建新文件夹
     std::ofstream out("./data/users.txt", std::ofstream::out | std::ofstream::trunc);

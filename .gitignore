@@ -3,9 +3,11 @@
 
 ### Path ###
 # Added by. YXHXianYu
+# ccls
+.ccls-cache/
+file/.ccls-cache/
 # Vscode
 .vscode/
-<<<<<<< HEAD
 # VSCodeCounter
 .VSCodeCounter/
 # Cmd

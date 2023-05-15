@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(colasql)
 
+# For ccls config
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # 将src文件夹下所有文件添加至SOURCE_src
 aux_source_directory(./src SOURCE_SRC)
 aux_source_directory(./src/constraint SOURCE_CONSTRANIT_SRC)
