@@ -209,9 +209,14 @@ int Table::CheckCondition(const std::unordered_map<std::string, std::any>& recor
         std::any to_any = ColasqlTool::GetAnyByTypeAndValue(field_map[field_name], std::get<1>(condition));
         
         if(!record.count(field_name)) {
+            if(to_any.type() == typeid(ColasqlNull)) {
+                continue;
+            }
             return kConditionsNotSatisfied;
         }
-        
+        if(to_any.type() == typeid(ColasqlNull)) {
+            return kConditionsNotSatisfied;
+        }
         int compare_result = ColasqlTool::CompareAny(record.at(field_name), to_any);
         /*std::cout<<field_name<<" "<<compare_result<<" "<<std::get<0>(condition)<<" "<<std::get<1>(condition)<<std::endl;*/
         if(compare_result == kEqual) {
