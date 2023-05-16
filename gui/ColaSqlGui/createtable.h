@@ -38,7 +38,7 @@ private:
     std::vector<QString> not_nulls;
     std::vector<QString> primes;
     std::vector<QString> uniques;
-    std::vector<std::pair<QString, QString> > foreigns;
+    std::vector<std::tuple<QString, QString, QString> > foreigns;
     std::vector<std::pair<QString, QString> > record;
 };
 
