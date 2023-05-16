@@ -202,7 +202,7 @@ int DataProcessor::CreateTable(
 	if (current_database == nullptr) {
 		return kDatabaseNotUse;
 	}
-	if(current_user->CheckAuthority(current_database_name, authority_number::CREATE)) {
+	if(current_user->CheckAuthority(current_database_name, authority_number::CREATE) == kSuccess) {
 		int ret = current_database->CreateTable(table_name, fields, constraints);
 		if(ret == kSuccess) {
 			UpdatePointer();
