@@ -1,6 +1,9 @@
 #include "table.h"
-#include <algorithm>
 
+#include <algorithm>
+#include <cassert>
+
+#include "index/fhqtreapindex.h"
 
 Table::Table(const std::string& table_name,
              const std::vector<std::pair<std::string, std::string>>& fields,
@@ -27,6 +30,31 @@ Table::Table(const std::string& table_name,
 }
 
 
+Table::~Table() {                           // 根据零三五法则，需要同时定义析构、拷贝构造、拷贝赋值函数
+    for(auto& ptr: constraints)
+        delete ptr;
+}
+
+Table::Table(const Table& p): table_name(p.table_name), fields(p.fields), constraints(p.constraints), records(p.records) {
+    for(auto& field: fields) {
+        field_map[field.first] = field.second;
+    }
+}
+
+Table& Table::operator = (Table other) {   // unique_ptr 需要定义 拷贝赋值函数
+    swap(*this, other);
+    return *this;
+}
+
+void swap(Table& s1, Table& s2) {
+    using std::swap;
+    swap(s1.table_name, s2.table_name);
+    swap(s1.fields, s2.fields);
+    swap(s1.field_map, s2.field_map);
+    swap(s1.records, s2.records);
+    swap(s1.constraints, s2.constraints);
+    swap(s1.index_ptr, s2.index_ptr);
+}
 
 const std::string& Table::GetTableName() const {
     return table_name;
@@ -129,22 +157,48 @@ int Table::Select(std::vector<std::string> field_name, std::vector<std::tuple<st
     }
     return_records.push_back(tmp);
     //ok
+    
 
-    for(const auto& record: records) {
-        //where ... continue
-        if(CheckCondition(record, conditions) != kSuccess) continue;
-
+    // 这个lambda表达式用于往return_records中加入一条记录
+    auto addRecord = [&](const auto& record) {
         std::vector<std::any> ret_record;
         for(const auto& name: field_name) {
             if(!record.count(name)) {
                 ret_record.push_back(std::any(ColasqlNull()));
-            }
-            else {
+            } else {
                 ret_record.push_back(record.at(name));
             }
         }
         return_records.push_back(ret_record);
+    };
+    
+    bool haveGetAnswer = false;
+
+    // 可以由索引得到选中记录
+    if(!haveGetAnswer /*&& index_ptr*/) {
+        std::vector<int> selected_index;
+        // int ret = index_ptr->query(conditions, selected_index);
+        int ret = 1;
+        if(ret == 0) {
+            for(const auto& idx: selected_index) {
+                assert(idx < records.size());
+                addRecord(records[idx]);
+            }
+            std::cout << "Index speedup successfully." << std::endl;
+            haveGetAnswer = true;
+        }
     }
+    
+    // 默认使用暴力方法求选中记录
+    if(!haveGetAnswer) {
+        for(const auto& record: records) {
+            // where ... continue
+            if(CheckCondition(record, conditions) != kSuccess) continue;
+            // 添加一条记录
+            addRecord(record);
+        }
+    }
+
     // TODO
     return kSuccess;
 }
@@ -325,4 +379,15 @@ int Table::AlterTableModify(std::pair<std::string, std::string> field) {
         record[field.first] = ColasqlTool::GetAnyByTypeAndValue(field.second, tmp);
     }
     return kSuccess;
+}
+
+// ===== Index =====
+
+int Table::BuildIndex(const std::vector<std::string>& compare_key, int type) {
+    if(type == kFHQTreapIndex) {
+        // index_ptr = std::make_unique<Index>(new FHQTreapIndex(records, fields, field_map, compare_key));
+        return kSuccess;
+    } else {
+        return kUnknownIndex;
+    }
 }
