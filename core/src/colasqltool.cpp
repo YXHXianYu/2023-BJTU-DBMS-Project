@@ -16,8 +16,8 @@ std::any ColasqlTool::GetAnyByType(const std::string& type) {
 
 std::any ColasqlTool::GetAnyByTypeAndValue(const std::string& type, const std::string& value) {
     std::any result;
-
-    if(type == "int") result = std::stoi(value);
+    if(value == "") return ColasqlNull();
+    else if(type == "int") result = std::stoi(value);
     else if(type == "float") result = std::stof(value);
     else if(type == "string") result = value;
     else result = ColasqlException();
