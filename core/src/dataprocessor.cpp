@@ -181,7 +181,7 @@ int DataProcessor::UseDatabase(std::string database_name) {
 	}
 	for (auto& database : databases) {
 		if (database.GetDatabaseName() == database_name) {
-			if(current_user->CheckDatabaseInAuthorities(database.GetDatabaseName())) {
+			if(current_user->CheckDatabaseInAuthorities(database.GetDatabaseName()) == kSuccess) {
 				current_database = &database;
 				current_database_name = database_name;
 				return kSuccess;
