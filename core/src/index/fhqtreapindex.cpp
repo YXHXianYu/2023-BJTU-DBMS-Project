@@ -19,6 +19,7 @@ int FHQTreapIndex::build(const std::vector<std::unordered_map<std::string, std::
 
     // ===== Records =====
     _records_ptr.reset(&records);
+    _field_map_ptr.reset(&field_map);
 
     // ===== Compare Key =====
     // n^2 optimization could be used here
@@ -36,12 +37,8 @@ int FHQTreapIndex::build(const std::vector<std::unordered_map<std::string, std::
         }
     }
 
-    for(const auto& key: _compare_key) {
-        std::cout << key << " ";
-    }
-    std::cout << std::endl;
-
     // ===== Build Tree =====
+    t = std::vector<Node>(records.size() + 2);
     for(int i = 0; i < records.size(); i++) {
         insert(i);
     }
@@ -74,7 +71,6 @@ int FHQTreapIndex::query(const std::vector<std::tuple<std::string, std::string, 
             if(recordBasedOnConditions.count(name) > 0) {
                 return kFailedConditionDuplicate;
             }
-
             recordBasedOnConditions.insert({name, ColasqlTool::GetAnyByTypeAndValue(_field_map_ptr->at(name), value)});
             flag = true;
             break;
@@ -86,10 +82,15 @@ int FHQTreapIndex::query(const std::vector<std::tuple<std::string, std::string, 
         }
     }
 
+    // for(auto& [str, any]: recordBasedOnConditions) {
+    //     std::cout << str << ", " << ColasqlTool::AnyToString(any) << std::endl;
+    // }
+
+
     // query
     int a, b, c;
     splitvR(rt, recordBasedOnConditions, a, b);
-    splitv(b, recordBasedOnConditions, b, c);
+    splitv(b, recordBasedOnConditions, b, c, false);
     
     output(b, result_indexes);
 
@@ -136,62 +137,62 @@ void FHQTreapIndex::splits(int x, int siz, int &l, int &r) {
     pushup(x);
 }
 
-void FHQTreapIndex::splitv(int x, int va, int &l, int &r) {
+void FHQTreapIndex::splitv(int x, int va, int &l, int &r, bool nullIsLess) {
     if(x == 0) {
         l = r = 0;
         return;
     }
-    if(compare(va, t[x].va) < 0) {
+    if(compare(va, t[x].va, nullIsLess) < 0) {
         r = x;
-        splitv(LC, va, l, LC);
+        splitv(LC, va, l, LC, nullIsLess);
     } else {
         l = x;
-        splitv(RC, va, RC, r);
+        splitv(RC, va, RC, r, nullIsLess);
     }
     pushup(x);
 }
 
-void FHQTreapIndex::splitv(int x, const std::unordered_map<std::string, std::any>& va, int &l, int &r) {
+void FHQTreapIndex::splitv(int x, const std::unordered_map<std::string, std::any>& va, int &l, int &r, bool nullIsLess) {
     if(x == 0) {
         l = r = 0;
         return;
     }
-    if(compare(va, t[x].va) < 0) {
+    if(compare(va, t[x].va, nullIsLess) < 0) {
         r = x;
-        splitv(LC, va, l, LC);
+        splitv(LC, va, l, LC, nullIsLess);
     } else {
         l = x;
-        splitv(RC, va, RC, r);
+        splitv(RC, va, RC, r, nullIsLess);
     }
     pushup(x);
 }
 
-void FHQTreapIndex::splitvR(int x, int va, int &l, int &r) {
+void FHQTreapIndex::splitvR(int x, int va, int &l, int &r, bool nullIsLess) {
     if(x == 0) {
         l = r = 0;
         return;
     }
-    if(compare(va, t[x].va) <= 0) {
+    if(compare(va, t[x].va, nullIsLess) <= 0) {
         r = x;
-        splitvR(LC, va, l, LC);
+        splitvR(LC, va, l, LC, nullIsLess);
     } else {
         l = x;
-        splitvR(RC, va, RC, r);
+        splitvR(RC, va, RC, r, nullIsLess);
     }
     pushup(x);
 }
 
-void FHQTreapIndex::splitvR(int x, const std::unordered_map<std::string, std::any>& va, int &l, int &r) {
+void FHQTreapIndex::splitvR(int x, const std::unordered_map<std::string, std::any>& va, int &l, int &r, bool nullIsLess) {
     if(x == 0) {
         l = r = 0;
         return;
     }
-    if(compare(va, t[x].va) <= 0) {
+    if(compare(va, t[x].va, nullIsLess) <= 0) {
         r = x;
-        splitvR(LC, va, l, LC);
+        splitvR(LC, va, l, LC, nullIsLess);
     } else {
         l = x;
-        splitvR(RC, va, RC, r);
+        splitvR(RC, va, RC, r, nullIsLess);
     }
     pushup(x);
 }
@@ -210,6 +211,7 @@ int FHQTreapIndex::merge(int l, int r) {
 }
 
 void FHQTreapIndex::output(int x, std::vector<int>& result) {
+    if(x == 0) return;
     result.push_back(t[x].va);
     output(LC, result);
     output(RC, result);

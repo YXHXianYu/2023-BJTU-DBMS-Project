@@ -40,6 +40,9 @@ public:
     int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);
     int AlterTableDrop(std::string table_name, std::string field_name);
     int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field);
+
+    // 建立索引
+    int BuildIndex(std::string table_name, const std::vector<std::string>& compare_key);
 };
 
 

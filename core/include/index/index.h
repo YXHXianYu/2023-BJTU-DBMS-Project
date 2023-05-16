@@ -1,6 +1,7 @@
 #ifndef __INDEX_H__
 #define __INDEX_H__
 
+#include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <any>
@@ -59,7 +60,7 @@ public:
     * 0  if r[i] == r[j]
     * 1  if r[i] > r[j]
     */
-    int compare(int i, int j) const {
+    int compare(int i, int j, bool nullIsLess = true) const {
         if(i >= _records_ptr->size() || j >= _records_ptr->size()) return 0;
         for(const auto& fieldName: _compare_key) {
             bool iHave = _records_ptr->at(i).count(fieldName) > 0;
@@ -69,9 +70,9 @@ public:
             if(iHave && jHave)
                 ret = ColasqlTool::CompareAny(_records_ptr->at(i).at(fieldName), _records_ptr->at(j).at(fieldName));
             else if(iHave && !jHave)
-                ret = 1;
+                ret = nullIsLess ? 1 : -1;
             else if(!iHave && jHave)
-                ret = -1;
+                ret = nullIsLess ? -1 : 1;
             else
                 ret = 0;
 
@@ -87,7 +88,7 @@ public:
     * 0  if r[i] == r[j]
     * 1  if r[i] > r[j]
     */
-    int compare(const std::unordered_map<std::string, std::any>& i, int j) const {
+    int compare(const std::unordered_map<std::string, std::any>& i, int j, bool nullIsLess = true) const {
         if(j >= _records_ptr->size()) return 0;
         for(const auto& fieldName: _compare_key) {
             bool iHave = i.count(fieldName) > 0;
@@ -97,11 +98,18 @@ public:
             if(iHave && jHave)
                 ret = ColasqlTool::CompareAny(i.at(fieldName), _records_ptr->at(j).at(fieldName));
             else if(iHave && !jHave)
-                ret = 1;
+                ret = nullIsLess ? 1 : -1;
             else if(!iHave && jHave)
-                ret = -1;
+                ret = nullIsLess ? -1 : 1;
             else
                 ret = 0;
+
+            // if(iHave && jHave)
+            // std::cout << "Comparing: " << fieldName << ", "
+            //     << ColasqlTool::AnyToString(i.at(fieldName)) << "|" << i.at(fieldName).type().name() << ", "
+            //     << ColasqlTool::AnyToString(_records_ptr->at(j).at(fieldName)) << "|"
+            //     << _records_ptr->at(j).at(fieldName).type().name() << ", "
+            //     << ret << std::endl;
 
             if(ret == 0) continue;
             return ret; }

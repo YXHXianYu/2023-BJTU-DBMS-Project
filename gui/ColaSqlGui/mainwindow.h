@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QObject>
 #include <QStandardItemModel>
 #include <QTextEdit>
 #include <QTreeWidget>
@@ -40,6 +41,8 @@ private:
     void use_database(std::string database);
     void select_all_from_table(
         std::string tbName, std::vector<std::vector<std::any>>& return_records);
+    void cancel_change();
+    void save_change();
 
 private slots:
     void click_action_database();
@@ -51,10 +54,11 @@ private slots:
     void init_treeview();
     void on_treeView_doubleClicked(const QModelIndex& index);
     void create_table(QString, QString);
+    void handleTableModified();
 
-    void on_btn_cancel_clicked();
+    void on_btn_commit_clicked();
 
-    void on_btn_save_clicked();
+    void on_btn_rollback_clicked();
 
 protected:
     bool eventFilter(QObject* watched, QEvent* event) override;

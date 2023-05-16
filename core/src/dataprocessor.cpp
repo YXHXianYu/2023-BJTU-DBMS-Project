@@ -536,6 +536,23 @@ int DataProcessor::Update(
 	return ret;
 }
 
+int DataProcessor::BuildIndex(std::string table_name, const std::vector<std::string>& compare_key) {
+	if (current_user == nullptr) {
+		return kUserNotLogin;
+	}
+	if (current_database == nullptr) {
+		return kDatabaseNotUse;
+	}
+	if(current_database->FindTable(table_name) != kSuccess) {
+		return kTableNotFound;
+	} 
+	if(current_user->CheckAuthority(current_database_name,table_name,authority_number::UPDATE) != kSuccess) return kInsufficientAuthority;
+
+    // 调用数据库的BuildIndex方法
+    return current_database->BuildIndex(table_name, compare_key);
+}
+
+
 int DataProcessor::Read(bool debug) {
 	FileManager::GetInstance().ReadUsersFile(users);
 	FileManager::GetInstance().ReadDatabasesFile(databases);

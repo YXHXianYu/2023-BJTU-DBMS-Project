@@ -42,6 +42,11 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
         return ShowDatabases(seq);                             // Show Databases
     }
 
+    // ----- Create (index) -----
+    if(seq[0] == "create" && seq[1] == "index") {              // Build Index
+        return BuildIndex(seq);
+    }
+
     // ----- Table -----
     if(seq[1] == "table") {
         if(seq[0] == "create") return CreateTable(seq);        // Create Table
@@ -209,7 +214,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
         } else if(seq[i + 1] == "foreign" && seq[i + 2] == "key") {
             if(j - i != 6) return error + statementError + "(constraint statement is too short or too long)";
             if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
-            if(seq[i + 4] != "reference") return error + statementError + "(not found \"reference\")";
+            if(seq[i + 4] != "references") return error + statementError + "(not found \"reference\")";
 
             constraints.push_back(new ForeignKeyConstraint(seq[i + 3], seq[i + 5], seq[i + 6]));
 
@@ -343,7 +348,7 @@ std::string Parser::QueryTable(const std::vector<std::string>& seq) {
     std::vector<Constraint*> constraints;
 
     int ret = DataProcessor::GetInstance().DescribeTable(tableName, fields, constraints);
-    
+
     if(ret != 0) {
         return error + GetErrorMessage(ret);
     }
@@ -636,6 +641,29 @@ std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
     return success;
 }
 
+std::string Parser::BuildIndex(const std::vector<std::string>& seq) {
+    if (seq.size() <= 4 || seq[2] != "on") {
+        return error + statementIncomplete;
+    }
+
+    std::string tableName = seq[3];
+
+    std::vector<std::string> compare_key;
+
+    for(int i = 4; i < seq.size(); i++) {
+        compare_key.push_back(seq[i]);
+    }
+
+    int ret = DataProcessor::GetInstance().BuildIndex(tableName, compare_key);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+    
+    return success;
+
+}
+
 std::string Parser::Read(bool debug) {
 
     int ret = DataProcessor::GetInstance().Read(debug);
@@ -648,7 +676,7 @@ std::string Parser::Read(bool debug) {
 std::string Parser::Save() {
 
     int ret = DataProcessor::GetInstance().Write();
-    
+
     if(ret != 0) return error + GetErrorMessage(ret);
 
     return success + "Saved";

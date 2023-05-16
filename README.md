@@ -197,6 +197,14 @@
   SHOW TABLES;
   ```
 
+* 索引相关
+
+  ```sql
+  CREATE INDEX ON 表名 列名1 列名2 ...
+  ```
+
+  * 以上述列名为关键字建立索引，在Select时Where列需为此处列的前缀才可以触发索引。
+
 #### 2.6 记录
 
 * 插入记录
@@ -378,3 +386,5 @@
 ### 4. TODO Lists
 
 * DELETE全表后，不一定返回empty set的问题。
+* add foreign key后rollback发生re
+* 外键建完commit之后，下次打开gui无法显示

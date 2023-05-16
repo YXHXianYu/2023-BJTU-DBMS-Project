@@ -54,10 +54,10 @@ private:
     int newNode(int va);
     
     void splits(int x, int siz, int &l, int &r);
-    void splitv(int x, int va, int &l, int &r);                                               // 将与va相等的值归类至L
-    void splitv(int x, const std::unordered_map<std::string, std::any>& va, int &l, int &r);  // 将与va相等的值归类至L
-    void splitvR(int x, int va, int &l, int &r);                                              // 将与va相等的值归类至R
-    void splitvR(int x, const std::unordered_map<std::string, std::any>& va, int &l, int &r); // 将与va相等的值归类至R
+    void splitv(int x, int va, int &l, int &r, bool nullIsLess = true);                                              // 将与va相等的值归类至L
+    void splitv(int x, const std::unordered_map<std::string, std::any>& va, int &l, int &r, bool nullIsLess = true); // 将与va相等的值归类至L
+    void splitvR(int x, int va, int &l, int &r, bool nullIsLess = true);                                             // 将与va相等的值归类至R
+    void splitvR(int x, const std::unordered_map<std::string, std::any>& va, int &l, int &r, bool nullIsLess = true);// 将与va相等的值归类至R
     int merge(int l, int r);
 
     void output(int x, std::vector<int>& result); // 将以x为根的子树的所有va存入result

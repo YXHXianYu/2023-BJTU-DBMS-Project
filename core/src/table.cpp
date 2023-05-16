@@ -69,6 +69,10 @@ const std::vector<std::pair<std::string, std::string>>& Table::GetFields() const
     return fields;
 }
 
+const std::unordered_map<std::string, std::string> Table::GetFieldMap() const {
+    return field_map;
+}
+
 const std::vector<std::unordered_map<std::string, std::any> >& Table::GetRecords() const {
     return records;
 }
@@ -239,10 +243,9 @@ int Table::Select(std::vector<std::string> field_name, std::vector<std::tuple<st
     bool haveGetAnswer = false;
 
     // 可以由索引得到选中记录
-    if(!haveGetAnswer /*&& index_ptr*/) {
+    if(!haveGetAnswer && index_ptr && conditions.size() > 0) {
         std::vector<int> selected_index;
-        // int ret = index_ptr->query(conditions, selected_index);
-        int ret = 1;
+        int ret = index_ptr->query(conditions, selected_index);
         if(ret == 0) {
             for(const auto& idx: selected_index) {
                 assert(idx < records.size());
@@ -500,7 +503,7 @@ int Table::AlterTableModify(std::pair<std::string, std::string> field) {
 
 int Table::BuildIndex(const std::vector<std::string>& compare_key, int type) {
     if(type == kFHQTreapIndex) {
-        // index_ptr = std::make_unique<Index>(new FHQTreapIndex(records, fields, field_map, compare_key));
+        index_ptr = std::make_unique<FHQTreapIndex>(records, fields, field_map, compare_key);
         return kSuccess;
     } else {
         return kUnknownIndex;
