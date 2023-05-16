@@ -4,7 +4,7 @@ ForeignKeyConstraint::ForeignKeyConstraint(const std::string& fieldName,const st
     Constraint(fieldName), _referenceTableName(referenceTableName), _referenceFieldName(referenceFieldName) {
 }
 
-std::string ForeignKeyConstraint::GetRefenrenceTableName() const {
+std::string ForeignKeyConstraint::GetReferenceTableName() const {
     return _referenceTableName;
 }
 

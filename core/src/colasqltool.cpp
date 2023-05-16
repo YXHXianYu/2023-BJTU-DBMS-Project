@@ -94,7 +94,7 @@ void ColasqlTool::OutputConstraints(const std::vector<Constraint*> constraints) 
         } else if(dynamic_cast<ForeignKeyConstraint*>(it) != nullptr) {
             ForeignKeyConstraint* p = dynamic_cast<ForeignKeyConstraint*>(it);
 
-            std::cout << "  Foreign Key: " << p->GetFieldName() << " Reference " << p->GetRefenrenceTableName() << "." << p->GetReferenceFieldName() << std::endl;
+            std::cout << "  Foreign Key: " << p->GetFieldName() << " Reference " << p->GetReferenceTableName() << "." << p->GetReferenceFieldName() << std::endl;
         } else if(dynamic_cast<NotNullConstraint*>(it) != nullptr) {
             NotNullConstraint* p = dynamic_cast<NotNullConstraint*>(it);
 

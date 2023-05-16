@@ -38,6 +38,12 @@ const int kSizeNotProper = 28;
 const int kInsufficientAuthority = 29;
 const int kAuthorityNotFound = 30;
 const int kAuthorityExisted = 31;
+const int kConstraintNotNullConflict = 32;
+const int kConstraintUniqueConflict = 33;
+const int kConstraintPrimaryKeyConflict = 34;
+const int kConstraintForeignKeyConflict = 35;
+const int kImpossibleSituation = 36;
+const int kBeingRefered = 37;
 
 
 // ===== About Index =====

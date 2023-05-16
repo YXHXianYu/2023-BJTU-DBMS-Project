@@ -23,6 +23,8 @@ public:
     void SetTables(const std::vector<Table>&);
 
     int FindTable(std::string table_name);
+    int FindTable(std::string table_name, Table& return_table);
+
     int ShowTables(std::vector<std::string>& return_tables);
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
     int DropTable(std::string table_name);

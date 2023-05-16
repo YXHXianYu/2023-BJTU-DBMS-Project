@@ -1,9 +1,14 @@
 #include "table.h"
-
+#include "database.h"
 #include <algorithm>
 #include <cassert>
 
 #include "index/fhqtreapindex.h"
+
+Table::Table(std::string &table_name) {
+    this->table_name = table_name;
+
+}
 
 Table::Table(const std::string& table_name,
              const std::vector<std::pair<std::string, std::string>>& fields,
@@ -72,7 +77,66 @@ const std::vector<Constraint*>& Table::GetConstraints() const {
     return constraints;
 }
 
-int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
+int Table::CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db) {
+    for(auto constraint:constraints) {
+        if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){//默认
+            if (!record.count(constraint->GetFieldName())) {
+                record[constraint->GetFieldName()] = dynamic_cast<const DefaultConstraint *>(constraint)->GetValue();
+            }
+        }
+        if(dynamic_cast<const NotNullConstraint *>(constraint) != nullptr) {//非空
+            if(!record.count(constraint->GetFieldName())) {
+                return kConstraintNotNullConflict;
+            }
+        }
+        if (dynamic_cast<const UniqueConstraint *>(constraint) != nullptr){//唯一
+            std::string field_name = constraint->GetFieldName();
+            if(record.count(field_name)) {
+                for(auto& other_record : records) {
+                    if (other_record.count(field_name)){
+                        if (ColasqlTool::CompareAny(record[field_name], other_record[field_name]) == kEqual){
+                            return kConstraintUniqueConflict;
+                        }
+                    }
+                }
+            }
+        }
+        if (dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr) { //主键
+            if(!record.count(constraint->GetFieldName())) {
+                return kConstraintPrimaryKeyConflict;
+            }
+            std::string field_name = constraint->GetFieldName();
+            for(auto& other_record : records) {
+                if (other_record.count(field_name)){
+                    if (ColasqlTool::CompareAny (record[field_name], other_record[field_name]) == kEqual){
+                        return kConstraintPrimaryKeyConflict;
+                    }
+                }
+            }
+        }
+        if (dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
+            if(!record.count(constraint->GetFieldName())) {
+                continue;
+            }
+            std::string field_name = constraint->GetFieldName();
+            std::any current_value = record[field_name];
+            std::string reference_table_name = dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName();
+            std::string reference_field_name = dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName();
+            std::string tmp;
+            Table reference_table = Table(tmp);
+            int ret = db->FindTable(reference_table_name, reference_table);
+            if(ret != kSuccess) return kImpossibleSituation;
+            for(const auto& record : reference_table.GetRecords()) {
+                if(!record.count(reference_field_name)) continue;
+                if(ColasqlTool::CompareAny(current_value,record.at(reference_field_name)) == kEqual) return kSuccess;
+            }
+            return kConstraintForeignKeyConflict;
+        }
+    }
+    return kSuccess;
+}
+
+int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in, Database* db) {
     std::unordered_map<std::string, std::any> record;
     if(record_in[0].first == "*") {
         if(fields.size() != record_in.size()) {
@@ -105,7 +169,7 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
             record[field.first] = std::any(field.second);
         }
     }
-    //if(CheckConstraint(record) != kSuccess) return kConstraintConflict;
+    if(CheckConstraint(record, db) != kSuccess) return kConstraintConflict;
     /*todo: 约束条件
     for(auto constraint:constraints) {
         if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){//默认
@@ -237,8 +301,29 @@ int Table::CheckCondition(const std::unordered_map<std::string, std::any>& recor
     }
     return kSuccess;
 }
+int Table::CheckBeingRefered(std::unordered_map<std::string, std::any>& record, Database* db) {
+    for(auto constraint:constraints) {
+        if (dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr){
+            if(!record.count(constraint->GetFieldName())) continue;
 
-int Table::Delete(std::vector<std::tuple<std::string, std::string, int>> conditions) {
+            std::string field_name = constraint->GetFieldName();
+            std::any current_value = record[field_name];
+            std::string reference_table_name = dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName();
+            std::string reference_field_name = dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName();
+            std::string tmp;
+            Table reference_table = Table(tmp);
+            int ret = db->FindTable(reference_table_name, reference_table);
+            if(ret != kSuccess) return kImpossibleSituation;
+            for(const auto& record : reference_table.GetRecords()) {
+                if(!record.count(reference_field_name)) continue;
+                if(ColasqlTool::CompareAny(current_value,record.at(reference_field_name)) == kEqual) return kBeingRefered;
+            }
+            
+        }
+    }
+    return kSuccess;
+}
+int Table::Delete(std::vector<std::tuple<std::string, std::string, int>> conditions, Database* db) {
     for (const auto &condition : conditions) {
         if(!field_map.count(std::get<0>(condition))) {
             return kFieldNotFound;
@@ -247,6 +332,7 @@ int Table::Delete(std::vector<std::tuple<std::string, std::string, int>> conditi
     std::vector<int> index_for_delete;
     for(int i = 0; i < records.size(); ++i) {
         std::unordered_map<std::string, std::any>& record = records[i];
+        if(CheckBeingRefered(record,db) == kBeingRefered) return kBeingRefered;
         if(CheckCondition(record, conditions) == kSuccess) {
             index_for_delete.push_back(i);
         }
@@ -276,7 +362,7 @@ int Table::CheckDataType(std::string type, std::string value) {
     return kSuccess;
 }
 
-int Table::Update(const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions){
+int Table::Update(const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions, Database* db){
     for(const auto& change_field: values) {
         if(!field_map.count(change_field.first)) {
             return kFieldNotFound;
@@ -286,6 +372,35 @@ int Table::Update(const std::vector<std::pair<std::string,std::string>>& values,
         int ret = CheckDataType(field_map[field.first], field.second);
         if(ret != kSuccess) return ret;
     }
+
+    for(auto record: records) {
+        if(CheckCondition(record,conditions) != kSuccess) {
+            continue;
+        }
+        for(const auto& field : values) {
+            if(field_map[field.first] == "int") {
+                for(auto x : field.second) {
+                    if(x > '9' || x < '0') return kDataTypeWrong;
+                }
+                record[field.first] = std::any(std::stoi(field.second));
+            }
+            else if(field_map[field.first] == "float") {
+                int sum_dot = 0;
+                for (auto x : field.second) {
+                    if(x == '.') sum_dot++;
+                    if ((x > '9' || x < '0') && sum_dot>=2)
+                        return kDataTypeWrong;
+                }
+                record[field.first] = std::any(std::stof(field.second));
+            }
+            else if (field_map[field.first] == "string") {
+                record[field.first] = std::any(field.second);
+            }
+            int ret = CheckConstraint(record, db);
+            if(ret != kSuccess) return ret;
+        }
+    }
+
     for(auto& record: records) {
         if(CheckCondition(record,conditions) != kSuccess) {
             continue;

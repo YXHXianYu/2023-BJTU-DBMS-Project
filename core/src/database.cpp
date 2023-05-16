@@ -31,6 +31,17 @@ int Database::FindTable(std::string table_name) {
     return kTableNotFound;
 }
 
+int Database::FindTable(std::string table_name, Table& return_table) {
+    for(const auto& table : tables) {
+        
+        if(table.GetTableName() == table_name) {
+            return_table = table;
+            return kSuccess;
+        }
+    }
+    return kTableNotFound;
+}
+
 int Database::CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints) {
     for(const auto& table : tables) {
         if(table.GetTableName() == table_name) {
@@ -44,7 +55,15 @@ int Database::CreateTable(std::string table_name, std::vector<std::pair<std::str
 int Database::DropTable(std::string table_name) {
     for(int i = 0; i < tables.size(); ++i) {
         if(tables[i].GetTableName() == table_name) {
+
+            //check constraint
+            auto constraints = tables[i].GetConstraints();
+            for(const auto& constraint : constraints) {
+                if(dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr){return kBeingRefered;}
+            }
             tables.erase(tables.begin() + i);
+            //todo : 删除所有被此表参考的约束
+            
             return kSuccess;
         }
     }
@@ -54,7 +73,7 @@ int Database::DropTable(std::string table_name) {
 int Database::Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in) {
     for(auto& table : tables) {
         if(table.GetTableName() == table_name) {
-            return table.Insert(record_in);
+            return table.Insert(record_in, this);
         }
     }
     return kTableNotFound;
@@ -63,7 +82,7 @@ int Database::Insert(std::string table_name, std::vector<std::pair<std::string, 
 int Database::Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions) {
     for(auto& table : tables) {
         if(table.GetTableName() == table_name) {
-            return table.Delete(conditions);
+            return table.Delete(conditions, this);
         }
     }
     return kTableNotFound;
@@ -80,7 +99,7 @@ int Database::Select(std::string table_name, std::vector<std::string> field_name
 int Database::Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions) {
     for(auto& table:tables) {
         if(table.GetTableName() == table_name) {
-            return table.Update(values, conditions);
+            return table.Update(values, conditions, this);
         }
     }
     return kTableNotFound;

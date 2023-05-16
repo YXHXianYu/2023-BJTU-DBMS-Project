@@ -12,6 +12,8 @@
 #include "constants.h"
 #include "index/index.h"
 
+class Database;
+
 class Table {
 private:
     std::string table_name;
@@ -23,6 +25,7 @@ private:
     std::unique_ptr<Index> index_ptr;
 
 public:
+    Table(std::string &table_name);
     Table(const std::string& table_name,
           const std::vector<std::pair<std::string, std::string>>& fields,
           const std::vector<Constraint*>& constraints);
@@ -48,15 +51,15 @@ public:
                std::vector<std::tuple<std::string, std::string,int>> conditions,
                std::vector<std::vector<std::any>> &return_records);
     //插入记录
-    int Insert(std::vector<std::pair<std::string, std::string>> record_in);
+    int Insert(std::vector<std::pair<std::string, std::string>> record_in, Database* db);
     //删除记录
-    int Delete(std::vector<std::tuple<std::string, std::string, int>> conditions);
+    int Delete(std::vector<std::tuple<std::string, std::string, int>> conditions, Database* db);
     //检查记录是否满足Where条件
     int CheckCondition(const std::unordered_map<std::string, std::any>& record,
                        const std::vector<std::tuple<std::string, std::string, int>>& conditions);
     //更新记录
     int Update(const std::vector<std::pair<std::string,std::string>>& value,
-               const std::vector<std::tuple<std::string, std::string, int>>& conditions);
+               const std::vector<std::tuple<std::string, std::string, int>>& conditions, Database* db);
 
     int DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,
                       std::vector<Constraint*>& constraints);
@@ -69,6 +72,10 @@ public:
 
     // 建立索引
     int BuildIndex(const std::vector<std::string>& compare_key, int type = kFHQTreapIndex);
+    //检查一条记录是否约束
+    int CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db);
+    //检查是否被其它表参考
+    int CheckBeingRefered(std::unordered_map<std::string, std::any>& record, Database* db);
 };
 
 #endif // TABLE_H
