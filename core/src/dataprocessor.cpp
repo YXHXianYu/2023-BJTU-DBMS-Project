@@ -268,7 +268,7 @@ int DataProcessor::ShowTables(std::vector<std::string>& return_tables) {
 			else it++;
 		}
 	}
-	return current_database->ShowTables(return_tables);
+	return ret;
 }
 
 int DataProcessor::AlterTableAdd(std::string table_name,
