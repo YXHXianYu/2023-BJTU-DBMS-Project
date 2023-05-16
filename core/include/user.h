@@ -63,7 +63,7 @@ public:
     int CheckDatabaseInAuthorities(std::string database_name);
     int CheckTableInAuthorities(std::string database_name, std::string table_name);
     //获取权限
-    //std::vector<authority> autorities GetAuthority() const ;
+    std::vector<priviledge> GetAuthorities() const ;
 
 };
 

@@ -157,7 +157,6 @@ int User::CheckTableInAuthorities(std::string database_name, std::string table_n
     }
     return kDatabaseNotFound;
 }
-/*
-std::vector<User::authority> autorities User::GetAuthority() const {
+std::vector<priviledge>  User::GetAuthorities() const {
     return authorities;
-}*/
+}
