@@ -5,27 +5,32 @@
 #include <QTextEdit>
 #include <streambuf>
 
-class QTextEditStreamBuf : public std::streambuf {
- public:
-  QTextEditStreamBuf(QTextEdit *edit) : m_Edit(edit) {}
+class QTextEditStreamBuf : public std::streambuf
+{
+public:
+    QTextEditStreamBuf(QTextEdit* edit)
+        : m_Edit(edit) {}
 
- protected:
-  virtual std::streamsize xsputn(const char *s, std::streamsize n) override {
-    QString text = QString::fromUtf8(s, static_cast<int>(n));
-    m_Edit->append(text);
-    return n;
-  }
-
-  virtual int_type overflow(int_type v) override {
-    if (v != traits_type::eof()) {
-      char ch = static_cast<char>(v);
-      xsputn(&ch, 1);
+protected:
+    virtual std::streamsize xsputn(const char* s, std::streamsize n) override
+    {
+        QString text = QString::fromUtf8(s, static_cast<int>(n));
+        m_Edit->append(text);
+        return n;
     }
-    return v;
-  }
 
- private:
-  QTextEdit *m_Edit;
+    virtual int_type overflow(int_type v) override
+    {
+        if (v != traits_type::eof())
+        {
+            char ch = static_cast<char>(v);
+            xsputn(&ch, 1);
+        }
+        return v;
+    }
+
+private:
+    QTextEdit* m_Edit;
 };
 
-#endif  // QTBSTREAMBUF_H
+#endif // QTBSTREAMBUF_H

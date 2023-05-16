@@ -6,32 +6,34 @@
 
 #include "dataprocessor.h"
 
-namespace Ui {
+namespace Ui
+{
 class ui_register;
 }
 
-class ui_register : public QMainWindow {
-  Q_OBJECT
+class ui_register : public QMainWindow
+{
+    Q_OBJECT
 
- public:
-  explicit ui_register(QWidget *parent = nullptr);
-  ~ui_register();
+public:
+    explicit ui_register(QWidget* parent = nullptr);
+    ~ui_register();
 
- signals:
-  void back();
+signals:
+    void back();
 
- private slots:
-  void on_pushButton_back_clicked();
+private slots:
+    void on_pushButton_back_clicked();
 
-  void on_pushButton_regist_clicked();
+    void on_pushButton_regist_clicked();
 
- private:
-  Ui::ui_register *ui;
-  QString user_name;
-  QString user_pwd1;
-  QString user_pwd2;
+private:
+    Ui::ui_register* ui;
+    QString user_name;
+    QString user_pwd1;
+    QString user_pwd2;
 
-  void clear();
+    void clear();
 };
 
-#endif  // UI_REGISTER_H
+#endif // UI_REGISTER_H
