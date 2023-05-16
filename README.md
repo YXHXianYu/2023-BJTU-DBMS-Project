@@ -386,3 +386,5 @@
 ### 4. TODO Lists
 
 * DELETE全表后，不一定返回empty set的问题。
+* add foreign key后rollback发生re
+* 外键建完commit之后，下次打开gui无法显示

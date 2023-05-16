@@ -32,15 +32,17 @@ void createtable::on_add_col_clicked()
     if (ui->foreign_check->isChecked())
     {
         QString reference_table = ui->foreign_table->text();
-        if (reference_table == "")
+        QString reference_field = ui->foreign_field->text();
+        if (reference_table == "" || reference_field == "")
         {
-            QMessageBox::warning(this, "警告", "未输入参考表！");
+            QMessageBox::warning(this, "警告", "未输入参考值！");
             return;
         }
         else
         {
             check = "FOREIGN KEY";
-            foreigns.push_back({field, reference_table});
+            foreigns.push_back(
+                std::make_tuple(field, reference_table, reference_field));
         }
     }
     if (ui->notnull_check->isChecked())
@@ -68,6 +70,7 @@ void createtable::on_add_col_clicked()
     ui->tableView->show();
     ui->col_name->clear();
     ui->foreign_table->clear();
+    ui->foreign_field->clear();
     ui->foreign_check->setChecked(false);
     ui->notnull_check->setChecked(false);
     ui->pk_check->setChecked(false);
@@ -110,12 +113,14 @@ void createtable::on_finished_table_clicked()
     {
         opt += "CONSTRAINT PRIMARY KEY " + prime + " ";
     }
-    for (auto const& pair : foreigns)
+    for (auto const& tuple : foreigns)
     {
-        QString key = pair.first;
-        QString table = pair.second;
+        //        QString key = std::get<0>(tuple);
+        //        QString table = std::get<1>(tuple);
+        //        QString field = std::get<0>(tuple);
+        auto [key, table, field] = tuple;
         opt += "CONSTRAINT FOREIGN KEY " + key + " REFERENCES " + table + " " +
-               key + " ";
+               field + " ";
     }
     opt += ";";
     qDebug() << opt;

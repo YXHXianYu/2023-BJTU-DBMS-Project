@@ -438,9 +438,13 @@ void MainWindow::display_table(
         model->appendRow(item);
     }
     ui->tableView->setModel(model);
+    connect(model, &QStandardItemModel::dataChanged, this,
+            &MainWindow::handleTableModified);
 }
 
-void MainWindow::on_btn_cancel_clicked()
+void MainWindow::handleTableModified() { save_change(); }
+
+void MainWindow::cancel_change()
 {
     qDebug() << "cancel edit";
     int ret = DataProcessor::GetInstance().GetCurrentDatabase(current_database);
@@ -459,7 +463,7 @@ void MainWindow::on_btn_cancel_clicked()
     display_table(return_records);
 }
 
-void MainWindow::on_btn_save_clicked()
+void MainWindow::save_change()
 {
     // fk multiple select
     if (multiple_select != 0)
@@ -494,12 +498,13 @@ void MainWindow::on_btn_save_clicked()
             QString origin_data = anyToQString(origin_records[i + 1][j]);
             if (new_data != origin_data)
             {
+                qDebug() << "modify:" << new_data;
                 diff++;
                 if (diff > 1)
                 {
                     QMessageBox::warning(this, "错误",
                                          "不支持多条处记录同时修改\n");
-                    on_btn_cancel_clicked();
+                    cancel_change();
                     return;
                 }
                 modify.push_back({anytoString(origin_records[0][j]),
@@ -518,6 +523,32 @@ void MainWindow::on_btn_save_clicked()
     {
         QMessageBox::warning(this, "错误", "修改错误" + QString::number(ret));
         qDebug() << "update error：" << ret;
-        on_btn_cancel_clicked();
+        cancel_change();
     }
+}
+
+void MainWindow::on_btn_commit_clicked()
+{
+    int ret = DataProcessor::GetInstance().Write();
+    if (ret != kSuccess)
+    {
+        QMessageBox::warning(this, "错误", "commit错误" + QString::number(ret));
+        qDebug() << "commit error：" << ret;
+    }
+}
+
+void MainWindow::on_btn_rollback_clicked()
+{
+    qDebug() << "click rollback";
+    int ret = DataProcessor::GetInstance().Read();
+    qDebug() << "get return";
+    if (ret != kSuccess)
+    {
+        QMessageBox::warning(this, "错误",
+                             "rollback错误" + QString::number(ret));
+        qDebug() << "rollback error：" << ret;
+        return;
+    }
+    init_treeview();
+    cancel_change();
 }
