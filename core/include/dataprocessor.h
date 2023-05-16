@@ -62,9 +62,10 @@ public:
 
 //权限
 public:
-    int GrantAuthority(std::string database_name, std::string table_name, std::string authority_name);
-    int GrantAuthority(std::string database_name, std::string authority_name);
-
+    int GrantAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);
+    int GrantAuthority(std::string user_name,std::string database_name, std::string authority_name);
+    int RevokeAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);
+    int RevokeAuthority(std::string user_name,std::string database_name, std::string authority_name);
 //文件
 public:
     int Read(bool debug = false);

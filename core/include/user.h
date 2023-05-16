@@ -19,8 +19,8 @@ enum authority_number {
     DROP,
 };
 struct priviledge {
-    std::string database_name; // maybe 'all'
-    std::string table_name;  // maybe 'all'
+    std::string database_name;
+    std::string table_name;
     authority_number number;
     //数据库级权限，table_name = ""
 };

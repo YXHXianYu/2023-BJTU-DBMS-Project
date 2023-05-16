@@ -58,12 +58,37 @@ int DataProcessor::Login(std::string user_name, std::string user_password) {
 	return kUserNameNotFound;
 }
 
-int DataProcessor::GrantAuthority(std::string database_name, std::string table_name, std::string authority_name) {
+int DataProcessor::GrantAuthority(std::string user_name, std::string database_name, std::string table_name, std::string authority_name) {
 	if(current_user == nullptr) return kUserNotLogin;
 	//todo:
+	authority_number number;
+	if(authority_name == "select") number = authority_number::SELECT;
+	if(authority_name == "delete") number = authority_number::DELETE;
+	if(authority_name == "insert") number = authority_number::INSERT;
+	if(authority_name == "update") number = authority_number::UPDATE;
+	if(authority_name == "index") number = authority_number::INDEX;
+	if(authority_name == "alter") number = authority_number::ALTER;
+
+
+	if(current_user->CheckAuthority(database_name, table_name, number) != kSuccess) {
+		return kInsufficientAuthority;
+	}
+	for(auto& user:users) {
+		if(user.GetUserName() == user_name) {
+			if(user.CheckAuthority(database_name, table_name, number) != kSuccess) user.GrantAuthority(database_name,table_name,number);
+			return kSuccess;
+		}
+	}
+	return kUserNameNotFound;
 }
-int DataProcessor::GrantAuthority(std::string database_name, std::string authority_name) {
+int DataProcessor::GrantAuthority(std::string user_name, std::string database_name, std::string authority_name) {
 	GrantAuthority(database_name,"",authority_name);
+}
+int RevokeAuthority(std::string database_name, std::string table_name, std::string authority_name) {
+	
+}
+int RevokeAuthority(std::string database_name, std::string authority_name) {
+
 }
 
 int DataProcessor::ShowDatabases(std::vector<std::string>& return_databases) {
@@ -72,7 +97,7 @@ int DataProcessor::ShowDatabases(std::vector<std::string>& return_databases) {
 	}
 	return_databases.clear();
 	for (const auto& database : databases) {
-		if(current_user->CheckDatabaseInAuthorities(database.GetDatabaseName())){
+		if(current_user->CheckDatabaseInAuthorities(database.GetDatabaseName()) == kSuccess){
 			return_databases.push_back(database.GetDatabaseName());
 		}
 	}
