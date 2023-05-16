@@ -126,12 +126,23 @@ int FileManager::WriteUsersFile(const std::vector<User>& users) {
   std::ofstream out("./data/users.txt",
                     std::ofstream::out | std::ofstream::trunc);
 
+    auto withNull = [&](const std::string& str) {
+        if(str == "") return "NULL";
+        else return str.c_str();
+    };
+
   // out
   if (out.is_open()) {
     out << users.size() << std::endl;
     for (const auto& user : users) {
-      out << user.GetUserName() << " " << user.GetUserPassword() << " "
-          << int(user.GetAuthority()) << std::endl;
+      out << user.GetUserName() << " " << user.GetUserPassword() << " ";
+      
+      int n = user.GetAuthorities().size();
+      out << n << " ";
+      for(const auto& privi: user.GetAuthorities()) {
+        out << withNull(privi.database_name) << " " << withNull(privi.table_name) << " " << privi.number << " ";
+      }
+      out << std::endl;
     }
     out.close();
   }
@@ -258,14 +269,29 @@ int FileManager::ReadUsersFile(std::vector<User>& users) {
 
   if (!in.is_open()) return -1;
 
+    auto makeNull = [&](std::string& str) {
+        if(str == "NULL") str = "";
+    };
+
   int n;
   in >> n;
   for (int i = 1; i <= n; i++) {
     std::string name;
     std::string password;
-    int x;
-    in >> name >> password >> x;
-    users.push_back(User(name, password, Authority(x)));
+    int m;
+    in >> name >> password >> m;
+    std::vector<priviledge> authorities;
+    authorities.resize(m);
+    for(int i = 0; i < m; i++) {
+        priviledge privi;
+        int x;
+        in >> privi.database_name >> privi.table_name >> x;
+        makeNull(privi.database_name);
+        makeNull(privi.table_name);
+        privi.number = authority_number(x);
+        authorities[i] = privi;
+    }
+    users.push_back(User(name, password, authorities));
   }
 
   return 0;

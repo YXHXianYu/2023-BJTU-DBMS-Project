@@ -4,6 +4,7 @@ project(colasql)
 
 # For ccls config
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 17)
 
 # 将src文件夹下所有文件添加至SOURCE_src
 aux_source_directory(./src SOURCE_SRC)

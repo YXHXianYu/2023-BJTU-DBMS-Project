@@ -5,11 +5,15 @@
 # Added by. YXHXianYu
 # ccls
 .ccls-cache/
+cmd/.ccls-cache/
+core/.ccls-cache/
 file/.ccls-cache/
+
 # Vscode
 .vscode/
 # VSCodeCounter
 .VSCodeCounter/
+
 # Cmd
 cmd/build/
 cmd/data/
