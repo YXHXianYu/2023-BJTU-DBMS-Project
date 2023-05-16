@@ -62,6 +62,10 @@ public:
 
 //权限
 public:
+    bool IsAdmin();
+    bool FindDatabase(std::string database_name);
+    bool FindTable(std::string database_name, std::string table_name);
+    bool FindUser(std::string user_name);
     int GrantAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);
     int GrantAuthority(std::string user_name,std::string database_name, std::string authority_name);
     int RevokeAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);

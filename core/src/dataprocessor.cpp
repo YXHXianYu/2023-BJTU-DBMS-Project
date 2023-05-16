@@ -60,16 +60,29 @@ int DataProcessor::Login(std::string user_name, std::string user_password) {
 
 int DataProcessor::GrantAuthority(std::string user_name, std::string database_name, std::string table_name, std::string authority_name) {
 	if(current_user == nullptr) return kUserNotLogin;
+	if(authority_name == "all") {
+		if(!IsAdmin()) return kInsufficientAuthority;
+	}
 	//todo:
 	authority_number number;
 	if(authority_name == "select") number = authority_number::SELECT;
-	if(authority_name == "delete") number = authority_number::DELETE;
-	if(authority_name == "insert") number = authority_number::INSERT;
-	if(authority_name == "update") number = authority_number::UPDATE;
-	if(authority_name == "index") number = authority_number::INDEX;
-	if(authority_name == "alter") number = authority_number::ALTER;
-
-
+	else if(authority_name == "delete") number = authority_number::DELETE;
+	else if(authority_name == "insert") number = authority_number::INSERT;
+	else if(authority_name == "update") number = authority_number::UPDATE;
+	else if(authority_name == "index") number = authority_number::INDEX;
+	else if(authority_name == "alter") number = authority_number::ALTER;
+	else if(authority_name == "all") {
+		int ret = GrantAuthority(user_name, database_name, table_name, "select");
+		GrantAuthority(user_name, database_name, table_name, "delete");
+		GrantAuthority(user_name, database_name, table_name, "insert");
+		GrantAuthority(user_name, database_name, table_name, "update");
+		GrantAuthority(user_name, database_name, table_name, "index");
+		GrantAuthority(user_name, database_name, table_name, "alter");
+		return ret;
+	}
+	if(!FindDatabase(database_name)) return kDatabaseNotFound;
+	if(!FindTable(database_name, table_name)) return kDatabaseNotFound;
+	if(!FindUser(user_name)) return kUserNameNotFound;
 	if(current_user->CheckAuthority(database_name, table_name, number) != kSuccess) {
 		return kInsufficientAuthority;
 	}
@@ -81,14 +94,137 @@ int DataProcessor::GrantAuthority(std::string user_name, std::string database_na
 	}
 	return kUserNameNotFound;
 }
-int DataProcessor::GrantAuthority(std::string user_name, std::string database_name, std::string authority_name) {
-	GrantAuthority(database_name,"",authority_name);
+bool DataProcessor::IsAdmin() {
+	if(current_database_name == "admin") return 1;
+	return 0;
 }
-int RevokeAuthority(std::string database_name, std::string table_name, std::string authority_name) {
-	
-}
-int RevokeAuthority(std::string database_name, std::string authority_name) {
 
+bool DataProcessor::FindDatabase(std::string database_name) {
+	for(auto& database: databases) {
+		if(database.GetDatabaseName() == database_name) return kSuccess;
+	}
+	return kDatabaseNotFound;
+}
+bool DataProcessor::FindTable(std::string database_name, std::string table_name) {
+	for(auto& database: databases) {
+		std::vector<std::string> tables;
+		database.ShowTables(tables);
+		for(auto table_name_in : tables)
+		if(database.GetDatabaseName() == database_name && table_name_in == table_name) return kSuccess;
+	}
+	return kTableNotFound;
+}
+
+bool DataProcessor::FindUser(std::string user_name) {
+	for(auto& user_in : users) {
+		if(user_in.GetUserName() == user_name) {
+			return kSuccess;
+		}
+	}
+	return kUserNameNotFound;
+}
+
+int DataProcessor::GrantAuthority(std::string user_name, std::string database_name, std::string authority_name) {
+	if(current_user == nullptr) return kUserNotLogin;
+	if(database_name == "*" || authority_name == "all") {
+		if(!IsAdmin()) return kInsufficientAuthority;
+	}
+	authority_number number;
+	if(authority_name == "create") number = authority_number::CREATE;
+	else if(authority_name == "drop") number = authority_number::DROP;
+	else if(authority_name == "select") number = authority_number::SELECT;
+	else if(authority_name == "delete") number = authority_number::DELETE;
+	else if(authority_name == "insert") number = authority_number::INSERT;
+	else if(authority_name == "update") number = authority_number::UPDATE;
+	else if(authority_name == "index") number = authority_number::INDEX;
+	else if(authority_name == "alter") number = authority_number::ALTER;
+	
+	if(authority_name == "all") {
+		int find_user = 0;
+		for(auto user:users) {
+			if(user.GetUserName() == user_name) {
+				find_user = 1;
+				break;
+			}
+		}
+		if(find_user == 0) return kUserNameNotFound;
+		int ret = GrantAuthority(user_name, database_name, "create");
+		GrantAuthority(user_name, database_name, "drop");
+		GrantAuthority(user_name, database_name, "select");
+		GrantAuthority(user_name, database_name, "insert");
+		GrantAuthority(user_name, database_name, "update");
+		GrantAuthority(user_name, database_name, "index");
+		GrantAuthority(user_name, database_name, "alter");
+		GrantAuthority(user_name, database_name, "delete");
+		return ret;
+	}
+	for(auto& database : databases) {
+		if(database_name != "*" && database_name != database.GetDatabaseName()) continue;
+		//数据库级权限
+		if(number == authority_number::CREATE || number == authority_number::DROP) {
+			if(current_user->CheckAuthority(database_name,number) != kSuccess) return kInsufficientAuthority;
+			for(auto& user:users) {
+				if(user.GetUserName() == user_name) {
+					if(user.CheckAuthority(database_name,number) != kSuccess) user.GrantAuthority(database_name,number);
+					return kSuccess;
+				}
+			}
+			return kUserNameNotFound;
+		}
+		//表级权限
+		std::vector<std::string> return_tables;
+		database.ShowTables(return_tables);
+		for(auto table_name : return_tables) {
+			if(current_user->CheckAuthority(database_name,table_name,number) != kSuccess) {
+				return kInsufficientAuthority;
+			}
+		}
+		for(auto& user:users) {
+			if(user.GetUserName() == user_name) {
+				for(auto table_name : return_tables) {
+					if(user.CheckAuthority(database_name,table_name,number) != kSuccess) user.GrantAuthority(database_name,table_name,number);
+				}
+				return kSuccess;
+			}
+		}
+		return kUserNameNotFound;
+	}
+	return kDatabaseNotFound;
+}
+int DataProcessor::RevokeAuthority(std::string user_name, std::string database_name, std::string table_name, std::string authority_name) {
+	if(current_user == nullptr) return kUserNotLogin;
+	authority_number number;
+	if(authority_name == "select") number = authority_number::SELECT;
+	else if(authority_name == "delete") number = authority_number::DELETE;
+	else if(authority_name == "insert") number = authority_number::INSERT;
+	else if(authority_name == "update") number = authority_number::UPDATE;
+	else if(authority_name == "index") number = authority_number::INDEX;
+	else if(authority_name == "alter") number = authority_number::ALTER;
+	if(!FindDatabase(database_name)) return kDatabaseNotFound;
+	if(!FindTable(database_name, table_name)) return kDatabaseNotFound;
+	if(!FindUser(user_name)) return kUserNameNotFound;
+	if(current_user->CheckAuthority(database_name,table_name,number) != kSuccess) {
+		return kInsufficientAuthority;
+	}
+	for(auto& user:users) {
+		if(user.GetUserName() == user_name) {
+			return user.RevokeAuthority(database_name, number);
+		}
+	}
+	return kDatabaseNotFound;
+}
+int DataProcessor::RevokeAuthority(std::string user_name, std::string database_name, std::string authority_name) {
+	authority_number number;
+	if(authority_name == "create") number = authority_number::CREATE;
+	else if(authority_name == "drop") number = authority_number::DROP;
+	if(!FindDatabase(database_name)) return kDatabaseNotFound;
+	if(!FindUser(user_name)) return kUserNameNotFound;
+	for(auto& user:users) {
+		if(user.GetUserName() == user_name) {
+			return user.RevokeAuthority(database_name, number);
+		}
+	}
+	return kUserNameNotFound;
 }
 
 int DataProcessor::ShowDatabases(std::vector<std::string>& return_databases) {

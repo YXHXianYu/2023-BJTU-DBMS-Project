@@ -27,6 +27,9 @@ std::string User::GetUserPassword() const  {
 }
 //查询数据库级权限
 int User::CheckAuthority(std::string database_name, authority_number number) const {
+    if(user_name == "admin") {
+        return kSuccess;
+    }
     for(const auto& authority : authorities) {
         if(authority.database_name == database_name && authority.number == number) return kSuccess;
     }
@@ -34,6 +37,9 @@ int User::CheckAuthority(std::string database_name, authority_number number) con
 }
 //查询表级权限
 int User::CheckAuthority(std::string database_name, std::string table_name, authority_number number) const {
+    if(user_name == "admin") {
+        return kSuccess;
+    }
     for(const auto& authority : authorities) {
         if(authority.database_name != database_name) continue;
         if(authority.table_name != table_name) continue;
@@ -71,6 +77,7 @@ int User::RevokeAuthority(std::string database_name, authority_number number) {
             return kSuccess;
         }
     }
+    return kSuccess;
 }
 //删除表级权限
 int User::RevokeAuthority(std::string database_name, std::string table_name, authority_number number) {
@@ -82,6 +89,7 @@ int User::RevokeAuthority(std::string database_name, std::string table_name, aut
             return kSuccess;
         }
     }
+    return kSuccess;
 }
 //授予所有表级权限
 int User::GrantAllTableAuthorities(std::string database_name, std::string table_name) {
@@ -146,12 +154,18 @@ int User::RevokeAllDatabaseAndTableAuthorities(std::string database_name) {
     return kSuccess;
 }
 int User::CheckDatabaseInAuthorities(std::string database_name) {
+    if(user_name == "admin") {
+        return kSuccess;
+    }
     for(const auto& authority : authorities) {
         if(authority.database_name == database_name) return kSuccess;
     }
     return kDatabaseNotFound;
 }
 int User::CheckTableInAuthorities(std::string database_name, std::string table_name) {
+    if(user_name == "admin") {
+        return kSuccess;
+    }
     for(const auto& authority : authorities) {
         if(authority.database_name == database_name && authority.table_name == table_name) return kSuccess;
     }
