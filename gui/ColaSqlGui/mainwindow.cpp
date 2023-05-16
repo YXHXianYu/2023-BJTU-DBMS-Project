@@ -516,8 +516,8 @@ void MainWindow::on_btn_save_clicked()
     ret = DataProcessor::GetInstance().Update(current_table, modify, condition);
     if (ret != kSuccess)
     {
-        QMessageBox::warning(this, "错误", "修改错误\n");
+        QMessageBox::warning(this, "错误", "修改错误" + QString::number(ret));
         qDebug() << "update error：" << ret;
-        assert(false);
+        on_btn_cancel_clicked();
     }
 }
