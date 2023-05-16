@@ -77,9 +77,10 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in) {
             record[field.first] = std::any(field.second);
         }
     }
+    //if(CheckConstraint(record) != kSuccess) return kConstraintConflict;
     /*todo: 约束条件
     for(auto constraint:constraints) {
-        if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){
+        if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){//默认
             if (!record.count(constraint->GetFieldName())) {
                 record[constraint->GetFieldName()] = getField
             }
