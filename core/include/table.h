@@ -40,6 +40,7 @@ public:
     //获取表名
     const std::string& GetTableName() const;
     const std::vector<std::pair<std::string, std::string>>& GetFields() const;
+    const std::unordered_map<std::string, std::string> GetFieldMap() const;
     const std::vector<std::unordered_map<std::string, std::any> >& GetRecords() const;
     const std::vector<Constraint*>& GetConstraints() const;
     

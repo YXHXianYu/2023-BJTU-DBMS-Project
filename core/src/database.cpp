@@ -131,3 +131,19 @@ int Database::ShowTables(std::vector<std::string>& return_tables) {
     }
     return kSuccess;
 }
+
+int Database::BuildIndex(std::string table_name, const std::vector<std::string>& compare_key) {
+    for(auto& table: tables) {
+        if(table.GetTableName() != table_name) continue;
+        const auto& fmap = table.GetFieldMap();
+        for(const auto& key: compare_key) {
+            if(fmap.count(key) == 0) {
+                return kFieldNotFound;
+            }
+        }
+        return table.BuildIndex(compare_key);
+    }
+    return kTableNotFound;
+
+}
+

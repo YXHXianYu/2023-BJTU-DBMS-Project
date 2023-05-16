@@ -70,6 +70,11 @@ public:
     int GrantAuthority(std::string user_name,std::string database_name, std::string authority_name);
     int RevokeAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);
     int RevokeAuthority(std::string user_name,std::string database_name, std::string authority_name);
+
+//索引
+public:
+    int BuildIndex(std::string table_name, const std::vector<std::string>& compare_key);
+
 //文件
 public:
     int Read(bool debug = false);

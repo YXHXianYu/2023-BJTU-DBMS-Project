@@ -36,31 +36,33 @@ public:
 
 private:
 
-    std::string CreateUser(const std::vector<std::string>& seq); // TODO
-    std::string GrantUser(const std::vector<std::string>& seq); // TODO
-    std::string DeleteUser(const std::vector<std::string>& seq); // TODO
+    std::string CreateUser(const std::vector<std::string>& seq); // 
+    std::string GrantUser(const std::vector<std::string>& seq); // 
+    std::string DeleteUser(const std::vector<std::string>& seq); // 
     // std::string ActivateAdmin(const std::vector<std::string>& seq);
     // std::string DeactivateAdmin(const std::vector<std::string>& seq);
 
-    std::string CreateDatabase(const std::vector<std::string>& seq); // TODO
-    std::string DeleteDatabase(const std::vector<std::string>& seq); // TODO
+    std::string CreateDatabase(const std::vector<std::string>& seq); // 
+    std::string DeleteDatabase(const std::vector<std::string>& seq); // 
     std::string UseDatabase(const std::vector<std::string>& seq);
-    std::string ShowDatabases(const std::vector<std::string>& seq); // TODO
+    std::string ShowDatabases(const std::vector<std::string>& seq); // 
 
     std::string CreateTable(const std::vector<std::string>& seq);
-    std::string DeleteTable(const std::vector<std::string>& seq); // TODO
-    std::string AlterTableAdd(const std::vector<std::string>& seq); // TODO
-    std::string AlterTableDrop(const std::vector<std::string>& seq); // TODO
-    std::string AlterTableModify(const std::vector<std::string>& seq); // TODO
-    std::string AlterTableConstraint(const std::vector<std::string>& seq); // TODO
-    std::string AlterTableDeleteConstraint(const std::vector<std::string>& seq); // TODO
-    std::string QueryTable(const std::vector<std::string>& seq); // TODO
-    std::string ShowTables(const std::vector<std::string>& seq); // TODO
+    std::string DeleteTable(const std::vector<std::string>& seq); // 
+    std::string AlterTableAdd(const std::vector<std::string>& seq); // 
+    std::string AlterTableDrop(const std::vector<std::string>& seq); // 
+    std::string AlterTableModify(const std::vector<std::string>& seq); // 
+    std::string AlterTableConstraint(const std::vector<std::string>& seq); // 
+    std::string AlterTableDeleteConstraint(const std::vector<std::string>& seq); // 
+    std::string QueryTable(const std::vector<std::string>& seq); // 
+    std::string ShowTables(const std::vector<std::string>& seq); // 
 
     std::string InsertRecord(const std::vector<std::string>& seq);
-    std::string DeleteRecord(const std::vector<std::string>& seq); // TODO
+    std::string DeleteRecord(const std::vector<std::string>& seq); // 
     std::string SelectRecord(const std::vector<std::string>& seq);
-    std::string UpdateRecord(const std::vector<std::string>& seq); // TODO
+    std::string UpdateRecord(const std::vector<std::string>& seq); // 
+    
+    std::string BuildIndex(const std::vector<std::string>& seq);
 
     std::string Read(bool debug = false);
     std::string Save();

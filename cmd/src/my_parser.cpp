@@ -42,6 +42,11 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
         return ShowDatabases(seq);                             // Show Databases
     }
 
+    // ----- Create (index) -----
+    if(seq[0] == "create" && seq[1] == "index") {              // Build Index
+        return BuildIndex(seq);
+    }
+
     // ----- Table -----
     if(seq[1] == "table") {
         if(seq[0] == "create") return CreateTable(seq);        // Create Table
@@ -634,6 +639,29 @@ std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
     }
 
     return success;
+}
+
+std::string Parser::BuildIndex(const std::vector<std::string>& seq) {
+    if (seq.size() <= 4 || seq[2] != "on") {
+        return error + statementIncomplete;
+    }
+
+    std::string tableName = seq[3];
+
+    std::vector<std::string> compare_key;
+
+    for(int i = 4; i < seq.size(); i++) {
+        compare_key.push_back(seq[i]);
+    }
+
+    int ret = DataProcessor::GetInstance().BuildIndex(tableName, compare_key);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+    
+    return success;
+
 }
 
 std::string Parser::Read(bool debug) {

@@ -24,9 +24,9 @@ const int kNotEqualConditon =16;
 const int kTableNotFound = 17;
 const int kConditionsNotSatisfied = 18;
 const int kNotSameType = 19;
-const int kLarger = 20;
-const int kEqual = 21;
-const int kLess = 22;
+const int kLarger = 1;
+const int kEqual = 0;
+const int kLess = -1;
 
 const int kIdentifiedFail = 24;
 const int kDatabaseNotUse = 25;
