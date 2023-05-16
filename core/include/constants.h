@@ -38,4 +38,16 @@ const int kSizeNotProper = 28;
 const int kInsufficientAuthority = 29;
 const int kAuthorityNotFound = 30;
 const int kAuthorityExisted = 31;
+
+
+// ===== About Index =====
+const int kUnknownIndex = 100;
+const int kFHQTreapIndex = 101;
+
+const int kFailedConditionRelationNotSupport = 110;
+const int kFailedConditionDuplicate = 111;
+const int kFailedIndexCouldnotSpeedup = 112;
+const int kFailedIndexNotBuild = 113;
+
+
 #endif

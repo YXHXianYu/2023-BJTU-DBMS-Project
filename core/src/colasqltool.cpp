@@ -188,7 +188,8 @@ std::vector<std::vector<std::any>> ColasqlTool::ChangeStringsToRecords(std::vect
 }
 
 std::string ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::any>> result) {
-    
+
+    std::cout << std::endl;
     std::string out_result;
     if(result.size() <= 1) {
         out_result = "Empty set\n";

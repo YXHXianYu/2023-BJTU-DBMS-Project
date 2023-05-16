@@ -4,9 +4,11 @@
 #include <vector>
 #include <string>
 #include <any>
-#include<cmath>
+#include <cmath>
+
 #include "all_constraints.h"
 #include "constants.h"
+
 class ColasqlTool {
 public:
 

@@ -17,12 +17,20 @@ void CommandProcessor::Start(const std::string& accountName, const std::string& 
 
     seq.clear();
     int ret;
+    int outputPrompt = true;
     while(true) { // 主循环
-        std::cout << GetPrompt();
+        if(outputPrompt) {
+            std::cout << GetPrompt();
+        }
 
         // input
         std::string input;
         std::getline(std::cin, input);
+        // char ch = getchar();
+        // while(ch != '\r' && ch != '\n') {
+        //     input.push_back(ch);
+        //     ch = getchar();
+        // }
 
         // quit
         if(input.length() >= 4 && input.substr(0, 4) == "quit") {
@@ -31,12 +39,18 @@ void CommandProcessor::Start(const std::string& accountName, const std::string& 
 
         std::string output = Run(input);
 
-        if(output == "") continue;
-        std::cout << output << std::endl;
+        if(output == "") {
+            outputPrompt = true;
+        } else {
+            outputPrompt = true;
+            std::cout << std::endl << output << std::endl;
+        }
     }
 }
 
 std::string CommandProcessor::Run(std::string input) {
+    if(input == "") return "";
+
     // preprocess
     Preprocess(input);
 
@@ -51,7 +65,6 @@ std::string CommandProcessor::Run(std::string input) {
     if(ret == 1) { // 语句未结束
         return "";
     }
-
     // parse
     std::string output;
     output = _parser.Parse(seq);
@@ -71,7 +84,6 @@ std::string CommandProcessor::GetPrompt() {
 // 若返回 1，则说明语句未结束
 // 若返回 -1，则说明语句异常（语句中包含不正常的分号）
 int CommandProcessor::Tokenize(std::string input, std::vector<std::string>& result) {
-
     bool haveEnd = false; // 是否以分号结尾
     if(input[input.length() - 1] == ';') {
         haveEnd = true;
