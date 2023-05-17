@@ -31,21 +31,53 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui_log, SIGNAL(login()), this, SLOT(init_treeview()));
 
     // actions
-    connect(ui->action_database, SIGNAL(triggered()), this,
-            SLOT(click_action_database()));
-    connect(ui->action_table, SIGNAL(triggered()), this,
-            SLOT(click_action_table()));
-    connect(ui->action_column, SIGNAL(triggered()), this,
-            SLOT(click_action_column()));
-    connect(ui->action_row, SIGNAL(triggered()), this,
-            SLOT(click_action_row()));
-    connect(ui->action_save, SIGNAL(triggered()), this, SLOT(save()));
+    connect(ui->btn_create_database, SIGNAL(triggered()), this,
+            SLOT(click_create_database()));
+    connect(ui->btn_create_table, SIGNAL(triggered()), this,
+            SLOT(click_create_table()));
+    connect(ui->btn_create_field, SIGNAL(triggered()), this,
+            SLOT(click_create_field()));
+    connect(ui->btn_create_record, SIGNAL(triggered()), this,
+            SLOT(click_create_record()));
+    connect(ui->btn_delete_database, SIGNAL(triggered()), this,
+            SLOT(click_delete_db()));
+    connect(ui->btn_delete_table, SIGNAL(triggered()), this,
+            SLOT(click_delete_tb()));
+    connect(ui->btn_delete_field, SIGNAL(triggered()), this,
+            SLOT(click_delete_field()));
+    connect(ui->btn_delete_record, SIGNAL(triggered()), this,
+            SLOT(click_delete_record()));
+    connect(ui->btn_save, SIGNAL(triggered()), this, SLOT(click_save()));
 
     // detect enter pressed
     ui->textEdit_code->installEventFilter(this);
 }
 
 MainWindow::~MainWindow() { delete ui; }
+
+QString MainWindow::anyToQString(const std::any& value)
+{
+    QString result;
+    if (value.type() == typeid(std::string))
+    {
+        result = QString::fromStdString(std::any_cast<std::string>(value));
+    }
+    else if (value.type() == typeid(int))
+    {
+        result = QString::number(std::any_cast<int>(value));
+    }
+    else if (value.type() == typeid(float))
+    {
+        result = QString::number(std::any_cast<float>(value));
+    }
+    return result;
+}
+
+std::string MainWindow::anytoString(const std::any& value)
+{
+    QString ret = anyToQString(value);
+    return ret.toStdString();
+}
 
 int MainWindow::use_database(std::string database)
 {
@@ -79,8 +111,36 @@ int MainWindow::select_all_from_table(
     return kSuccess;
 }
 
+void MainWindow::display_table(
+    std::vector<std::vector<std::any>>& return_records)
+{
+    // display table on tableview
+    std::vector<std::any> fields = return_records[0];
+    QStandardItemModel* model = new QStandardItemModel();
+    model->setColumnCount(fields.size());
+    for (size_t i = 0; i < fields.size(); ++i)
+    {
+        model->setHeaderData(i, Qt::Horizontal, anyToQString(fields[i]));
+    }
+    for (size_t i = 1; i < return_records.size(); ++i)
+    {
+        QList<QStandardItem*> item;
+        // add row
+        for (auto const& record : return_records[i])
+        {
+            item.append(new QStandardItem(anyToQString(record)));
+        }
+        model->appendRow(item);
+    }
+    ui->tableView->setModel(model);
+    connect(model, &QStandardItemModel::dataChanged, this,
+            &MainWindow::handleTableModified);
+}
+
 void MainWindow::init_treeview()
 {
+    clicked_column = -1;
+    clicked_row = -1;
     QStandardItemModel* model = new QStandardItemModel(this);
     ui->treeView->header()->setSectionResizeMode(QHeaderView::Stretch);
     model->setHorizontalHeaderLabels(QStringList(QStringLiteral("database")));
@@ -93,6 +153,7 @@ void MainWindow::init_treeview()
         current_database = "";
     }
     // get databases
+    std::vector<std::string> databases;
     ret = DataProcessor::GetInstance().ShowDatabases(databases);
     if (ret != 0)
     {
@@ -138,7 +199,34 @@ void MainWindow::init_treeview()
     ui->treeView->expandAll();
 }
 
-void MainWindow::click_action_database()
+void MainWindow::on_treeView_doubleClicked(const QModelIndex& index)
+{
+    // click a table then display it
+    if (index.parent().isValid())
+    {
+        std::string database = index.parent().data().toString().toStdString();
+        std::string table = index.data().toString().toStdString();
+        qDebug() << "click on " + QString::fromStdString(table);
+        int ret = use_database(database);
+        if (ret != kSuccess)
+            return;
+        // select * from table
+        std::vector<std::vector<std::any>> return_records;
+        ret = select_all_from_table(table, return_records);
+        if (ret != kSuccess)
+            return;
+        // display table on tableview
+        current_table = table;
+        display_table(return_records);
+    }
+    // click a database
+    else
+    {
+        qDebug() << "click database";
+    }
+}
+
+void MainWindow::click_create_database()
 {
     //    新建数据库
     qDebug() << "add database ";
@@ -149,7 +237,8 @@ void MainWindow::click_action_database()
         return;
     }
     qDebug() << dbName;
-    int ret = DataProcessor::GetInstance().CreateDatabase(dbName.toStdString());
+    int ret = DataProcessor::GetInstance().CreateDatabase(
+        dbName.toLower().toStdString());
     if (!ret)
     {
         QMessageBox::information(this, "通知", "数据库已创建");
@@ -167,7 +256,7 @@ void MainWindow::click_action_database()
     init_treeview();
 }
 
-void MainWindow::click_action_table()
+void MainWindow::click_create_table()
 {
     // add table
     ui_create_table = new createtable();
@@ -199,7 +288,7 @@ void MainWindow::create_table(QString database, QString opt)
     init_treeview();
 }
 
-void MainWindow::click_action_column()
+void MainWindow::click_create_field()
 {
     qDebug() << "add column\n";
     ColumnDialog dialog;
@@ -214,11 +303,11 @@ void MainWindow::click_action_column()
         std::pair<std::string, std::string> field;
         field =
             std::make_pair(columnName.toStdString(), columnType.toStdString());
-        int ret = use_database(dbName.toStdString());
+        int ret = use_database(dbName.toLower().toStdString());
         if (ret != kSuccess)
             return;
-        ret = DataProcessor::GetInstance().AlterTableAdd(tbName.toStdString(),
-                                                         field);
+        ret = DataProcessor::GetInstance().AlterTableAdd(
+            tbName.toLower().toStdString(), field);
         if (!ret)
         {
             QMessageBox::information(this, "通知", "新建列成功\n");
@@ -234,7 +323,7 @@ void MainWindow::click_action_column()
     }
 }
 
-void MainWindow::click_action_row()
+void MainWindow::click_create_record()
 {
     qDebug() << "add row\n";
     QDialog dialog;
@@ -255,96 +344,28 @@ void MainWindow::click_action_row()
                      &QDialog::accept);
     QObject::connect(&buttonBox, &QDialogButtonBox::rejected, &dialog,
                      &QDialog::reject);
-    QString dbName = "";
-    QString tbName = "";
     if (dialog.exec() == QDialog::Accepted)
     {
+        QString dbName = "";
+        QString tbName = "";
         dbName = input1.text();
         tbName = input2.text();
+        if (tbName == "" || dbName == "")
+            return;
+        qDebug() << dbName;
+        qDebug() << tbName;
+        int ret = use_database(dbName.toLower().toStdString());
+        if (ret != kSuccess)
+            return;
+        std::vector<std::vector<std::any>> return_records;
+        ret = select_all_from_table(tbName.toStdString(), return_records);
+        if (return_records.size() == 0 || ret != kSuccess)
+            return;
+        ui_create_record = new createrecord(return_records, tbName);
+        connect(ui_create_record, SIGNAL(create_record_signal(QString)), this,
+                SLOT(create_record(QString)));
+        ui_create_record->show();
     }
-
-    if (tbName == "" || dbName == "")
-        return;
-    qDebug() << dbName;
-    qDebug() << tbName;
-    int ret = use_database(dbName.toStdString());
-    if (ret != kSuccess)
-        return;
-    std::vector<std::vector<std::any>> return_records;
-    ret = select_all_from_table(tbName.toStdString(), return_records);
-    if (return_records.size() == 0 || ret != kSuccess)
-        return;
-    ui_create_record = new createrecord(return_records, tbName);
-    connect(ui_create_record, SIGNAL(create_record_signal(QString)), this,
-            SLOT(create_record(QString)));
-    ui_create_record->show();
-
-    //    QStringList fieldName =
-    //        QInputDialog::getText(this, "输入",
-    //                              "请输入要插入的字段名，每个字段用','隔开",
-    //                              QLineEdit::Normal, "Info1,Info2,......")
-    //            .split(",");
-    //    QStringList input =
-    //        QInputDialog::getText(this, "输入",
-    //        "请输入一条记录，每个字段用','隔开",
-    //                              QLineEdit::Normal, "Info1,Info2,......")
-    //            .split(",");
-    //    qDebug() << input << endl;
-    //    std::vector<std::pair<std::string, std::string>> record_in;
-    //    if (fieldName.at(0) == '*')
-    //    {
-    //        for (int i = 0; i < input.length(); ++i)
-    //        {
-    //            record_in.push_back({"*", input.at(i).toStdString()});
-    //        }
-    //    }
-    //    else if (fieldName.length() == input.length())
-    //    {
-    //        for (int i = 0; i < input.length(); ++i)
-    //        {
-    //            record_in.push_back(
-    //                {fieldName.at(i).toStdString(),
-    //                input.at(i).toStdString()});
-    //        }
-    //    }
-    //    else
-    //    {
-    //        QMessageBox::warning(this, "错误",
-    //        "插入字段与输入数据长度不同\n"); return;
-    //    }
-    //    int ret =
-    //        DataProcessor::GetInstance().Insert(tbName.toStdString(),
-    //        record_in);
-    //    if (!ret)
-    //    {
-    //        QMessageBox::information(this, "通知", "新建记录成功\n");
-    //        return;
-    //    }
-    //    else if (ret == kDatabaseNotUse)
-    //    {
-    //        QMessageBox::warning(this, "错误", "未选用数据库\n");
-    //        return;
-    //    }
-    //    else if (ret == kTableNotFound)
-    //    {
-    //        QMessageBox::warning(this, "错误", "未找到该表\n");
-    //        return;
-    //    }
-    //    else if (ret == kDataTypeWrong)
-    //    {
-    //        QMessageBox::warning(this, "错误", "数据与字段类型不符\n");
-    //        return;
-    //    }
-    //    else if (ret == kFieldNotFound)
-    //    {
-    //        QMessageBox::warning(this, "错误", "未找到该字段\n");
-    //        return;
-    //    }
-    //    else
-    //    {
-    //        QMessageBox::warning(this, "错误", "i dont know! fk u!\n");
-    //        assert(false);
-    //    }
 }
 
 void MainWindow::create_record(QString opt)
@@ -359,7 +380,193 @@ void MainWindow::create_record(QString opt)
     QMessageBox::information(this, "通知", "新建记录成功\n");
 }
 
-void MainWindow::save()
+void MainWindow::click_delete_db()
+{
+    qDebug() << "delete database ";
+    QString dbName =
+        QInputDialog::getText(this, "输入", "数据库名:", QLineEdit::Normal);
+    if (dbName.isEmpty())
+        return;
+    qDebug() << dbName;
+    int ret = DataProcessor::GetInstance().DeleteDatabase(
+        dbName.toLower().toStdString());
+    if (ret != kSuccess)
+    {
+        QMessageBox::warning(
+            this, "错误", "删除数据库失败，错误信息：" + QString::number(ret));
+        return;
+    }
+    init_treeview();
+    current_table = "";
+    QStandardItemModel* model = new QStandardItemModel();
+    ui->tableView->setModel(model);
+    ui->treeView->expandAll();
+    QMessageBox::information(this, "通知", "删除数据库成功\n");
+}
+
+void MainWindow::click_delete_tb()
+{
+    qDebug() << "add row\n";
+    QDialog dialog;
+    QFormLayout layout(&dialog);
+    dialog.setWindowTitle("输入");
+
+    QLineEdit input1;
+    QLineEdit input2;
+
+    layout.addRow("数据库:", &input1);
+    layout.addRow("删除表:", &input2);
+
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                               Qt::Horizontal, &dialog);
+    layout.addRow(&buttonBox);
+
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog,
+                     &QDialog::accept);
+    QObject::connect(&buttonBox, &QDialogButtonBox::rejected, &dialog,
+                     &QDialog::reject);
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        QString dbName = "";
+        QString tbName = "";
+        dbName = input1.text();
+        tbName = input2.text();
+        if (tbName.isEmpty() || dbName.isEmpty())
+            return;
+        qDebug() << dbName;
+        qDebug() << tbName;
+        int ret = use_database(dbName.toLower().toStdString());
+        if (ret != kSuccess)
+            return;
+        ret = DataProcessor::GetInstance().DropTable(
+            tbName.toLower().toStdString());
+        if (ret != kSuccess)
+        {
+            QMessageBox::warning(
+                this, "错误", "删除表失败，错误信息：" + QString::number(ret));
+            return;
+        }
+        init_treeview();
+        current_table = "";
+        QStandardItemModel* model = new QStandardItemModel();
+        ui->tableView->setModel(model);
+        ui->treeView->expandAll();
+        QMessageBox::information(this, "通知", "删除表成功！");
+    }
+}
+
+void MainWindow::click_delete_field()
+{
+    // fk multiple select
+    if (multiple_select != 0)
+    {
+        QMessageBox::warning(this, "错误", "多表查询不支持修改\n");
+        return;
+    }
+    if (current_table == "")
+    {
+        QMessageBox::warning(this, "错误", "请先选用表");
+        return;
+    }
+
+    QStandardItemModel* model =
+        qobject_cast<QStandardItemModel*>(ui->tableView->model());
+    if (model)
+    {
+        QItemSelectionModel* selectionModel = ui->tableView->selectionModel();
+        QModelIndexList selectedColumns = selectionModel->selectedColumns();
+        foreach (const QModelIndex& index, selectedColumns)
+        {
+            QString field =
+                model->headerData(index.column(), Qt::Horizontal).toString();
+            qDebug() << QString::number(clicked_column);
+            qDebug() << "delete field" + field + "from table" +
+                            QString::fromStdString(current_table);
+            int ret = DataProcessor::GetInstance().AlterTableDrop(
+                current_table, field.toLower().toStdString());
+            if (ret != kSuccess)
+            {
+                QMessageBox::warning(this, "错误", "删除字段错误");
+                qDebug() << "delete field error" + QString::number(ret);
+                return;
+            }
+        }
+        QMessageBox::information(this, "通知", "删除字段成功！");
+        std::vector<std::vector<std::any>> return_records;
+        int ret = select_all_from_table(current_table, return_records);
+        if (ret != kSuccess)
+        {
+            return;
+        }
+        display_table(return_records);
+    }
+    else
+    {
+        QMessageBox::warning(this, "错误", "请先选用表");
+        return;
+    }
+}
+
+void MainWindow::click_delete_record()
+{
+    // fk multiple select
+    if (multiple_select != 0)
+    {
+        QMessageBox::warning(this, "错误", "多表查询不支持修改\n");
+        return;
+    }
+    if (current_table == "")
+    {
+        QMessageBox::warning(this, "错误", "请先选用表");
+        return;
+    }
+    QStandardItemModel* model =
+        qobject_cast<QStandardItemModel*>(ui->tableView->model());
+    if (model)
+    {
+        QItemSelectionModel* selectionModel = ui->tableView->selectionModel();
+        QModelIndexList selectedRows = selectionModel->selectedRows();
+        foreach (const QModelIndex& index, selectedRows)
+        {
+            int row = index.row();
+            std::vector<std::tuple<std::string, std::string, int>> conditions;
+            for (int column = 0; column < model->columnCount(); ++column)
+            {
+                QModelIndex cellIndex = model->index(row, column);
+                QString data = model->data(cellIndex).toString();
+                QString field =
+                    model->headerData(column, Qt::Horizontal).toString();
+                qDebug() << data;
+                qDebug() << field;
+                conditions.push_back(std::make_tuple(
+                    field.toStdString(), data.toStdString(), kEqualConditon));
+            }
+            int ret =
+                DataProcessor::GetInstance().Delete(current_table, conditions);
+            if (ret != kSuccess)
+            {
+                QMessageBox::warning(this, "错误", "删除记录错误");
+                qDebug() << "delete record error" + QString::number(ret);
+                return;
+            }
+        }
+        QMessageBox::information(this, "通知", "删除记录成功！");
+        std::vector<std::vector<std::any>> return_records;
+        int ret = select_all_from_table(current_table, return_records);
+        if (ret != kSuccess)
+        {
+            return;
+        }
+        display_table(return_records);
+    }
+    else
+    {
+        QMessageBox::warning(this, "错误", "请先选用表");
+        return;
+    }
+}
+
+void MainWindow::click_save()
 {
     std::string ret =
         ColaSQLCommand::CommandProcessor::GetInstance().Run("COMMIT;");
@@ -432,83 +639,6 @@ void MainWindow::onEnterPressed()
         }
     }
     ui->textEdit_code->append("Co1aSQL > ");
-}
-
-QString MainWindow::anyToQString(const std::any& value)
-{
-    QString result;
-    if (value.type() == typeid(std::string))
-    {
-        result = QString::fromStdString(std::any_cast<std::string>(value));
-    }
-    else if (value.type() == typeid(int))
-    {
-        result = QString::number(std::any_cast<int>(value));
-    }
-    else if (value.type() == typeid(float))
-    {
-        result = QString::number(std::any_cast<float>(value));
-    }
-    return result;
-}
-
-std::string MainWindow::anytoString(const std::any& value)
-{
-    QString ret = anyToQString(value);
-    return ret.toStdString();
-}
-
-void MainWindow::on_treeView_doubleClicked(const QModelIndex& index)
-{
-    // click a table then display it
-    if (index.parent().isValid())
-    {
-        std::string database = index.parent().data().toString().toStdString();
-        std::string table = index.data().toString().toStdString();
-        qDebug() << "click on " + QString::fromStdString(table);
-        int ret = use_database(database);
-        if (ret != kSuccess)
-            return;
-        // select * from table
-        std::vector<std::vector<std::any>> return_records;
-        ret = select_all_from_table(table, return_records);
-        if (ret != kSuccess)
-            return;
-        current_table = table;
-        // display table on tableview
-        display_table(return_records);
-    }
-    // click a database
-    else
-    {
-        qDebug() << "click database";
-    }
-}
-
-void MainWindow::display_table(
-    std::vector<std::vector<std::any>>& return_records)
-{
-    // display table on tableview
-    std::vector<std::any> fields = return_records[0];
-    QStandardItemModel* model = new QStandardItemModel();
-    model->setColumnCount(fields.size());
-    for (size_t i = 0; i < fields.size(); ++i)
-    {
-        model->setHeaderData(i, Qt::Horizontal, anyToQString(fields[i]));
-    }
-    for (size_t i = 1; i < return_records.size(); ++i)
-    {
-        QList<QStandardItem*> item;
-        // add row
-        for (auto const& record : return_records[i])
-        {
-            item.append(new QStandardItem(anyToQString(record)));
-        }
-        model->appendRow(item);
-    }
-    ui->tableView->setModel(model);
-    connect(model, &QStandardItemModel::dataChanged, this,
-            &MainWindow::handleTableModified);
 }
 
 void MainWindow::handleTableModified() { save_change(); }
@@ -612,6 +742,7 @@ void MainWindow::on_btn_commit_clicked()
         QMessageBox::warning(this, "错误", "commit错误" + QString::number(ret));
         qDebug() << "commit error：" << ret;
     }
+    QMessageBox::information(this, "通知", "commit success!");
 }
 
 void MainWindow::on_btn_rollback_clicked()
@@ -631,4 +762,13 @@ void MainWindow::on_btn_rollback_clicked()
     QStandardItemModel* model = new QStandardItemModel();
     ui->tableView->setModel(model);
     ui->treeView->expandAll();
+    QMessageBox::information(this, "通知", "rollback success!");
+}
+
+void MainWindow::on_tableView_clicked(const QModelIndex& index)
+{
+    clicked_column = index.column();
+    clicked_row = index.row();
+    qDebug() << clicked_column;
+    qDebug() << clicked_row;
 }

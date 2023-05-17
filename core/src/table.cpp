@@ -87,6 +87,34 @@ int Table::GetIndex(std::vector<std::string>& result_key) const {
     return kSuccess;
 }
 
+int Table::DropForeignReferedConstraint(std::string table_name) {
+    for(auto it = constraints.begin(); it != constraints.end();) {
+        if(dynamic_cast<const ForeignReferedConstraint *>(*it) == nullptr) {
+            if(dynamic_cast<const ForeignReferedConstraint *>(*it)->GetReferenceTableName() == table_name) {
+                delete *it;
+                constraints.erase(it);
+            }
+            else it++;
+        }
+        else it++;
+    }
+    return kSuccess;
+}
+
+int Table::DropForeignReferedConstraint(std::string table_name, std::string field_name) {
+    for(auto it = constraints.begin(); it != constraints.end();) {
+        if(dynamic_cast<const ForeignReferedConstraint *>(*it) == nullptr) {
+            if(dynamic_cast<const ForeignReferedConstraint *>(*it)->GetReferenceTableName() == table_name && dynamic_cast<const ForeignReferedConstraint *>(*it)->GetReferenceFieldName() == field_name) {
+                delete *it;
+                constraints.erase(it);
+            }
+            else it++;
+        }
+        else it++;
+    }
+    return kSuccess;
+}
+
 int Table::CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db) {
     for(auto constraint:constraints) {
         if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){//默认
@@ -124,7 +152,7 @@ int Table::CheckConstraint(std::unordered_map<std::string, std::any>& record, Da
                 }
             }
         }
-        if (dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
+        if (dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) { //检查外键约束
             if(!record.count(constraint->GetFieldName())) {
                 continue;
             }
@@ -180,33 +208,7 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in, Da
         }
     }
     if(CheckConstraint(record, db) != kSuccess) return kConstraintConflict;
-    /*todo: 约束条件
-    for(auto constraint:constraints) {
-        if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){//默认
-            if (!record.count(constraint->GetFieldName())) {
-                record[constraint->GetFieldName()] = getField
-            }
-        }
-        if(dynamic_cast<const NotNullConstraint *>(constraint) != nullptr) {//非空
-            if(!record.count(constraint->GetFieldName())) {
-                return kConstraintConflict;
-            }
-        }
-        if (dynamic_cast<const UniqueConstraint *>(constraint) != nullptr){//唯一
-            std::string field_name = constraint->GetFieldName();
-            if(record.count(field_name)) {
-                for(auto other_record : records) {
-                    if (other_record.count(field_name)){
-                        if (record[field_name] == other_record[field_name]){
-                            return kConstraintConflict;
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-    */
+    
     records.push_back(record);
     return kSuccess;
 }
@@ -311,7 +313,7 @@ int Table::CheckCondition(const std::unordered_map<std::string, std::any>& recor
     return kSuccess;
 }
 int Table::CheckBeingRefered(std::unordered_map<std::string, std::any>& record, Database* db) {
-    for(auto constraint:constraints) {
+    for(const auto& constraint:constraints) {
         if (dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr){
             if(!record.count(constraint->GetFieldName())) continue;
 
@@ -355,7 +357,6 @@ int Table::Delete(std::vector<std::tuple<std::string, std::string, int>> conditi
 
 int Table::CheckDataType(std::string type, std::string value) {
     if(type == "int") {
-        
         for(auto x : value) {
             if(x > '9' || x < '0') return kDataTypeWrong;
         }
@@ -370,7 +371,10 @@ int Table::CheckDataType(std::string type, std::string value) {
     }
     return kSuccess;
 }
-
+int Table::AlterTableConstraint(Constraint* constraint) {
+    constraints.push_back(constraint);
+    return kSuccess;
+}
 int Table::Update(const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions, Database* db){
     for(const auto& change_field: values) {
         if(!field_map.count(change_field.first)) {
@@ -387,7 +391,11 @@ int Table::Update(const std::vector<std::pair<std::string,std::string>>& values,
             continue;
         }
         for(const auto& field : values) {
-            if(field_map[field.first] == "int") {
+            if(field.second == "") {
+                if(!record.count(field.first)) continue;
+                record.erase(record.find(field.first));
+            }
+            else if(field_map[field.first] == "int") {
                 for(auto x : field.second) {
                     if(x > '9' || x < '0') return kDataTypeWrong;
                 }
@@ -452,8 +460,28 @@ int Table::AlterTableAdd(std::pair<std::string, std::string> new_field) {
     return kSuccess; 
 }
 
-int Table::AlterTableDrop(std::string field_name) {
+int Table::AlterTableDrop(std::string field_name, Database* db) {
     if(!field_map.count(field_name)) return kFieldNotFound;
+    
+    
+    for(const auto& constraint : constraints) {
+        if(dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr && dynamic_cast<const ForeignReferedConstraint *>(constraint)->GetFieldName()==field_name) 
+            return kBeingRefered;
+    }
+
+    for(auto it = constraints.begin(); it != constraints.end();) {
+        if((*it)->GetFieldName() != field_name) {it++;continue;}
+        if(dynamic_cast<const ForeignKeyConstraint *>(*it) != nullptr) {
+            //delete foreignreferedconstraint
+            std::string reference_table_name = dynamic_cast<const ForeignKeyConstraint *>(*it)->GetReferenceTableName();
+            db->FindTableReference(reference_table_name).DropForeignReferedConstraint(table_name, field_name);
+        }
+        delete (*it);
+        constraints.erase(it);
+
+    }
+
+
     for(auto& record : records) {
         for(auto it = record.begin(); it != record.end(); ++it) {
             if(it->first == field_name) {
@@ -480,7 +508,20 @@ int Table::AlterTableDrop(std::string field_name) {
 int Table::AlterTableModify(std::pair<std::string, std::string> field) {
     if(!field_map.count(field.first)) {
         return kFieldNotFound;
+<<<<<<< HEAD
     } 
+=======
+    }
+    if(field_map[field.first] == field.second) return kSuccess;
+    for(const auto& constraint : constraints) {
+        if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr && dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetFieldName()==field.first) 
+            return kConstraintForeignKeyConflict;
+        if(dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr && dynamic_cast<const ForeignReferedConstraint *>(constraint)->GetFieldName()==field.first) 
+            return kBeingRefered;
+        if(dynamic_cast<const DefaultConstraint *>(constraint) != nullptr&& dynamic_cast<const DefaultConstraint *>(constraint)->GetFieldName()==field.first) return 
+            kConstraintDefaultConflict;
+    }
+>>>>>>> 2008f3c1b9cdb95b8cc099767cc813aba58f81ee
     for(auto& record: records) {
         if(!record.count(field.first)) {
             continue;

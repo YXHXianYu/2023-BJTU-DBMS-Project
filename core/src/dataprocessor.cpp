@@ -361,9 +361,12 @@ int DataProcessor::DropTable(std::string table_name) {
 		int w = current_database->DropTable(table_name);
 		if(w == kSuccess) {
 			UpdatePointer();
+			
 			for(auto& user:users) {
 				user.RevokeAllTableAuthorities(current_database_name,table_name);
 			}
+			
+			
 		}
 		return w;
 	}
@@ -498,6 +501,32 @@ int DataProcessor::Select(
 	UpdatePointer();
 	return ret;
 }
+
+int DataProcessor::Select(
+		std::vector<std::string> table_names, std::vector<std::string> field_name,
+		std::vector<std::tuple<std::string, std::string, int>> conditions,
+		std::vector<std::vector<std::any>>& return_records) {
+	return_records.clear();
+	if (current_user == nullptr) {
+		return kUserNotLogin;
+	}
+	if (current_database == nullptr) {
+		return kDatabaseNotUse;
+	}
+	for(const auto& table_name: table_names) {
+		if(current_database->FindTable(table_name) != kSuccess) {
+			return kTableNotFound;
+		} 
+	}
+	for(const auto& table_name: table_names) {
+		if(current_user->CheckAuthority(current_database_name,table_name,authority_number::SELECT) != kSuccess) return kInsufficientAuthority;
+	}
+	int ret = current_database->Select(table_names, field_name, conditions,
+									return_records);
+	UpdatePointer();
+	return ret;
+}
+
 int DataProcessor::Delete(
 		std::string table_name,
 		std::vector<std::tuple<std::string, std::string, int>> conditions) {
@@ -533,6 +562,16 @@ int DataProcessor::Update(
 	
 	int ret = current_database->Update(table_name, values, conditions);
 	UpdatePointer();
+	return ret;
+}
+
+int DataProcessor::AlterTableConstraint(std::string table_name, Constraint* constraint) {
+	if(current_user == nullptr) return kUserNotLogin;
+	if(current_database == nullptr) return kDatabaseNotUse;
+	if(current_database->FindTable(table_name) != kSuccess) {
+		return kTableNotFound;
+	}
+	int ret = current_database->AlterTableConstraint(table_name, constraint);
 	return ret;
 }
 

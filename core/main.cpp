@@ -25,8 +25,29 @@ int main() {
     fields.push_back({"Cname", "string"});
     std::cout<<DataProcessor::GetInstance().CreateTable("course",fields,constraints)<<std::endl;
 
-    //测试insert
+    fields.clear();
+    fields.push_back({"Sno", "string"});
+    fields.push_back({"Cno", "string"});
+    fields.push_back({"Grade", "int"});
+    std::cout<<DataProcessor::GetInstance().CreateTable("sc",fields,constraints)<<std::endl;
+
+    
+
+    //测试insert course
     std::vector<std::pair<std::string, std::string>> record_in;
+    record_in.clear();
+    record_in.push_back({"Cno", "001"});
+    record_in.push_back({"Cname", "software"});
+    std::cout<<DataProcessor::GetInstance().Insert("course",record_in)<<std::endl;
+    
+    //测试insert course
+    record_in.clear();
+    record_in.push_back({"Cno", "002"});
+    record_in.push_back({"Cname", "sleep"});
+    std::cout<<DataProcessor::GetInstance().Insert("course",record_in)<<std::endl;
+    
+    //测试insert student
+    record_in.clear();
     record_in.push_back({"Sno", "21301032"});
     record_in.push_back({"Sname", "drj"});
     record_in.push_back({"Age", "20"});
@@ -43,7 +64,33 @@ int main() {
     record_in.push_back({"Sname", "third"});
     record_in.push_back({"Age", "60"});
     std::cout<<DataProcessor::GetInstance().Insert("student",record_in)<<std::endl;
-    //测试select
+
+    //测试insert sc
+    record_in.clear();
+    record_in.push_back({"Sno", "21301032"});
+    record_in.push_back({"Cno", "001"});
+    record_in.push_back({"Grade", "99"});
+    std::cout<<DataProcessor::GetInstance().Insert("sc",record_in)<<std::endl;
+
+    record_in.clear();
+    record_in.push_back({"Sno", "21301032"});
+    record_in.push_back({"Cno", "002"});
+    record_in.push_back({"Grade", "97"});
+    std::cout<<DataProcessor::GetInstance().Insert("sc",record_in)<<std::endl;
+
+    record_in.clear();
+    record_in.push_back({"Sno", "21301030"});
+    record_in.push_back({"Cno", "002"});
+    record_in.push_back({"Grade", "90"});
+    std::cout<<DataProcessor::GetInstance().Insert("sc",record_in)<<std::endl;
+
+    record_in.clear();
+    record_in.push_back({"Sno", "21301000"});
+    record_in.push_back({"Cno", "001"});
+    record_in.push_back({"Grade", "50"});
+    std::cout<<DataProcessor::GetInstance().Insert("sc",record_in)<<std::endl;
+
+    //测试select student
     std::string table_name = "student";
     std::vector<std::string> field_name;
     field_name.push_back("*");
@@ -53,6 +100,68 @@ int main() {
     std::vector<std::vector<std::any>> return_records;
     std::cout<<DataProcessor::GetInstance().Select("student",field_name,conditions,return_records)<<std::endl;
     ColasqlTool::OutputSelectResult(return_records);
+    
+    //测试select course
+    table_name = "course";
+    field_name.clear();
+    field_name.push_back("*");
+    conditions.clear();
+    return_records.clear();
+    std::cout<<DataProcessor::GetInstance().Select(table_name,field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+
+    //测试select sc
+    table_name = "sc";
+    field_name.clear();
+    field_name.push_back("*");
+    conditions.clear();
+    return_records.clear();
+    std::cout<<DataProcessor::GetInstance().Select(table_name,field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);
+
+    //测试select student, course, sc
+    std::vector<std::string> table_names;
+    
+    table_name = "student";
+    table_names.push_back(table_name);
+    table_name = "course";
+    table_names.push_back(table_name);
+    table_name = "sc";
+    table_names.push_back(table_name);
+    
+    conditions.clear();
+    conditions.push_back(std::make_tuple("Grade","50", kLargerEqualCondition));
+    conditions.push_back(std::make_tuple("Cname","software", kEqualConditon));
+    
+    field_name.clear();
+    field_name.push_back("Sname");
+    field_name.push_back("Cname");
+    field_name.push_back("Grade");
+    return_records.clear();
+    std::cout<<DataProcessor::GetInstance().Select(table_names,field_name,conditions,return_records)<<std::endl;
+    ColasqlTool::OutputSelectResult(return_records);    
+
+
+    //测试select student, course
+    conditions.clear();
+        table_names.clear();
+        table_name = "student";
+        table_names.push_back(table_name);
+        table_name = "course";
+        table_names.push_back(table_name);
+        field_name.clear();
+        field_name.push_back("*");
+        return_records.clear();
+        std::cout<<DataProcessor::GetInstance().Select(table_names,field_name,conditions,return_records)<<std::endl;
+        /*for(const auto& record : return_records) {
+            for(auto x : record) {
+                std::cout<<ColasqlTool::AnyToString(x)<<" ";
+            }
+            std::cout<<std::endl;
+        }
+        std::cout<<"end"<<std::endl;*/
+        ColasqlTool::OutputSelectResult(return_records);
+
     //测试update
     // int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& value, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
     std::vector<std::pair<std::string,std::string>> values;

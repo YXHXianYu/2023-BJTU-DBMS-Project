@@ -128,30 +128,32 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>新建</string>
     </property>
-    <addaction name="action_database"/>
-    <addaction name="action_table"/>
-    <addaction name="action_column"/>
-    <addaction name="action_row"/>
+    <addaction name="btn_create_database"/>
+    <addaction name="btn_create_table"/>
+    <addaction name="btn_create_field"/>
+    <addaction name="btn_create_record"/>
    </widget>
    <widget class="QMenu" name="menu_delete">
     <property name="title">
      <string>删除</string>
     </property>
-    <addaction name="delete_database"/>
-    <addaction name="delete_table"/>
+    <addaction name="btn_delete_database"/>
+    <addaction name="btn_delete_table"/>
+    <addaction name="btn_delete_field"/>
+    <addaction name="btn_delete_record"/>
    </widget>
    <widget class="QMenu" name="menu_query">
     <property name="title">
      <string>查询</string>
     </property>
-    <addaction name="new_select"/>
+    <addaction name="btn_new_select"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>文件</string>
     </property>
-    <addaction name="action_save"/>
-    <addaction name="action_load"/>
+    <addaction name="btn_save"/>
+    <addaction name="btn__load"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_create"/>
@@ -173,49 +175,59 @@ p, li { white-space: pre-wrap; }
     <string>表</string>
    </property>
   </action>
-  <action name="action_table">
+  <action name="btn_create_table">
    <property name="text">
     <string>新建表</string>
    </property>
   </action>
-  <action name="action_row">
+  <action name="btn_create_record">
    <property name="text">
     <string>新建记录</string>
    </property>
   </action>
-  <action name="action_column">
+  <action name="btn_create_field">
    <property name="text">
     <string>新建字段</string>
    </property>
   </action>
-  <action name="action_database">
+  <action name="btn_create_database">
    <property name="text">
     <string>新建数据库</string>
    </property>
   </action>
-  <action name="delete_database">
+  <action name="btn_delete_database">
    <property name="text">
     <string>删除数据库</string>
    </property>
   </action>
-  <action name="delete_table">
+  <action name="btn_delete_table">
    <property name="text">
     <string>删除表</string>
    </property>
   </action>
-  <action name="new_select">
+  <action name="btn_new_select">
    <property name="text">
     <string>新建查询</string>
    </property>
   </action>
-  <action name="action_save">
+  <action name="btn_save">
    <property name="text">
     <string>保存</string>
    </property>
   </action>
-  <action name="action_load">
+  <action name="btn__load">
    <property name="text">
     <string>加载</string>
+   </property>
+  </action>
+  <action name="btn_delete_field">
+   <property name="text">
+    <string>删除所选字段</string>
+   </property>
+  </action>
+  <action name="btn_delete_record">
+   <property name="text">
+    <string>删除所选记录</string>
    </property>
   </action>
  </widget>
