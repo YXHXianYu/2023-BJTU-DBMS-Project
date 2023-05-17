@@ -26,18 +26,10 @@
   * YXH
 
 * 复杂的SQL查询（多表多条件）
-  * DRJ
-
 * 事务管理
 * 索引管理
-  * YXH
-
 * 完整性管理（主键、外键、UNIQUE、NOT NULL、DEFAULT）
-  * DRJ
-
 * 安全性管理（用户、权限）
-  * DRJ
-
 
 ***
 
@@ -269,7 +261,14 @@
   ROLLBACK;
   ```
 
-#### 2.8 关键字
+#### 2.8 Co1aSQL脚本执行
+
+* 执行Co1aSQL脚本
+  * ```
+  RUN path/to/directory/script.colasql
+  ```
+
+#### 2.9 关键字
 
 * 以下内容为Co1aSQL关键字，若占用，则不一定能得到预期结果
   * ```

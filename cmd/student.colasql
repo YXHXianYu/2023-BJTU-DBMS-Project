@@ -1,0 +1,23 @@
+CREATE DATABASE bjtu;
+
+USE bjtu;
+
+CREATE TABLE student
+  Sno int
+  Sname string
+  Ssex string
+  Sbirthday string
+  Totalcredit int
+
+  Constraint c1 Primary key Sno
+  Constraint c2 Not Null Sname
+  Constraint c3 Unique Sbirthday
+  Constraint c4 Default Totalcredit 0
+;
+
+INSERT INTO student Sno Sname Ssex Sbirthday 
+  VALUES 21301114 YXH_XianYu Male 2002-10-12;
+INSERT INTO student Sno Sname Ssex Sbirthday 
+  VALUES 21301113 YLW Male Unknown;
+INSERT INTO student Sno Sname Ssex Sbirthday Totalcredit
+  VALUES 1 ShirahaneSuoh Female 2002-03-16 163;

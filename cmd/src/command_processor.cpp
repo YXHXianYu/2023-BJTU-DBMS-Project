@@ -1,5 +1,7 @@
 #include "command_processor.h"
 
+#include <fstream>
+
 namespace ColaSQLCommand {
 
 CommandProcessor& CommandProcessor::GetInstance() {
@@ -35,6 +37,10 @@ void CommandProcessor::Start(const std::string& accountName, const std::string& 
         // quit
         if(input.length() >= 4 && input.substr(0, 4) == "quit") {
             break;
+        }
+        if(input.length() >= 3 && input.substr(0, 3) == "run") {
+            std::cout << std::endl << RunScript(input) << std::endl;
+            continue;
         }
 
         std::string output = Run(input);
@@ -97,6 +103,37 @@ std::string CommandProcessor::ComplexSelect(std::string input, std::vector<std::
     return output;
 }
 
+std::string CommandProcessor::RunScript(std::string path) {
+    if(path.length() <= 4) return "Incomplete statement.";
+
+    path = path.substr(3);
+    path.erase(0, path.find_first_not_of(" "));
+    path.erase(path.find_last_not_of(" ") + 1);
+
+    std::cout << "Opening: " << path << std::endl;
+
+    std::ifstream in(path, std::ifstream::in);
+    if(!in.is_open()) {
+        return "Failed to open file";
+    }
+
+
+    std::string result = "";
+    std::string input;
+    while(std::getline(in, input)) { // 主循环
+        if(input.length() >= 3 && input.substr(0, 3) == "run") {
+            result += RunScript(input) + "\n";
+            continue;
+        }
+
+        std::string output = Run(input);
+
+        if(output != "") {
+            result += output + "\n";
+        }
+    }
+    return result;
+}
 
 CommandProcessor::CommandProcessor() {}
 

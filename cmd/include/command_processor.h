@@ -26,6 +26,8 @@ public:
     std::string Run(std::string input);
     std::string ComplexSelect(std::string input, std::vector<std::vector<std::any>>& result);
 
+    std::string RunScript(std::string path);
+
 private:
     std::vector<std::string> seq;
 
