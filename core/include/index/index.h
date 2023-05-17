@@ -46,6 +46,11 @@ public:
                       std::vector<int>& result_indexes) = 0;
 
     /**
+     * get compare keys
+     */
+    const std::vector<std::string>& getCompareKey() const;
+
+    /**
     * get index state
     * 0 if valid
     * != 0 if invalid

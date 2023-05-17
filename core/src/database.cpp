@@ -66,7 +66,7 @@ int Database::AlterTableConstraint(std::string table_name, Constraint* constrain
     for(auto& table:tables) {
         if(table.GetTableName() == table_name) {
             if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
-                ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(),table_name,constraint->GetFieldName());
+                ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
                 int ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
                 if(ret!=kSuccess) return ret;
             }
@@ -120,7 +120,44 @@ int Database::Delete(std::string table_name, std::vector<std::tuple<std::string,
     return kTableNotFound;
 }
 
+int Database::CheckCondition(const std::unordered_map<std::string, std::any>& record,
+                       const std::vector<std::tuple<std::string, std::string, int>>& conditions, std::unordered_map<std::string, std::string> field_map) {
+    for(const auto& condition : conditions) {
+        std::string field_name = std::get<0>(condition);
+        int expected_result = std::get<2>(condition);
+        std::any to_any = ColasqlTool::GetAnyByTypeAndValue(field_map[field_name], std::get<1>(condition));
+        
+        if(!record.count(field_name)) {
+            if(to_any.type() == typeid(ColasqlNull)) {
+                continue;
+            }
+            return kConditionsNotSatisfied;
+        }
+        if(to_any.type() == typeid(ColasqlNull)) {
+            return kConditionsNotSatisfied;
+        }
+        int compare_result = ColasqlTool::CompareAny(record.at(field_name), to_any);
+        /*std::cout<<field_name<<" "<<compare_result<<" "<<std::get<0>(condition)<<" "<<std::get<1>(condition)<<std::endl;*/
+        if(compare_result == kEqual) {
+            if (expected_result != kEqualConditon && expected_result != kLessEqualConditon && expected_result != kLargerEqualCondition)
+                return kConditionsNotSatisfied;
+        }
+        if(compare_result == kLarger) {
+            if(expected_result != kLargerConditon && expected_result != kLargerEqualCondition && expected_result != kNotEqualConditon) {
+                return kConditionsNotSatisfied;
+            }
+        }
+        if(compare_result == kLess) {
+            if(expected_result != kLessCondition && expected_result != kLessEqualConditon && expected_result != kNotEqualConditon) {
+                return kConditionsNotSatisfied;
+            }
+        }
+    }
+    return kSuccess;
+}
+
 int Database::Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string, int>> conditions, std::vector<std::vector<std::any>> &return_records) {
+    
     for(auto& table : tables) {
         if(table.GetTableName() == table_name) {
             return table.Select(field_name, conditions, return_records);
@@ -129,6 +166,7 @@ int Database::Select(std::string table_name, std::vector<std::string> field_name
     return kTableNotFound;
 }
 int Database::Select(std::vector<std::string> table_names, std::vector<std::string> field_names,std::vector<std::tuple<std::string, std::string, int>> conditions,std::vector<std::vector<std::any>>& return_records) {
+    std::unordered_map<std::string, std::string> field_map;
     std::vector<std::vector<std::vector<std::any>>> td_records;
     std::vector<std::tuple<std::string, std::string, int>> empty_condition;
     std::vector<std::string> all_field_names;
@@ -138,6 +176,13 @@ int Database::Select(std::vector<std::string> table_names, std::vector<std::stri
             if(table.GetTableName() == table_name) {
                 return_records.clear();
                 table.Select(all_field_names, empty_condition, return_records);
+                std::unordered_map<std::string, std::string> table_field_map = table.GetFieldMap();
+                for(const auto& x : table_field_map) {
+                    if(field_map.count(x.first) && field_map.at(x.first) != x.second) {
+                        return kDataTypeWrong;
+                    }
+                    field_map[x.first] = x.second;
+                }
                 td_records.push_back(return_records);
             }
         }
@@ -186,7 +231,7 @@ int Database::Select(std::vector<std::string> table_names, std::vector<std::stri
                     else return_record.push_back(record.at(field_name));
                 }
                 //std::cout<<std::endl;
-                return_records.push_back(return_record);
+                if(CheckCondition(record, conditions, field_map) == kSuccess) return_records.push_back(return_record);
                 return;
             }
             const auto& inner_records = td_records[now];

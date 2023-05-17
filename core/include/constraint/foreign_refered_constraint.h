@@ -10,7 +10,7 @@
 class ForeignReferedConstraint: public Constraint {
 
 public:
-    ForeignReferedConstraint(const std::string& fieldName, const std::string& referenceTableName, const std::string& referenceFieldName);
+    ForeignReferedConstraint(const std::string& fieldName, const std::string& constraintName, const std::string& referenceTableName, const std::string& referenceFieldName);
 
     std::string GetReferenceTableName() const;
 

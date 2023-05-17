@@ -111,7 +111,18 @@ int FileManager::WriteTablesFile(const std::string& databaseName,
              std::ofstream::out | std::ofstream::trunc);
     if (!out.is_open()) assert(false); 
 
-    // TODO;
+    int indexState;
+    std::vector<std::string> compare_key;
+    indexState = table.GetIndex(compare_key);
+    if(indexState == kSuccess) {
+            out << compare_key.size() << std::endl;
+            for(const auto& key: compare_key) {
+                out << key << " ";
+            }
+            out << std::endl;
+        } else {
+            out << 0 << std::endl;
+        }
     out.close();
   }
 
@@ -199,7 +210,9 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
   }
   in.close();
 
+
   // each table
+    std::cout << databaseName << ": " << tableNames.size() << " Tables" << std::endl;
   for (const auto& tableName : tableNames) {
     std::vector<std::pair<std::string, std::string>> fields;
     std::unordered_map<std::string, std::string> field_map;
@@ -247,30 +260,31 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
         in >> n;
         for(int i = 1; i <= n; i++) {
             int type;
-            std::string fieldName;
-            in >> type >> fieldName;
+            std::string fieldName, constraintName;
+            in >> type >> constraintName >> fieldName;
             if(type == kPrimaryKey) {
-                constraints.push_back(new PrimaryKeyConstraint(fieldName));
+                constraints.push_back(new PrimaryKeyConstraint(fieldName, constraintName));
             } else if(type == kForeignKey) {
                 std::string s1, s2;
                 in >> s1 >> s2;
-                constraints.push_back(new ForeignKeyConstraint(fieldName, s1, s2));
+                constraints.push_back(new ForeignKeyConstraint(fieldName, constraintName, s1, s2));
             } else if(type == kForeignRefered) {
                 std::string s1, s2;
                 in >> s1 >> s2;
-                constraints.push_back(new ForeignReferedConstraint(fieldName, s1, s2));
+                constraints.push_back(new ForeignReferedConstraint(fieldName, constraintName, s1, s2));
             } else if(type == kUnique) {
-                constraints.push_back(new UniqueConstraint(fieldName));
+                constraints.push_back(new UniqueConstraint(fieldName, constraintName));
             } else if(type == kNotNull) {
-                constraints.push_back(new NotNullConstraint(fieldName));
+                constraints.push_back(new NotNullConstraint(fieldName, constraintName));
             } else if(type == kDefault) {
                 std::string value;
                 in >> value;
-                constraints.push_back(new DefaultConstraint(fieldName, ColasqlTool::GetAnyByTypeAndValue(field_map.at(fieldName), value)));
+                constraints.push_back(new DefaultConstraint(fieldName, constraintName, ColasqlTool::GetAnyByTypeAndValue(field_map.at(fieldName), value)));
             } else {
                 std::cerr << "Unknown Constraint Type" << std::endl;
             }
         }
+        in.close();
 
         // ColasqlTool::OutputConstraints(constraints);
 
@@ -279,12 +293,28 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
     in.open(path + tableName + "Indexes.txt", std::ifstream::in);
     if (!in.is_open()) assert(false);
 
-    // TODO
+    int indexState;
+    in >> indexState;
+    std::vector<std::string> compare_key;
+    if(indexState > 0) {
+            for(int i = 0; i < indexState; i++) {
+                std::string str;
+                in >> str;
+                compare_key.push_back(str);
+            }
+        }
+        in.close();
 
     // construct table
     Table table(tableName, fields, constraints, records);
+    if(compare_key.size() > 0) {
+            table.BuildIndex(compare_key);
+        }
+    std::cout << "===" << std::endl;
     tables.push_back(table);
+    std::cout << "===2" << std::endl;
   }
+std::cout << "===3" << std::endl;
 
   return 0;
 }

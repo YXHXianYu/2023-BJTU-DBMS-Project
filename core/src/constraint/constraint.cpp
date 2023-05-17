@@ -1,7 +1,8 @@
 
 #include "constraint.h"
 
-Constraint::Constraint(const std::string& fieldName): _fieldName(fieldName) {
+Constraint::Constraint(const std::string& fieldName, const std::string& constraintName):
+    _fieldName(fieldName), _constraintName(constraintName) {
 }
 
 std::string Constraint::GetFieldName() const {
@@ -10,6 +11,14 @@ std::string Constraint::GetFieldName() const {
 
 void Constraint::SetFieldName(const std::string& fieldName) {
     _fieldName = fieldName;
+}
+
+std::string Constraint::GetConstraintName() const {
+    return _constraintName;
+}
+
+void Constraint::SetConstraintName(const std::string& constraintName) {
+    _constraintName = constraintName;
 }
 
 void Constraint::Polymorphic() {

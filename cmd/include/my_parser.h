@@ -42,6 +42,9 @@ private:
     std::string DeleteUser(const std::vector<std::string>& seq); //
     // std::string ActivateAdmin(const std::vector<std::string>& seq);
     // std::string DeactivateAdmin(const std::vector<std::string>& seq);
+    std::string Login(const std::vector<std::string>& seq);
+
+    std::string RevokeUser(const std::vector<std::string>& seq);
 
     std::string CreateDatabase(const std::vector<std::string>& seq); //
     std::string DeleteDatabase(const std::vector<std::string>& seq); //
@@ -57,6 +60,7 @@ private:
     std::string AlterTableDeleteConstraint(const std::vector<std::string>& seq); //
     std::string QueryTable(const std::vector<std::string>& seq); //
     std::string ShowTables(const std::vector<std::string>& seq); //
+    std::string DescribeTable(const std::vector<std::string>& seq);
 
     std::string InsertRecord(const std::vector<std::string>& seq);
     std::string DeleteRecord(const std::vector<std::string>& seq); //

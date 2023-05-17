@@ -46,6 +46,8 @@ public:
     const std::unordered_map<std::string, std::string> GetFieldMap() const;
     const std::vector<std::unordered_map<std::string, std::any> >& GetRecords() const;
     const std::vector<Constraint*>& GetConstraints() const;
+
+    int GetIndex(std::vector<std::string>& result_key) const;
     
     //查询记录
     int Select(std::vector<std::string> field_name,

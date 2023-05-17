@@ -9,3 +9,8 @@ Index::Index(const std::vector<std::unordered_map<std::string, std::any>>& recor
 
 Index::~Index() {
 }
+
+const std::vector<std::string>& Index::getCompareKey() const {
+    return _compare_key;
+}
+

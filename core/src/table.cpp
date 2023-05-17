@@ -81,6 +81,12 @@ const std::vector<Constraint*>& Table::GetConstraints() const {
     return constraints;
 }
 
+int Table::GetIndex(std::vector<std::string>& result_key) const {
+    if(index_ptr == nullptr || index_ptr->getState() != 0) return kFailedIndexNotBuild;
+    result_key = index_ptr->getCompareKey();
+    return kSuccess;
+}
+
 int Table::DropForeignReferedConstraint(std::string table_name) {
     for(auto it = constraints.begin(); it != constraints.end();) {
         if(dynamic_cast<const ForeignReferedConstraint *>(*it) == nullptr) {

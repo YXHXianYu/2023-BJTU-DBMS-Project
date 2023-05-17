@@ -1,7 +1,10 @@
 #include "foreign_refered_constraint.h"
 
-ForeignReferedConstraint::ForeignReferedConstraint(const std::string& fieldName,const std::string& referenceTableName, const std::string& referenceFieldName):
-    Constraint(fieldName), _referenceTableName(referenceTableName), _referenceFieldName(referenceFieldName) {
+ForeignReferedConstraint::ForeignReferedConstraint(const std::string& fieldName,
+                                                   const std::string& constraintName,
+                                                   const std::string& referenceTableName,
+                                                   const std::string& referenceFieldName):
+    Constraint(fieldName, constraintName), _referenceTableName(referenceTableName), _referenceFieldName(referenceFieldName) {
 }
 
 std::string ForeignReferedConstraint::GetReferenceTableName() const {
