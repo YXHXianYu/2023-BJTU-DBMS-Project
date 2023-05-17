@@ -1,5 +1,5 @@
 #include "database.h"
-
+#include<assert.h>
 Database::Database() {
 
 }
@@ -31,9 +31,17 @@ int Database::FindTable(std::string table_name) {
     return kTableNotFound;
 }
 
+Table& Database::FindTableReference(std::string table_name) {
+    for(auto& table : tables) {
+        if(table.GetTableName() == table_name) return table;
+    }
+    assert(1);
+    //impossible situation
+        return tables[0];
+}
+
 int Database::FindTable(std::string table_name, Table& return_table) {
     for(const auto& table : tables) {
-        
         if(table.GetTableName() == table_name) {
             return_table = table;
             return kSuccess;
@@ -51,6 +59,20 @@ int Database::CreateTable(std::string table_name, std::vector<std::pair<std::str
     tables.push_back(Table(table_name, fields, constraints));
     return kSuccess;
 }
+int Database::AlterTableConstraint(std::string table_name, Constraint* constraint) {
+    for(auto& table:tables) {
+        if(table.GetTableName() == table_name) {
+            if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
+                ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(),table_name,constraint->GetFieldName());
+                int ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
+                if(ret!=kSuccess) return ret;
+            }
+            return table.AlterTableConstraint(constraint);
+        }
+    }
+    
+    return kTableNotFound;
+}
 
 int Database::DropTable(std::string table_name) {
     for(int i = 0; i < tables.size(); ++i) {
@@ -61,9 +83,16 @@ int Database::DropTable(std::string table_name) {
             for(const auto& constraint : constraints) {
                 if(dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr){return kBeingRefered;}
             }
-            tables.erase(tables.begin() + i);
-            //todo : 删除所有被此表参考的约束
             
+            //删除所有被此表参考的约束
+            for(const auto& constraint : constraints) {
+                if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr){
+                    std::string reference_table_name = dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName();
+                    std::string tmp;
+                    FindTableReference(reference_table_name).DropForeignReferedConstraint(table_name);
+                }
+            }
+            tables.erase(tables.begin() + i);
             return kSuccess;
         }
     }
@@ -127,7 +156,9 @@ int Database::AlterTableAdd(std::string table_name, std::pair<std::string, std::
 int Database::AlterTableDrop(std::string table_name, std::string field_name) {
     for(auto& table:tables) {
         if(table.GetTableName() == table_name) {
-            return table.AlterTableDrop(field_name);
+            int ret= table.AlterTableDrop(field_name, this);
+            
+            return ret;
         }
     }
     return kTableNotFound;

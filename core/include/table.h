@@ -68,15 +68,18 @@ public:
     int CheckDataType(std::string type, std::string value);
     //增加字段
     int AlterTableAdd(std::pair<std::string, std::string> new_field);
-    int AlterTableDrop(std::string field_name);
+    int AlterTableDrop(std::string field_name, Database* db);
     int AlterTableModify(std::pair<std::string, std::string> field);
-
+    int AlterTableConstraint(Constraint* constraint);
     // 建立索引
     int BuildIndex(const std::vector<std::string>& compare_key, int type = kFHQTreapIndex);
     //检查一条记录是否约束
     int CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db);
     //检查是否被其它表参考
     int CheckBeingRefered(std::unordered_map<std::string, std::any>& record, Database* db);
+
+    int DropForeignReferedConstraint(std::string table_name);
+    int DropForeignReferedConstraint(std::string table_name, std::string field_name);
 };
 
 #endif // TABLE_H

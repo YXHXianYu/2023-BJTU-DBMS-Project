@@ -49,7 +49,7 @@ public:
     int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);//修改表结构,增加字段
     int AlterTableDrop(std::string table_name, std::string field_name);          //删除字段
     int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field); //修改字段
-    int AlterTableConstraint(std::string table_name, Constraint constraint);    //添加约束条件
+    int AlterTableConstraint(std::string table_name, Constraint* constraint);    //添加约束条件
     int AlterTableDeleteConstraint(std::string table_name, std::string constraint_name); ///删除约束
 
 //记录

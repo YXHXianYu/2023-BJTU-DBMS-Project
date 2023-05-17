@@ -361,9 +361,12 @@ int DataProcessor::DropTable(std::string table_name) {
 		int w = current_database->DropTable(table_name);
 		if(w == kSuccess) {
 			UpdatePointer();
+			
 			for(auto& user:users) {
 				user.RevokeAllTableAuthorities(current_database_name,table_name);
 			}
+			
+			
 		}
 		return w;
 	}
@@ -533,6 +536,16 @@ int DataProcessor::Update(
 	
 	int ret = current_database->Update(table_name, values, conditions);
 	UpdatePointer();
+	return ret;
+}
+
+int DataProcessor::AlterTableConstraint(std::string table_name, Constraint* constraint) {
+	if(current_user == nullptr) return kUserNotLogin;
+	if(current_database == nullptr) return kDatabaseNotUse;
+	if(current_database->FindTable(table_name) != kSuccess) {
+		return kTableNotFound;
+	}
+	int ret = current_database->AlterTableConstraint(table_name, constraint);
 	return ret;
 }
 
