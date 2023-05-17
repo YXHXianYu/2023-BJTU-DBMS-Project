@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget* parent)
             SLOT(click_delete_field()));
     connect(ui->btn_delete_record, SIGNAL(triggered()), this,
             SLOT(click_delete_record()));
+    connect(ui->btn_SQL, SIGNAL(triggered()), this,
+            SLOT(click_complex_select()));
     connect(ui->btn_save, SIGNAL(triggered()), this, SLOT(click_save()));
 
     // detect enter pressed
@@ -204,6 +206,7 @@ void MainWindow::on_treeView_doubleClicked(const QModelIndex& index)
     // click a table then display it
     if (index.parent().isValid())
     {
+        multiple_select = 0;
         std::string database = index.parent().data().toString().toStdString();
         std::string table = index.data().toString().toStdString();
         qDebug() << "click on " + QString::fromStdString(table);
@@ -406,7 +409,7 @@ void MainWindow::click_delete_db()
 
 void MainWindow::click_delete_tb()
 {
-    qDebug() << "add row\n";
+    qDebug() << "delete table\n";
     QDialog dialog;
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
@@ -573,6 +576,48 @@ void MainWindow::click_save()
     QMessageBox::information(this, "通知", QString::fromStdString(ret));
 }
 
+void MainWindow::click_complex_select()
+{
+    qDebug() << "complex select";
+    multiple_select = 1;
+    QDialog dialog;
+    QFormLayout layout(&dialog);
+    dialog.setWindowTitle("输入");
+
+    QLineEdit dbInput;
+    QTextEdit input;
+
+    layout.addRow("所属数据库", &dbInput);
+    layout.addRow(&input);
+
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                               Qt::Horizontal, &dialog);
+    layout.addRow(&buttonBox);
+
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog,
+                     &QDialog::accept);
+    QObject::connect(&buttonBox, &QDialogButtonBox::rejected, &dialog,
+                     &QDialog::reject);
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        QString dbName = dbInput.text();
+        QString sql = input.toPlainText();
+        qDebug() << sql;
+        std::vector<std::vector<std::any>> return_records;
+        QString ret = QString::fromStdString(
+            ColaSQLCommand::CommandProcessor::GetInstance().ComplexSelect(
+                sql.toStdString(), return_records));
+        qDebug() << "return success!";
+        if (ret != "Success!")
+        {
+            QMessageBox::warning(this, "错误",
+                                 "复杂查询失败，错误信息：" + ret);
+            return;
+        }
+        display_table(return_records);
+    }
+}
+
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 {
     if (watched == ui->textEdit_code && event->type() == QEvent::KeyPress)
@@ -643,6 +688,7 @@ void MainWindow::onEnterPressed()
 
 void MainWindow::handleTableModified() { save_change(); }
 
+// 单点修改
 void MainWindow::cancel_change()
 {
     qDebug() << "cancel edit";
@@ -665,7 +711,6 @@ void MainWindow::cancel_change()
     // display table on tableview
     display_table(return_records);
 }
-
 void MainWindow::save_change()
 {
     // fk multiple select
@@ -769,6 +814,4 @@ void MainWindow::on_tableView_clicked(const QModelIndex& index)
 {
     clicked_column = index.column();
     clicked_row = index.row();
-    qDebug() << clicked_column;
-    qDebug() << clicked_row;
 }
