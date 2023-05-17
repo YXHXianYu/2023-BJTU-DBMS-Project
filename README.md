@@ -55,6 +55,8 @@
   colasql 用户名 密码
   
   #管理员用户名admin，密码colasql
+
+  LOGIN 用户名 密码;
   ```
   
 * 创建用户
