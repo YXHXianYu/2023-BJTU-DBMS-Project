@@ -45,6 +45,7 @@ const int kConstraintForeignKeyConflict = 35;
 const int kImpossibleSituation = 36;
 const int kBeingRefered = 37;
 const int kConstraintDefaultConflict = 38;
+const int kAuthorityNotProper = 39;
 
 // ===== About Index =====
 const int kUnknownIndex = 100;

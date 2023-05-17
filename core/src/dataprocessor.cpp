@@ -200,6 +200,7 @@ int DataProcessor::RevokeAuthority(std::string user_name, std::string database_n
 	else if(authority_name == "update") number = authority_number::UPDATE;
 	else if(authority_name == "index") number = authority_number::INDEX;
 	else if(authority_name == "alter") number = authority_number::ALTER;
+	else return kAuthorityNotProper;
 	if(!FindDatabase(database_name)) return kDatabaseNotFound;
 	if(!FindTable(database_name, table_name)) return kDatabaseNotFound;
 	if(!FindUser(user_name)) return kUserNameNotFound;
@@ -220,7 +221,14 @@ int DataProcessor::RevokeAuthority(std::string user_name, std::string database_n
 	authority_number number;
 	if(authority_name == "create") number = authority_number::CREATE;
 	else if(authority_name == "drop") number = authority_number::DROP;
-	
+	else if(authority_name == "select") number = authority_number::SELECT;
+	else if(authority_name == "delete") number = authority_number::DELETE;
+	else if(authority_name == "insert") number = authority_number::INSERT;
+	else if(authority_name == "update") number = authority_number::UPDATE;
+	else if(authority_name == "index") number = authority_number::INDEX;
+	else if(authority_name == "alter") number = authority_number::ALTER;
+	else return kAuthorityNotProper;
+
 	for(auto& database:databases) {
 		if(database.GetDatabaseName() != database_name) continue;
 		//数据库级权限
