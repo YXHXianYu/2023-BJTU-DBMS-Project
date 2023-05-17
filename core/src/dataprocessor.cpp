@@ -357,7 +357,7 @@ int DataProcessor::DropTable(std::string table_name) {
 	if (current_database == nullptr) {
 		return kDatabaseNotUse;
 	}
-	if(current_user->CheckAuthority(current_database_name, authority_number::DROP)) {
+	if(current_user->CheckAuthority(current_database_name, authority_number::DROP) == kSuccess) {
 		int w = current_database->DropTable(table_name);
 		if(w == kSuccess) {
 			UpdatePointer();

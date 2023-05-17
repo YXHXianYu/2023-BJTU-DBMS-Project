@@ -35,7 +35,7 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
     // ----- Database -----
     if(seq[1] == "database") {
         if(seq[0] == "create") return CreateDatabase(seq);     // Create Database
-        else if(seq[0] == "drop") return CreateDatabase(seq);  // Drop Database
+        else if(seq[0] == "drop") return DeleteDatabase(seq);  // Drop Database
     } else if(seq[0] == "use") {
         return UseDatabase(seq);                               // Use Database
     } else if(seq[0] == "show" && seq[1] == "databases") {
@@ -105,18 +105,16 @@ std::string Parser::CreateDatabase(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::DeleteDatabase(const std::vector<std::string>& seq) {
-    return "Warning: DeleteDatabase Under development";
-
     if(seq.size() != 3) {
         return error + statementRedundant;
     }
 
     std::string databaseName = seq[2];
 
-    int ret /*=  DataProcessor::GetInstance().(databaseName)*/;
+    int ret =  DataProcessor::GetInstance().DeleteDatabase(databaseName);
 
     if(ret != 0) {
-        return error + GetErrorMessage(ret); // TODO: error information
+        return error + GetErrorMessage(ret);
     }
 
     return success;

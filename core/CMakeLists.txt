@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 17) # A ccls bug, you need to use old syntax to enable cc
 # 将src文件夹下所有文件添加至SOURCE_src
 aux_source_directory(./src SOURCE_SRC)
 aux_source_directory(./src/constraint SOURCE_CONSTRANIT_SRC)
+aux_source_directory(./src/index SOURCE_INDEX_SRC)
 aux_source_directory(./../file/src/ SOURCE_FILE)
 
 # cpp
@@ -21,6 +22,7 @@ add_executable(
     # core
     ${SOURCE_SRC}
     ${SOURCE_CONSTRANIT_SRC}
+    ${SOURCE_INDEX_SRC}
 
     # file
     ${SOURCE_FILE}
