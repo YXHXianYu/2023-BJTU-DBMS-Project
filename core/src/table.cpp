@@ -81,6 +81,12 @@ const std::vector<Constraint*>& Table::GetConstraints() const {
     return constraints;
 }
 
+int Table::GetIndex(std::vector<std::string>& result_key) const {
+    if(index_ptr == nullptr || index_ptr->getState() != 0) return kFailedIndexNotBuild;
+    result_key = index_ptr->getCompareKey();
+    return kSuccess;
+}
+
 int Table::CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db) {
     for(auto constraint:constraints) {
         if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){//默认
@@ -474,7 +480,7 @@ int Table::AlterTableDrop(std::string field_name) {
 int Table::AlterTableModify(std::pair<std::string, std::string> field) {
     if(!field_map.count(field.first)) {
         return kFieldNotFound;
-    }
+    } 
     for(auto& record: records) {
         if(!record.count(field.first)) {
             continue;

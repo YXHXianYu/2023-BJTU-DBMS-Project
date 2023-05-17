@@ -111,7 +111,18 @@ int FileManager::WriteTablesFile(const std::string& databaseName,
              std::ofstream::out | std::ofstream::trunc);
     if (!out.is_open()) assert(false); 
 
-    // TODO;
+    int indexState;
+    std::vector<std::string> compare_key;
+    indexState = table.GetIndex(compare_key);
+    if(indexState == kSuccess) {
+            out << compare_key.size() << std::endl;
+            for(const auto& key: compare_key) {
+                out << key << " ";
+            }
+            out << std::endl;
+        } else {
+            out << 0 << std::endl;
+        }
     out.close();
   }
 
@@ -199,7 +210,9 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
   }
   in.close();
 
+
   // each table
+    std::cout << databaseName << ": " << tableNames.size() << " Tables" << std::endl;
   for (const auto& tableName : tableNames) {
     std::vector<std::pair<std::string, std::string>> fields;
     std::unordered_map<std::string, std::string> field_map;
@@ -271,6 +284,7 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
                 std::cerr << "Unknown Constraint Type" << std::endl;
             }
         }
+        in.close();
 
         // ColasqlTool::OutputConstraints(constraints);
 
@@ -279,12 +293,28 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
     in.open(path + tableName + "Indexes.txt", std::ifstream::in);
     if (!in.is_open()) assert(false);
 
-    // TODO
+    int indexState;
+    in >> indexState;
+    std::vector<std::string> compare_key;
+    if(indexState > 0) {
+            for(int i = 0; i < indexState; i++) {
+                std::string str;
+                in >> str;
+                compare_key.push_back(str);
+            }
+        }
+        in.close();
 
     // construct table
     Table table(tableName, fields, constraints, records);
+    if(compare_key.size() > 0) {
+            table.BuildIndex(compare_key);
+        }
+    std::cout << "===" << std::endl;
     tables.push_back(table);
+    std::cout << "===2" << std::endl;
   }
+std::cout << "===3" << std::endl;
 
   return 0;
 }
