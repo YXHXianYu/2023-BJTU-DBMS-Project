@@ -93,6 +93,7 @@ int main() {
     std::cout<<DataProcessor::GetInstance().ShowDatabases(databases)<<std::endl;
     ColasqlTool::OutputSelectResult(ColasqlTool::ChangeStringsToRecords(databases, "DATABASES"));
 
+
     //调试Show Tables
     std::vector<std::string> tables;
     std::cout<<DataProcessor::GetInstance().ShowTables(tables)<<std::endl;
@@ -105,8 +106,8 @@ int main() {
     std::vector<Constraint*> table_constraints;
     std::cout<<DataProcessor::GetInstance().DescribeTable("student",table_fields,table_constraints)<<std::endl;
     ColasqlTool::OutputSelectResult(ColasqlTool::ChangeDescriptionToRecords(table_fields,table_constraints));
-    
-    
+    //调试delete database
+    std::cout<<"delete database:"<<DataProcessor::GetInstance().DeleteDatabase("test")<<std::endl;
 
     return 0;
 }
