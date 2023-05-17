@@ -89,7 +89,7 @@ std::string CommandProcessor::ComplexSelect(std::string input, std::vector<std::
 
     // parse
     std::string output;
-    output = _parser.Parse(seq);
+    output = _parser.ParseSelect(seq, result);
     seq.clear();
     return output;
 }

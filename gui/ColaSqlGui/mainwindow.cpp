@@ -578,6 +578,7 @@ void MainWindow::click_save()
 void MainWindow::click_complex_select()
 {
     qDebug() << "complex select";
+    multiple_select = 1;
     QDialog dialog;
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
@@ -682,6 +683,7 @@ void MainWindow::onEnterPressed()
 
 void MainWindow::handleTableModified() { save_change(); }
 
+// 单点修改
 void MainWindow::cancel_change()
 {
     qDebug() << "cancel edit";
@@ -704,7 +706,6 @@ void MainWindow::cancel_change()
     // display table on tableview
     display_table(return_records);
 }
-
 void MainWindow::save_change()
 {
     // fk multiple select

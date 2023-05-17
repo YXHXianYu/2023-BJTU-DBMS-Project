@@ -58,9 +58,8 @@ private:
     std::string AlterTableModify(const std::vector<std::string>& seq); //
     std::string AlterTableConstraint(const std::vector<std::string>& seq); //
     std::string AlterTableDeleteConstraint(const std::vector<std::string>& seq); //
-    std::string QueryTable(const std::vector<std::string>& seq); //
+    std::string QueryTable(const std::vector<std::string>& seq); // describe table
     std::string ShowTables(const std::vector<std::string>& seq); //
-    std::string DescribeTable(const std::vector<std::string>& seq);
 
     std::string InsertRecord(const std::vector<std::string>& seq);
     std::string DeleteRecord(const std::vector<std::string>& seq); //

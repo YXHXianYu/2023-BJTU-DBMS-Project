@@ -31,6 +31,7 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
         else if(seq[0] == "drop") return DeleteUser(seq);      // Drop User
     }
     if(seq[0] == "grant" && seq[1] == "user") return GrantUser(seq);
+    if(seq[0] == "login") return Login(seq);
 
     // ----- Database -----
     if(seq[1] == "database") {
@@ -111,6 +112,15 @@ std::string Parser::GrantUser(const std::vector<std::string>& seq) {
 
 std::string Parser::DeleteUser(const std::vector<std::string>& seq) {
     return "Warning: Delete User is under development";
+}
+
+std::string Parser::Login(const std::vector<std::string>& seq) {
+    if(seq.size() != 3) return error + statementError;
+
+    int ret = DataProcessor::GetInstance().Login(seq[1], seq[2]);
+
+    if(ret != 0) return error + GetErrorMessage(ret);
+    return success;
 }
 
 // ----- Database -----

@@ -212,7 +212,7 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
 
 
   // each table
-    std::cout << databaseName << ": " << tableNames.size() << " Tables" << std::endl;
+    // std::cout << databaseName << ": " << tableNames.size() << " Tables" << std::endl;
   for (const auto& tableName : tableNames) {
     std::vector<std::pair<std::string, std::string>> fields;
     std::unordered_map<std::string, std::string> field_map;
