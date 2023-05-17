@@ -87,6 +87,9 @@ std::string CommandProcessor::ComplexSelect(std::string input, std::vector<std::
         return "Error: Statement error!";
     }
 
+    if(ret == 1) { // 语句未结束
+        return "";
+    }
     // parse
     std::string output;
     output = _parser.ParseSelect(seq, result);

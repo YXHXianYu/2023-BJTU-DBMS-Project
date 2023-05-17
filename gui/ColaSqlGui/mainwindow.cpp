@@ -584,8 +584,10 @@ void MainWindow::click_complex_select()
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
 
+    QLineEdit dbInput;
     QTextEdit input;
 
+    layout.addRow("所属数据库", &dbInput);
     layout.addRow(&input);
 
     QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
@@ -598,7 +600,9 @@ void MainWindow::click_complex_select()
                      &QDialog::reject);
     if (dialog.exec() == QDialog::Accepted)
     {
+        QString dbName = dbInput.text();
         QString sql = input.toPlainText();
+        qDebug() << sql;
         std::vector<std::vector<std::any>> return_records;
         QString ret = QString::fromStdString(
             ColaSQLCommand::CommandProcessor::GetInstance().ComplexSelect(

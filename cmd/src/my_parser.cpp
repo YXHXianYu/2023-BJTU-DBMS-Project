@@ -103,7 +103,7 @@ std::string Parser::GrantUser(const std::vector<std::string>& seq) {
         ret = DataProcessor::GetInstance().GrantAuthority(seq[2], seq[3], seq[4]);
     else
         ret = DataProcessor::GetInstance().GrantAuthority(seq[2], seq[3], seq[4], seq[5]);
-    
+
     if(ret != 0) {
         return error + GetErrorMessage(ret);
     }
@@ -118,7 +118,7 @@ std::string Parser::RevokeUser(const std::vector<std::string>& seq) {
         ret = DataProcessor::GetInstance().RevokeAuthority(seq[2], seq[3], seq[4]);
     else
         ret = DataProcessor::GetInstance().RevokeAuthority(seq[2], seq[3], seq[4], seq[5]);
-    
+
     if(ret != 0) {
         return error + GetErrorMessage(ret);
     }
@@ -620,7 +620,7 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
     std::vector<std::vector<std::any>> result;
 
     int ret;
-    
+
     if(tableName.size() == 1)
         ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
     else
@@ -707,14 +707,19 @@ std::string Parser::ReturnSelectRecord(const std::vector<std::string>& seq, std:
             orderField.push_back(seq[i]);
         }
     }
-
     // data processor
 
-    int ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
+    int ret;
+
+    if(tableName.size() == 1)
+        ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
+    else
+        ret = DataProcessor::GetInstance().Select(tableName, fieldName, conditions, result);
 
     if(ret != 0) {
         return error + GetErrorMessage(ret); // TODO: error information
     }
+
 
     return success;
 }
