@@ -310,11 +310,8 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
     if(compare_key.size() > 0) {
             table.BuildIndex(compare_key);
         }
-    std::cout << "===" << std::endl;
     tables.push_back(table);
-    std::cout << "===2" << std::endl;
   }
-std::cout << "===3" << std::endl;
 
   return 0;
 }

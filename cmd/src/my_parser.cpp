@@ -28,9 +28,9 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
     // ----- User -----
     if(seq[1] == "user") {
         if(seq[0] == "create") return CreateUser(seq);         // Create User
-        else if(seq[0] == "grant") return GrantUser(seq);
         else if(seq[0] == "drop") return DeleteUser(seq);      // Drop User
     }
+    if(seq[0] == "grant" && seq[1] == "user") return GrantUser(seq);
 
     // ----- Database -----
     if(seq[1] == "database") {
@@ -234,7 +234,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
             if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)";
             if(fieldMap.count(seq[i + 4]) == 0) return error + statementError + "(field name is not found)";
 
-            constraints.push_back(new PrimaryKeyConstraint(seq[i + 3], seq[i + 1]));
+            constraints.push_back(new PrimaryKeyConstraint(seq[i + 4], seq[i + 1]));
 
         } else if(seq[i + 2] == "foreign" && seq[i + 3] == "key") {
             if(j - i != 7) return error + statementError + "(constraint statement is too short or too long)";
@@ -247,7 +247,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
             if(j - i != 3) return error + statementError + "(constraint statement is too short or too long)";
             if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
 
-            constraints.push_back(new UniqueConstraint(seq[i + 2], seq[i + 1]));
+            constraints.push_back(new UniqueConstraint(seq[i + 3], seq[i + 1]));
 
         } else if(seq[i + 2] == "not" && seq[i + 3] == "null") {
             if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)";
