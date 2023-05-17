@@ -140,6 +140,7 @@ int Table::CheckConstraint(std::unordered_map<std::string, std::any>& record, Da
             }
         }
         if (dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr) { //主键
+            std::cout<<"checking primary key constraint"<<std::endl;
             if(!record.count(constraint->GetFieldName())) {
                 return kConstraintPrimaryKeyConflict;
             }
@@ -207,7 +208,8 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in, Da
             record[field.first] = std::any(field.second);
         }
     }
-    if(CheckConstraint(record, db) != kSuccess) return kConstraintConflict;
+    int ret = CheckConstraint(record, db);
+    if(ret != kSuccess) return ret;
     
     records.push_back(record);
     return kSuccess;
@@ -508,9 +510,6 @@ int Table::AlterTableDrop(std::string field_name, Database* db) {
 int Table::AlterTableModify(std::pair<std::string, std::string> field) {
     if(!field_map.count(field.first)) {
         return kFieldNotFound;
-<<<<<<< HEAD
-    } 
-=======
     }
     if(field_map[field.first] == field.second) return kSuccess;
     for(const auto& constraint : constraints) {
@@ -521,7 +520,6 @@ int Table::AlterTableModify(std::pair<std::string, std::string> field) {
         if(dynamic_cast<const DefaultConstraint *>(constraint) != nullptr&& dynamic_cast<const DefaultConstraint *>(constraint)->GetFieldName()==field.first) return 
             kConstraintDefaultConflict;
     }
->>>>>>> 2008f3c1b9cdb95b8cc099767cc813aba58f81ee
     for(auto& record: records) {
         if(!record.count(field.first)) {
             continue;
