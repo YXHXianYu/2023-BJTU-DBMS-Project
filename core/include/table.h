@@ -77,9 +77,10 @@ public:
     int BuildIndex(const std::vector<std::string>& compare_key, int type = kFHQTreapIndex);
     //检查一条记录是否约束
     int CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db);
+    int CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db, std::vector<std::unordered_map<std::string, std::any> > records, int current_record_order);
     //检查是否被其它表参考
     int CheckBeingRefered(std::unordered_map<std::string, std::any>& record, Database* db);
-
+    int FindField(std::string field_name) const;
     int DropForeignReferedConstraint(std::string table_name);
     int DropForeignReferedConstraint(std::string table_name, std::string field_name);
 };

@@ -33,6 +33,16 @@ int Database::FindTable(std::string table_name) {
     return kTableNotFound;
 }
 
+int Database::FindField(std::string table_name, std::string field_name){
+    if(FindTable(table_name) != kSuccess) return kTableNotFound;
+    for(const auto& table: tables) {
+        if(table.GetTableName() == table_name) {
+            return table.FindField(field_name);
+        }
+    }
+    return kTableNotFound;
+}
+
 Table& Database::FindTableReference(std::string table_name) {
     for(auto& table : tables) {
         if(table.GetTableName() == table_name) return table;
@@ -58,14 +68,57 @@ int Database::CreateTable(std::string table_name, std::vector<std::pair<std::str
             return kTableNameExisted;
         }
     }
-    tables.push_back(Table(table_name, fields, constraints));
-    
+    Table table = Table(table_name, fields, constraints);
+    //tables.push_back(table);
+    int sum_pri = 0;
+    for(auto constraint : constraints) {
+        int ret = 0;//FindField(table_name, constraint->GetFieldName());
+        int flag = 0;
+        for(const auto& x:fields) {
+            std::string field_name = x.first;
+            if(field_name == constraint->GetFieldName()) {
+                flag = 1;
+                break;
+            }
+        }
+        if(flag == 0) return kFieldNotFound;
+        if(dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr) {
+            //std::cout<<"sumpri = "<<sum_pri<<std::endl;
+            if(sum_pri > 0)  return kPrimaryKeyExcessive;
+            
+            sum_pri++;
+        }
+
+        if(ret != kSuccess) return ret;
+        
+        if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
+            ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
+            ret = FindTable(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName());
+            if(ret!=kSuccess) return ret;
+            ret = FindField(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(), dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName());
+            if(ret!=kSuccess) return ret;
+        }
+    }
+
+    for(auto constraint : constraints) {
+        if(dynamic_cast<const ForeignKeyConstraint *>(constraint) == nullptr) continue;
+        
+        //std::cout<<"AlterTableConstraint checked in database"<<std::endl;
+        
+        std::cout<<"AlterTableConstraint checked foreignkey and adding ForeignReferedConstraint"<<std::endl;
+        ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
+        int ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
+        if(ret!=kSuccess) return ret;
+    }
+    tables.push_back(table);
     return kSuccess;
 }
 int Database::AlterTableConstraint(std::string table_name, Constraint* constraint) {
     for(auto& table:tables) {
         if(table.GetTableName() == table_name) {
+            std::cout<<"AlterTableConstraint checked in database"<<std::endl;
             if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
+                std::cout<<"AlterTableConstraint checked foreignkey and adding ForeignReferedConstraint"<<std::endl;
                 ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
                 int ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
                 if(ret!=kSuccess) return ret;
