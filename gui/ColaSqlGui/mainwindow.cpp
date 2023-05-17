@@ -601,6 +601,14 @@ void MainWindow::click_complex_select()
     if (dialog.exec() == QDialog::Accepted)
     {
         QString dbName = dbInput.text();
+        int db_ret = use_database(dbName.toStdString());
+        if (db_ret != kSuccess)
+        {
+            QMessageBox::warning(
+                this, "错误",
+                "使用数据库失败，错误信息：" + QString::number(db_ret));
+            return;
+        }
         QString sql = input.toPlainText();
         qDebug() << sql;
         std::vector<std::vector<std::any>> return_records;
