@@ -1,5 +1,7 @@
 #include "database.h"
 #include<assert.h>
+#include <functional>
+#include<map>
 Database::Database() {
 
 }
@@ -126,6 +128,95 @@ int Database::Select(std::string table_name, std::vector<std::string> field_name
     }
     return kTableNotFound;
 }
+int Database::Select(std::vector<std::string> table_names, std::vector<std::string> field_names,std::vector<std::tuple<std::string, std::string, int>> conditions,std::vector<std::vector<std::any>>& return_records) {
+    std::vector<std::vector<std::vector<std::any>>> td_records;
+    std::vector<std::tuple<std::string, std::string, int>> empty_condition;
+    std::vector<std::string> all_field_names;
+    all_field_names.push_back("*");
+    for(const auto& table_name: table_names) {
+        for(auto & table: tables) {
+            if(table.GetTableName() == table_name) {
+                return_records.clear();
+                table.Select(all_field_names, empty_condition, return_records);
+                td_records.push_back(return_records);
+            }
+        }
+    }
+    int sz = td_records.size();
+    //std::cout<<"sz = "<<sz<<std::endl;
+    return_records.clear();
+
+    all_field_names.clear();
+    //return_records第一行全是字段名
+    std::vector<std::any> tmp;
+    if(field_names[0] == "*") {
+        field_names.clear();
+        std::map<std::string, int> mp;
+        for(const auto& inner_records: td_records) {
+            for(const auto& name : inner_records[0]) {
+                if(!mp.count(ColasqlTool::AnyToString(name)))tmp.push_back(name);
+                mp[ColasqlTool::AnyToString(name)] = 1;
+            }
+        }
+        for(const auto& x : tmp) {
+            field_names.push_back(ColasqlTool::AnyToString(x));
+        }
+    }
+    else {
+        std::map<std::string, int> mp;
+        for(const auto& inner_records: td_records) {
+            for(const auto& name : inner_records[0]) {
+                mp[ColasqlTool::AnyToString(name)] = 1;
+            }
+        }
+        for(const auto& name: field_names) {
+            if(!mp.count(name)) return kFieldNotFound;
+            tmp.push_back(std::any(name));
+        }
+    }
+    return_records.push_back(tmp);
+    const auto& get_return_records = [&]() {
+        const auto& dfs = [&](auto&& self, int now, std::unordered_map<std::string, std::any> record) {
+            //std::cout<<"check now and sz: "<<now<<" "<<sz<<std::endl;
+            if(now == sz) {
+                std::vector<std::any> return_record;
+                for(const auto& field_name: field_names) {
+                    //std::cout<<"check dfs: "<<field_name<<" ";
+                    if(!record.count(field_name)) return_record.push_back(std::any(ColasqlNull()));
+                    else return_record.push_back(record.at(field_name));
+                }
+                //std::cout<<std::endl;
+                return_records.push_back(return_record);
+                return;
+            }
+            const auto& inner_records = td_records[now];
+            //std::cout<<"checksize: "<<now<<" "<<td_records[now].size()<<std::endl;
+            std::unordered_map<std::string, std::any> new_record;
+            for(int i = 1; i < inner_records.size(); ++i) {
+                const auto& inner_record = inner_records[i];
+                new_record = record;
+                bool flag = 1;
+                for(int j = 0; j < inner_record.size(); ++j){
+                    if(new_record.count(ColasqlTool::AnyToString(inner_records[0][j])) && ColasqlTool::CompareAny(inner_record[j], new_record.at(ColasqlTool::AnyToString(inner_records[0][j])))!= kEqual){
+                        flag = 0;
+                        break;
+                    }
+                    new_record[ColasqlTool::AnyToString(inner_records[0][j])] = inner_record[j];
+                }
+                if(flag == 0) continue;
+                //std::cout<<now<<" "<<i<<" "<<inner_records.size()<<std::endl;
+                self(self, now + 1, new_record);
+            }
+        };
+        std::unordered_map<std::string, std::any> initial_record;
+        dfs(dfs, 0, initial_record);
+    };
+
+    get_return_records();
+    return kSuccess;
+    //dfs(0, sz, return_records);
+}
+
 int Database::Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions) {
     for(auto& table:tables) {
         if(table.GetTableName() == table_name) {
