@@ -140,13 +140,16 @@ int Table::CheckConstraint(std::unordered_map<std::string, std::any>& record, Da
             }
         }
         if (dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr) { //主键
+            //std::cout<<"checking primary key constraint"<<std::endl;
             if(!record.count(constraint->GetFieldName())) {
+                //std::cout<<"failed field name is "<<constraint->GetFieldName()<<std::endl;
                 return kConstraintPrimaryKeyConflict;
             }
             std::string field_name = constraint->GetFieldName();
             for(auto& other_record : records) {
                 if (other_record.count(field_name)){
                     if (ColasqlTool::CompareAny (record[field_name], other_record[field_name]) == kEqual){
+                        //std::cout<<"failed record[field_name]"<< ColasqlTool::AnyToString(record[field_name])<<std::endl;
                         return kConstraintPrimaryKeyConflict;
                     }
                 }
@@ -207,7 +210,8 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in, Da
             record[field.first] = std::any(field.second);
         }
     }
-    if(CheckConstraint(record, db) != kSuccess) return kConstraintConflict;
+    int ret = CheckConstraint(record, db);
+    if(ret != kSuccess) return ret;
     
     records.push_back(record);
     return kSuccess;
