@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget* parent)
             SLOT(click_delete_field()));
     connect(ui->btn_delete_record, SIGNAL(triggered()), this,
             SLOT(click_delete_record()));
+    connect(ui->btn_SQL, SIGNAL(triggered()), this,
+            SLOT(click_complex_select()));
     connect(ui->btn_save, SIGNAL(triggered()), this, SLOT(click_save()));
 
     // detect enter pressed
@@ -406,7 +408,7 @@ void MainWindow::click_delete_db()
 
 void MainWindow::click_delete_tb()
 {
-    qDebug() << "add row\n";
+    qDebug() << "delete table\n";
     QDialog dialog;
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
@@ -571,6 +573,43 @@ void MainWindow::click_save()
     std::string ret =
         ColaSQLCommand::CommandProcessor::GetInstance().Run("COMMIT;");
     QMessageBox::information(this, "通知", QString::fromStdString(ret));
+}
+
+void MainWindow::click_complex_select()
+{
+    qDebug() << "complex select";
+    QDialog dialog;
+    QFormLayout layout(&dialog);
+    dialog.setWindowTitle("输入");
+
+    QTextEdit input;
+
+    layout.addRow(&input);
+
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                               Qt::Horizontal, &dialog);
+    layout.addRow(&buttonBox);
+
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog,
+                     &QDialog::accept);
+    QObject::connect(&buttonBox, &QDialogButtonBox::rejected, &dialog,
+                     &QDialog::reject);
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        QString sql = input.toPlainText();
+        std::vector<std::vector<std::any>> return_records;
+        QString ret = QString::fromStdString(
+            ColaSQLCommand::CommandProcessor::GetInstance().ComplexSelect(
+                sql.toStdString(), return_records));
+        qDebug() << "return success!";
+        if (ret != "Success!")
+        {
+            QMessageBox::warning(this, "错误",
+                                 "复杂查询失败，错误信息：" + ret);
+            return;
+        }
+        display_table(return_records);
+    }
 }
 
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)

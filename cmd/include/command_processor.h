@@ -24,6 +24,7 @@ public:
 
     // 本函数不包含登入！请务必先登入再调用本函数
     std::string Run(std::string input);
+    std::string ComplexSelect(std::string input, std::vector<std::vector<std::any>>& result);
 
 private:
     std::vector<std::string> seq;

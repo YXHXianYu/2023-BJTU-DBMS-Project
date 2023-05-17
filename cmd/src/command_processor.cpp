@@ -72,6 +72,29 @@ std::string CommandProcessor::Run(std::string input) {
     return output;
 }
 
+
+std::string CommandProcessor::ComplexSelect(std::string input, std::vector<std::vector<std::any>>& result){
+    if(input == "") return "";
+
+    // preprocess
+    Preprocess(input);
+
+    // tokenize
+    int ret = Tokenize(input, seq);
+
+    if(ret == -1) { // 语句异常（语句中包含不正常的分号）
+        seq.clear();
+        return "Error: Statement error!";
+    }
+
+    // parse
+    std::string output;
+    output = _parser.Parse(seq);
+    seq.clear();
+    return output;
+}
+
+
 CommandProcessor::CommandProcessor() {}
 
 std::string CommandProcessor::GetPrompt() {
@@ -120,7 +143,7 @@ int CommandProcessor::Preprocess(std::string& str) {
         }
     }
 
-    
+
 
     return 0;
 }

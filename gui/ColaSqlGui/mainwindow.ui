@@ -146,14 +146,13 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>查询</string>
     </property>
-    <addaction name="btn_new_select"/>
+    <addaction name="btn_SQL"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>文件</string>
     </property>
     <addaction name="btn_save"/>
-    <addaction name="btn__load"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_create"/>
@@ -205,9 +204,9 @@ p, li { white-space: pre-wrap; }
     <string>删除表</string>
    </property>
   </action>
-  <action name="btn_new_select">
+  <action name="btn_SQL">
    <property name="text">
-    <string>新建查询</string>
+    <string>SQL</string>
    </property>
   </action>
   <action name="btn_save">
