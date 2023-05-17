@@ -247,6 +247,7 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
     if(DEBUG) ColasqlTool::OutputFields(fields);
     if(DEBUG) ColasqlTool::OutputConstraints(constraints);
 
+
     // std::string tableName = seq[2];
     // std::vector<std::pair<std::string, std::any>> fields;
     // std::vector<Constraint*> constraints;

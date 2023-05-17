@@ -12,10 +12,10 @@ Table::Table(std::string &table_name) {
 
 Table::Table(const std::string& table_name,
              const std::vector<std::pair<std::string, std::string>>& fields,
-             const std::vector<Constraint*>& constraints) {
+             const std::vector<Constraint*>& constraints_) {
     this->table_name = table_name;
     this->fields = fields;
-    this->constraints = constraints;
+    this->constraints = constraints_;
     for(auto field:fields) {
         field_map[field.first] = field.second;
     }
@@ -23,11 +23,11 @@ Table::Table(const std::string& table_name,
 
 Table::Table(const std::string& table_name,
              const std::vector<std::pair<std::string, std::string>>& fields,
-             const std::vector<Constraint*>& constraints,
+             const std::vector<Constraint*>& constraints_,
              const std::vector<std::unordered_map<std::string, std::any>>& records) {
     this->table_name = table_name;
     this->fields = fields;
-    this->constraints = constraints;
+    this->constraints = constraints_;
     this->records = records;
     for(auto field:fields) {
         field_map[field.first] = field.second;
@@ -36,8 +36,8 @@ Table::Table(const std::string& table_name,
 
 
 Table::~Table() {                           // 根据零三五法则，需要同时定义析构、拷贝构造、拷贝赋值函数
-    for(auto& ptr: constraints)
-        delete ptr;
+    // for(auto& ptr: constraints)
+        // delete ptr;
 }
 
 Table::Table(const Table& p): table_name(p.table_name), fields(p.fields), constraints(p.constraints), records(p.records) {

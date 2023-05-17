@@ -103,13 +103,13 @@ int FileManager::WriteTablesFile(const std::string& databaseName,
              std::ofstream::out | std::ofstream::trunc);
     if (!out.is_open()) assert(false);
 
-    // TODO
+    out << ColasqlTool::ConstraintsToString(table.GetConstraints()) << std::endl;
     out.close();
 
     // tableIndexes.txt
     out.open(path + table.GetTableName() + "Indexes.txt",
              std::ofstream::out | std::ofstream::trunc);
-    if (!out.is_open()) assert(false);
+    if (!out.is_open()) assert(false); 
 
     // TODO;
     out.close();
@@ -241,10 +241,39 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
     in.close();
 
     // tableConstraints.txt
-    in.open(path + tableName + "Records.txt", std::ifstream::in);
+    in.open(path + tableName + "Constraints.txt", std::ifstream::in);
     if (!in.is_open()) assert(false);
 
-    // TODO
+        in >> n;
+        for(int i = 1; i <= n; i++) {
+            int type;
+            std::string fieldName;
+            in >> type >> fieldName;
+            if(type == kPrimaryKey) {
+                constraints.push_back(new PrimaryKeyConstraint(fieldName));
+            } else if(type == kForeignKey) {
+                std::string s1, s2;
+                in >> s1 >> s2;
+                constraints.push_back(new ForeignKeyConstraint(fieldName, s1, s2));
+            } else if(type == kForeignRefered) {
+                std::string s1, s2;
+                in >> s1 >> s2;
+                constraints.push_back(new ForeignReferedConstraint(fieldName, s1, s2));
+            } else if(type == kUnique) {
+                constraints.push_back(new UniqueConstraint(fieldName));
+            } else if(type == kNotNull) {
+                constraints.push_back(new NotNullConstraint(fieldName));
+            } else if(type == kDefault) {
+                std::string value;
+                in >> value;
+                constraints.push_back(new DefaultConstraint(fieldName, ColasqlTool::GetAnyByTypeAndValue(field_map.at(fieldName), value)));
+            } else {
+                std::cerr << "Unknown Constraint Type" << std::endl;
+            }
+        }
+
+        // ColasqlTool::OutputConstraints(constraints);
+
 
     // tableIndexes.txt
     in.open(path + tableName + "Indexes.txt", std::ifstream::in);

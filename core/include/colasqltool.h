@@ -40,7 +40,14 @@ public:
     static std::vector<std::vector<std::any>> ChangeStringsToRecords(std::vector<std::string> strings, std::string head);
 
     //把表描述信息转换成表结构
-    static std::vector<std::vector<std::any>> ChangeDescriptionToRecords(const std::vector<std::pair<std::string, std::string>>& fields, const std::vector<Constraint*>&constraints);
+    static std::vector<std::vector<std::any>> ChangeDescriptionToRecords(const std::vector<std::pair<std::string, std::string>>& fields,
+                                                                         const std::vector<Constraint*>&constraints);
+
+    // 把约束条件vector转换成字符串（用于文件输出）
+    static std::string ConstraintsToString(const std::vector<Constraint*>& constraints);
+
+    // 把字符串转换成约束条件vector
+    // static std::vector<Constraint*> StringToConstraints(const std::string& str);
 };
 
 class ColasqlException {

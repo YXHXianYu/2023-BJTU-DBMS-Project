@@ -49,6 +49,7 @@ int Database::CreateTable(std::string table_name, std::vector<std::pair<std::str
         }
     }
     tables.push_back(Table(table_name, fields, constraints));
+    
     return kSuccess;
 }
 
