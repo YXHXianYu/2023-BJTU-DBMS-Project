@@ -36,6 +36,8 @@ public:
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);
 
     int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);
+    int CheckCondition(const std::unordered_map<std::string, std::any>& record,
+                       const std::vector<std::tuple<std::string, std::string, int>>& conditions, std::unordered_map<std::string, std::string> field_map);
 
     int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>& constraints);
     int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);

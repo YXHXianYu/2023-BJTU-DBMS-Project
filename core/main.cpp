@@ -128,15 +128,22 @@ int main() {
     table_names.push_back(table_name);
     table_name = "sc";
     table_names.push_back(table_name);
-    field_name.clear();
     
+    conditions.clear();
+    conditions.push_back(std::make_tuple("Grade","50", kLargerEqualCondition));
+    conditions.push_back(std::make_tuple("Cname","software", kEqualConditon));
+    
+    field_name.clear();
     field_name.push_back("Sname");
     field_name.push_back("Cname");
     field_name.push_back("Grade");
     return_records.clear();
     std::cout<<DataProcessor::GetInstance().Select(table_names,field_name,conditions,return_records)<<std::endl;
     ColasqlTool::OutputSelectResult(return_records);    
+
+
     //测试select student, course
+    conditions.clear();
         table_names.clear();
         table_name = "student";
         table_names.push_back(table_name);
