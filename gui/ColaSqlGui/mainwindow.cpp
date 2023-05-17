@@ -206,6 +206,7 @@ void MainWindow::on_treeView_doubleClicked(const QModelIndex& index)
     // click a table then display it
     if (index.parent().isValid())
     {
+        multiple_select = 0;
         std::string database = index.parent().data().toString().toStdString();
         std::string table = index.data().toString().toStdString();
         qDebug() << "click on " + QString::fromStdString(table);
@@ -809,6 +810,4 @@ void MainWindow::on_tableView_clicked(const QModelIndex& index)
 {
     clicked_column = index.column();
     clicked_row = index.row();
-    qDebug() << clicked_column;
-    qDebug() << clicked_row;
 }
