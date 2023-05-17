@@ -66,7 +66,7 @@ int Database::AlterTableConstraint(std::string table_name, Constraint* constrain
     for(auto& table:tables) {
         if(table.GetTableName() == table_name) {
             if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
-                ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(),table_name,constraint->GetFieldName());
+                ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
                 int ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
                 if(ret!=kSuccess) return ret;
             }

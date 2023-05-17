@@ -258,6 +258,7 @@ std::string ColasqlTool::ConstraintsToString(const std::vector<Constraint*>& con
             if(DEBUG) std::cout  << "===1.1.1" << std::endl;
 
             str += std::to_string(kPrimaryKey) + " "
+                + p->GetConstraintName() + " "
                 + p->GetFieldName() + "\n";
         } else if(dynamic_cast<ForeignKeyConstraint*>(it) != nullptr) {
             ForeignKeyConstraint* p = dynamic_cast<ForeignKeyConstraint*>(it);
@@ -265,6 +266,7 @@ std::string ColasqlTool::ConstraintsToString(const std::vector<Constraint*>& con
             if(DEBUG) std::cout  << "===1.1.2" << std::endl;
 
             str += std::to_string(kForeignKey) + " "
+                + p->GetConstraintName() + " "
                 + p->GetFieldName() + " "
                 + p->GetReferenceTableName() + " "
                 + p->GetReferenceFieldName() + "\n";
@@ -276,6 +278,7 @@ std::string ColasqlTool::ConstraintsToString(const std::vector<Constraint*>& con
             if(DEBUG) std::cout  << "===1.1.3" << std::endl;
 
             str += std::to_string(kForeignRefered) + " "
+                + p->GetConstraintName() + " "
                 + p->GetFieldName() + " "
                 + p->GetReferenceTableName() + " "
                 + p->GetReferenceFieldName() + "\n";
@@ -285,6 +288,7 @@ std::string ColasqlTool::ConstraintsToString(const std::vector<Constraint*>& con
             if(DEBUG) std::cout  << "===1.1.4" << std::endl;
 
             str += std::to_string(kNotNull) + " "
+                + p->GetConstraintName() + " "
                 + p->GetFieldName() + "\n";
 
         } else if(dynamic_cast<UniqueConstraint*>(it) != nullptr) {
@@ -293,6 +297,7 @@ std::string ColasqlTool::ConstraintsToString(const std::vector<Constraint*>& con
             if(DEBUG) std::cout  << "===1.1.5" << std::endl;
 
             str += std::to_string(kUnique) + " "
+                + p->GetConstraintName() + " "
                 + p->GetFieldName() + "\n";
 
         } else if(dynamic_cast<DefaultConstraint*>(it) != nullptr) {
@@ -301,6 +306,7 @@ std::string ColasqlTool::ConstraintsToString(const std::vector<Constraint*>& con
             if(DEBUG) std::cout  << "===1.1.6" << std::endl;
 
             str += std::to_string(kDefault) + " "
+                + p->GetConstraintName() + " "
                 + p->GetFieldName() + " ";
             if(p->GetValue().type() == typeid(int))
                 str += std::to_string(std::any_cast<int>(p->GetValue())) + "\n";
