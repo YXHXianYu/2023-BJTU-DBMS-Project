@@ -22,6 +22,7 @@ SOURCES += \
     $${PWD}/../../core/src/constraint/*.cpp \
     $${PWD}/../../core/src/index/*.cpp \
     ../../file/src/filemanager.cpp \
+    createindex.cpp \
     createrecord.cpp \
     createtable.cpp \
     main.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
 
 HEADERS += \
     columndialog.h \
+    createindex.h \
     createrecord.h \
     createtable.h \
     mainwindow.h \
@@ -40,6 +42,7 @@ HEADERS += \
     ui_register.h
 
 FORMS += \
+    createindex.ui \
     createrecord.ui \
     createtable.ui \
     mainwindow.ui \

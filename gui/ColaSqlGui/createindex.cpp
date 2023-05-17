@@ -1,10 +1,10 @@
-#include "createrecord.h"
+#include "createindex.h"
 
-#include "ui_createrecord.h"
+#include "ui_createindex.h"
 
-createrecord::createrecord(std::vector<std::vector<std::any>> return_records,
-                           const QString& tbName, QWidget* parent)
-    : QMainWindow(parent), ui(new Ui::createrecord)
+createindex::createindex(std::vector<std::vector<std::any>> return_records,
+                         const QString& tbName, QWidget* parent)
+    : QMainWindow(parent), ui(new Ui::createindex)
 {
     ui->setupUi(this);
     records = return_records;
@@ -12,9 +12,9 @@ createrecord::createrecord(std::vector<std::vector<std::any>> return_records,
     display_table(records);
 }
 
-createrecord::~createrecord() { delete ui; }
+createindex::~createindex() { delete ui; }
 
-QString createrecord::anyToQString(const std::any& value)
+QString createindex::anyToQString(const std::any& value)
 {
     QString result;
     if (value.type() == typeid(std::string))
@@ -32,7 +32,7 @@ QString createrecord::anyToQString(const std::any& value)
     return result;
 }
 
-void createrecord::display_table(
+void createindex::display_table(
     std::vector<std::vector<std::any>>& return_records)
 {
     // display table on tableview
@@ -47,18 +47,17 @@ void createrecord::display_table(
     // add row
     for (size_t i = 0; i < fields.size(); ++i)
     {
-        items.append(new QStandardItem());
+        items.append(new QStandardItem("-"));
     }
     model->appendRow(items);
     ui->tableView->setModel(model);
 }
 
-void createrecord::on_btn_cancel_clicked() { this->close(); }
+void createindex::on_btn_cancel_clicked() { this->close(); }
 
-void createrecord::on_btn_finish_clicked()
+void createindex::on_btn_finish_clicked()
 {
     QString fields;
-    QString values;
     QString opt;
     QStandardItemModel* model =
         qobject_cast<QStandardItemModel*>(ui->tableView->model());
@@ -68,21 +67,17 @@ void createrecord::on_btn_finish_clicked()
         for (int i = 0; i < cols; ++i)
         {
             QString new_data = model->data(model->index(0, i)).toString();
-            if (new_data != "")
+            if (new_data == "*")
             {
                 fields += anyToQString(records[0][i]) + " ";
-                values += new_data + " ";
             }
         }
         qDebug() << fields;
-        qDebug() << values;
-        opt = "INSERT INTO " + table + " ";
+        opt = "CREATE INDEX ON " + table + " ";
         opt += fields;
-        opt += "VALUES ";
-        opt += values;
         opt += ";";
         qDebug() << opt;
-        emit create_record_signal(opt);
+        emit create_index_signal(opt);
         this->close();
     }
     else

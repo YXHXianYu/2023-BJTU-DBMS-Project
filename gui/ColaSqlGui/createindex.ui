@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>createrecord</class>
- <widget class="QMainWindow" name="createrecord">
+ <class>createindex</class>
+ <widget class="QMainWindow" name="createindex">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -26,6 +26,19 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="btn_cancel">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>260</y>
+      <width>80</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>取消</string>
+    </property>
+   </widget>
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
@@ -49,17 +62,17 @@
      <string>完成</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_cancel">
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>260</y>
-      <width>80</width>
-      <height>20</height>
+      <x>20</x>
+      <y>10</y>
+      <width>291</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>取消</string>
+     <string>请在想要创建索引的列下打*</string>
     </property>
    </widget>
   </widget>
