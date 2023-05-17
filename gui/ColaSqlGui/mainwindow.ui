@@ -132,6 +132,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="btn_create_table"/>
     <addaction name="btn_create_field"/>
     <addaction name="btn_create_record"/>
+    <addaction name="btn_create_index"/>
    </widget>
    <widget class="QMenu" name="menu_delete">
     <property name="title">
@@ -148,13 +149,21 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="btn_SQL"/>
    </widget>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menu_file">
     <property name="title">
      <string>文件</string>
     </property>
     <addaction name="btn_save"/>
+    <addaction name="btn_read_sql"/>
    </widget>
-   <addaction name="menu"/>
+   <widget class="QMenu" name="menu_user">
+    <property name="title">
+     <string>用户</string>
+    </property>
+    <addaction name="btn_change_user"/>
+   </widget>
+   <addaction name="menu_user"/>
+   <addaction name="menu_file"/>
    <addaction name="menu_create"/>
    <addaction name="menu_delete"/>
    <addaction name="menu_query"/>
@@ -227,6 +236,21 @@ p, li { white-space: pre-wrap; }
   <action name="btn_delete_record">
    <property name="text">
     <string>删除所选记录</string>
+   </property>
+  </action>
+  <action name="btn_read_sql">
+   <property name="text">
+    <string>读取sql文件</string>
+   </property>
+  </action>
+  <action name="btn_create_index">
+   <property name="text">
+    <string>新建索引</string>
+   </property>
+  </action>
+  <action name="btn_change_user">
+   <property name="text">
+    <string>切换用户</string>
    </property>
   </action>
  </widget>

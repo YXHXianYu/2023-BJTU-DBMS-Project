@@ -4,6 +4,7 @@
 #include <ui_login.h>
 
 #include <QDebug>
+#include <QFileDialog>
 #include <QFormLayout>
 #include <QInputDialog>
 #include <QKeyEvent>
@@ -13,6 +14,7 @@
 #include <QStandardItemModel>
 #include <QTextEdit>
 #include <QTreeWidget>
+#include <memory>
 
 #include "columndialog.h"
 #include "command_processor.h"
@@ -62,6 +64,7 @@ private slots:
     void click_delete_record();                          // 删除记录
     void click_save();                                   // 保存文件
     void click_complex_select();                         // 复杂查询
+    void click_read_sql();                               // 执行.sql文件
     void on_btn_commit_clicked();                        // commit
     void on_btn_rollback_clicked();                      // rollback
     void on_tableView_clicked(const QModelIndex& index); // 点击表

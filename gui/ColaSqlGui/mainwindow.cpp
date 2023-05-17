@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 
-#include <memory>
-
 #include "ui_login.h"
 #include "ui_mainwindow.h"
 
@@ -49,6 +47,8 @@ MainWindow::MainWindow(QWidget* parent)
             SLOT(click_delete_record()));
     connect(ui->btn_SQL, SIGNAL(triggered()), this,
             SLOT(click_complex_select()));
+    connect(ui->btn_read_sql, SIGNAL(triggered()), this,
+            SLOT(click_read_sql()));
     connect(ui->btn_save, SIGNAL(triggered()), this, SLOT(click_save()));
 
     // detect enter pressed
@@ -623,6 +623,37 @@ void MainWindow::click_complex_select()
             return;
         }
         display_table(return_records);
+    }
+}
+
+void MainWindow::click_read_sql()
+{
+    QFileDialog dialog(this);
+    dialog.setWindowTitle("Select File");
+    QString filePath = dialog.getOpenFileName();
+    if (!filePath.isEmpty())
+    {
+        QFileInfo fileInfo(filePath);
+        if (fileInfo.suffix() != "colasql")
+        {
+            QMessageBox::warning(this, "错误文件类型", "请选择.colasql文件");
+        }
+        else
+        {
+            qDebug() << "Selected File: " << filePath;
+            QString opt = "run " + filePath + ";";
+            qDebug() << "cmd run: " << opt;
+            QString ret = QString::fromStdString(
+                ColaSQLCommand::CommandProcessor::GetInstance().Run(
+                    opt.toStdString()));
+            qDebug() << "return success!";
+            if (ret != "Success!")
+            {
+                QMessageBox::warning(this, "错误",
+                                     "执行.colasql错误，错误信息：" + ret);
+                return;
+            }
+        }
     }
 }
 
