@@ -30,7 +30,7 @@ const int kLess = -1;
 
 const int kIdentifiedFail = 24;
 const int kDatabaseNotUse = 25;
-const int kFieldExisted = 25;
+
 const int kErrorCurrentUser = 26;
 const int kErrorCurrentDatabase = 27;
 const int kSizeNotProper = 28;
@@ -46,6 +46,9 @@ const int kImpossibleSituation = 36;
 const int kBeingRefered = 37;
 const int kConstraintDefaultConflict = 38;
 const int kAuthorityNotProper = 39;
+const int kReferenceTableNotFound = 40;
+const int kFieldExisted = 41;
+const int kPrimaryKeyExcessive = 42;
 
 // ===== About Index =====
 const int kUnknownIndex = 100;

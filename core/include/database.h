@@ -24,6 +24,7 @@ public:
 
     int FindTable(std::string table_name);
     int FindTable(std::string table_name, Table& return_table);
+    int FindField(std::string table_name, std::string field_name);
     Table& FindTableReference(std::string table_name);
     int ShowTables(std::vector<std::string>& return_tables);
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
