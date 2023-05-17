@@ -457,6 +457,12 @@ void MainWindow::click_delete_tb()
 
 void MainWindow::click_delete_field()
 {
+    // fk multiple select
+    if (multiple_select != 0)
+    {
+        QMessageBox::warning(this, "错误", "多表查询不支持修改\n");
+        return;
+    }
     if (current_table == "")
     {
         QMessageBox::warning(this, "错误", "请先选用表");
@@ -503,7 +509,57 @@ void MainWindow::click_delete_field()
 
 void MainWindow::click_delete_record()
 {
+    // fk multiple select
+    if (multiple_select != 0)
+    {
+        QMessageBox::warning(this, "错误", "多表查询不支持修改\n");
+        return;
+    }
     if (current_table == "")
+    {
+        QMessageBox::warning(this, "错误", "请先选用表");
+        return;
+    }
+    QStandardItemModel* model =
+        qobject_cast<QStandardItemModel*>(ui->tableView->model());
+    if (model)
+    {
+        QItemSelectionModel* selectionModel = ui->tableView->selectionModel();
+        QModelIndexList selectedRows = selectionModel->selectedRows();
+        foreach (const QModelIndex& index, selectedRows)
+        {
+            int row = index.row();
+            std::vector<std::tuple<std::string, std::string, int>> conditions;
+            for (int column = 0; column < model->columnCount(); ++column)
+            {
+                QModelIndex cellIndex = model->index(row, column);
+                QString data = model->data(cellIndex).toString();
+                QString field =
+                    model->headerData(column, Qt::Horizontal).toString();
+                qDebug() << data;
+                qDebug() << field;
+                conditions.push_back(std::make_tuple(
+                    field.toStdString(), data.toStdString(), kEqualConditon));
+            }
+            int ret =
+                DataProcessor::GetInstance().Delete(current_table, conditions);
+            if (ret != kSuccess)
+            {
+                QMessageBox::warning(this, "错误", "删除记录错误");
+                qDebug() << "delete record error" + QString::number(ret);
+                return;
+            }
+        }
+        QMessageBox::information(this, "通知", "删除记录成功！");
+        std::vector<std::vector<std::any>> return_records;
+        int ret = select_all_from_table(current_table, return_records);
+        if (ret != kSuccess)
+        {
+            return;
+        }
+        display_table(return_records);
+    }
+    else
     {
         QMessageBox::warning(this, "错误", "请先选用表");
         return;
