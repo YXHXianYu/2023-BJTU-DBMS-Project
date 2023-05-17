@@ -38,12 +38,12 @@ private:
 
     std::string CreateUser(const std::vector<std::string>& seq); // 
     std::string GrantUser(const std::vector<std::string>& seq); // 
+    std::string RevokeUser(const std::vector<std::string>& seq);
     std::string DeleteUser(const std::vector<std::string>& seq); // 
     // std::string ActivateAdmin(const std::vector<std::string>& seq);
     // std::string DeactivateAdmin(const std::vector<std::string>& seq);
     std::string Login(const std::vector<std::string>& seq);
 
-    std::string RevokeUser(const std::vector<std::string>& seq);
 
     std::string CreateDatabase(const std::vector<std::string>& seq); // 
     std::string DeleteDatabase(const std::vector<std::string>& seq); // 

@@ -89,13 +89,28 @@ std::string Parser::CreateUser(const std::vector<std::string>& seq) {
 
 std::string Parser::GrantUser(const std::vector<std::string>& seq) {
     // return "Warning: Grant User is under development";
-    if(seq.size() != 5 || seq.size() != 6) return error + statementError;
+    if(seq.size() != 5 && seq.size() != 6) return error + statementError;
 
     int ret;
     if(seq.size() == 5)
         ret = DataProcessor::GetInstance().GrantAuthority(seq[2], seq[3], seq[4]);
     else
         ret = DataProcessor::GetInstance().GrantAuthority(seq[2], seq[3], seq[4], seq[5]);
+    
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+    return success;
+}
+
+std::string Parser::RevokeUser(const std::vector<std::string>& seq) {
+    if(seq.size() != 5 && seq.size() != 6) return error + statementError;
+
+    int ret;
+    if(seq.size() == 5)
+        ret = DataProcessor::GetInstance().RevokeAuthority(seq[2], seq[3], seq[4]);
+    else
+        ret = DataProcessor::GetInstance().RevokeAuthority(seq[2], seq[3], seq[4], seq[5]);
     
     if(ret != 0) {
         return error + GetErrorMessage(ret);
@@ -597,7 +612,12 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
 
     std::vector<std::vector<std::any>> result;
 
-    int ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
+    int ret;
+    
+    if(tableName.size() == 1)
+        ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
+    else
+        ret = DataProcessor::GetInstance().Select(tableName, fieldName, conditions, result);
 
     if(ret != 0) {
         return error + GetErrorMessage(ret); // TODO: error information
