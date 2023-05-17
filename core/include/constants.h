@@ -56,4 +56,12 @@ const int kFailedIndexCouldnotSpeedup = 112;
 const int kFailedIndexNotBuild = 113;
 
 
+// ===== About Constraints =====
+const int kPrimaryKey = 150;
+const int kForeignKey = 151;
+const int kForeignRefered = 152;
+const int kUnique = 153;
+const int kNotNull = 154;
+const int kDefault = 155;
+
 #endif

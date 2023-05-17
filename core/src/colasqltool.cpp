@@ -85,7 +85,7 @@ int ColasqlTool::CompareAny(const std::any& any1, const std::any& any2) {
 }
 
 void ColasqlTool::OutputConstraints(const std::vector<Constraint*> constraints) {
-    std::cout << "Constraints: " << std::endl;
+    std::cout << "Constraints(" << constraints.size() << "): " << std::endl;
     for(auto &it: constraints) {
         if(dynamic_cast<PrimaryKeyConstraint*>(it) != nullptr) {
             PrimaryKeyConstraint* p = dynamic_cast<PrimaryKeyConstraint*>(it);
@@ -239,4 +239,82 @@ std::string ColasqlTool::OutputSelectResult(const std::vector<std::vector<std::a
     }
     std::cout<<out_result;
     return out_result;
+}
+
+
+// 把约束条件vector转换成字符串（用于文件输出）
+std::string ColasqlTool::ConstraintsToString(const std::vector<Constraint*>& constraints) {
+    std::string str = "";
+
+    bool DEBUG = false;
+
+    str += std::to_string(constraints.size()) + "\n";
+    for(auto &it: constraints) {
+        if(DEBUG) std::cout << "===1.1" << std::endl;
+
+        if(dynamic_cast<const PrimaryKeyConstraint*>(it) != nullptr) {
+            PrimaryKeyConstraint* p = dynamic_cast<PrimaryKeyConstraint*>(it);
+
+            if(DEBUG) std::cout  << "===1.1.1" << std::endl;
+
+            str += std::to_string(kPrimaryKey) + " "
+                + p->GetFieldName() + "\n";
+        } else if(dynamic_cast<ForeignKeyConstraint*>(it) != nullptr) {
+            ForeignKeyConstraint* p = dynamic_cast<ForeignKeyConstraint*>(it);
+
+            if(DEBUG) std::cout  << "===1.1.2" << std::endl;
+
+            str += std::to_string(kForeignKey) + " "
+                + p->GetFieldName() + " "
+                + p->GetReferenceTableName() + " "
+                + p->GetReferenceFieldName() + "\n";
+
+        } else if(dynamic_cast<ForeignReferedConstraint*>(it) != nullptr) {
+            ForeignReferedConstraint* p = dynamic_cast<ForeignReferedConstraint*>(it);
+
+
+            if(DEBUG) std::cout  << "===1.1.3" << std::endl;
+
+            str += std::to_string(kForeignRefered) + " "
+                + p->GetFieldName() + " "
+                + p->GetReferenceTableName() + " "
+                + p->GetReferenceFieldName() + "\n";
+        } else if(dynamic_cast<NotNullConstraint*>(it) != nullptr) {
+            NotNullConstraint* p = dynamic_cast<NotNullConstraint*>(it);
+
+            if(DEBUG) std::cout  << "===1.1.4" << std::endl;
+
+            str += std::to_string(kNotNull) + " "
+                + p->GetFieldName() + "\n";
+
+        } else if(dynamic_cast<UniqueConstraint*>(it) != nullptr) {
+            UniqueConstraint* p = dynamic_cast<UniqueConstraint*>(it);
+
+            if(DEBUG) std::cout  << "===1.1.5" << std::endl;
+
+            str += std::to_string(kUnique) + " "
+                + p->GetFieldName() + "\n";
+
+        } else if(dynamic_cast<DefaultConstraint*>(it) != nullptr) {
+            DefaultConstraint* p = dynamic_cast<DefaultConstraint*>(it);
+
+            if(DEBUG) std::cout  << "===1.1.6" << std::endl;
+
+            str += std::to_string(kDefault) + " "
+                + p->GetFieldName() + " ";
+            if(p->GetValue().type() == typeid(int))
+                str += std::to_string(std::any_cast<int>(p->GetValue())) + "\n";
+            else if(p->GetValue().type() == typeid(float))
+                str += std::to_string(std::any_cast<float>(p->GetValue())) + "\n";
+            else if(p->GetValue().type() == typeid(std::string))
+                str += std::any_cast<std::string>(p->GetValue()) + "\n";
+            else
+                str += "0\n";
+
+        } else {
+            // error
+            std::cout << "Unknown Constraint Type" << std::endl;
+        }
+    }
+    return str;
 }
