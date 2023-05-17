@@ -25,7 +25,6 @@ MainWindow::MainWindow(QWidget* parent)
 
     // login
     connect(ui_log, SIGNAL(login()), this, SLOT(show()));
-    connect(ui_log, SIGNAL(login()), this, SLOT(addTreeItems()));
     connect(ui_log, SIGNAL(login()), this, SLOT(init_treeview()));
 
     // actions
@@ -49,6 +48,8 @@ MainWindow::MainWindow(QWidget* parent)
             SLOT(click_complex_select()));
     connect(ui->btn_read_sql, SIGNAL(triggered()), this,
             SLOT(click_read_sql()));
+    connect(ui->btn_change_user, SIGNAL(triggered()), this,
+            SLOT(click_change_user()));
     connect(ui->btn_save, SIGNAL(triggered()), this, SLOT(click_save()));
 
     // detect enter pressed
@@ -655,6 +656,15 @@ void MainWindow::click_read_sql()
             }
         }
     }
+}
+
+void MainWindow::click_change_user()
+{
+    ui_log = new ui_login;
+    ui_log->show();
+    this->hide();
+    connect(ui_log, SIGNAL(login()), this, SLOT(show()));
+    connect(ui_log, SIGNAL(login()), this, SLOT(init_treeview()));
 }
 
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)

@@ -240,7 +240,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="btn_read_sql">
    <property name="text">
-    <string>读取sql文件</string>
+    <string>读取colasql文件</string>
    </property>
   </action>
   <action name="btn_create_index">
