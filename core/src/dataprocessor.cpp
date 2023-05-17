@@ -174,7 +174,7 @@ int DataProcessor::GrantAuthority(std::string user_name, std::string database_na
 		//表级权限
 		std::vector<std::string> return_tables;
 		database.ShowTables(return_tables);
-		for(auto table_name : return_tables) {
+		for(const auto& table_name : return_tables) {
 			if(current_user->CheckAuthority(database_name,table_name,number) != kSuccess) {
 				return kInsufficientAuthority;
 			}
@@ -214,16 +214,52 @@ int DataProcessor::RevokeAuthority(std::string user_name, std::string database_n
 	return kDatabaseNotFound;
 }
 int DataProcessor::RevokeAuthority(std::string user_name, std::string database_name, std::string authority_name) {
+	if(!FindDatabase(database_name)) return kDatabaseNotFound;
+	if(!FindUser(user_name)) return kUserNameNotFound;
+	
 	authority_number number;
 	if(authority_name == "create") number = authority_number::CREATE;
 	else if(authority_name == "drop") number = authority_number::DROP;
-	if(!FindDatabase(database_name)) return kDatabaseNotFound;
-	if(!FindUser(user_name)) return kUserNameNotFound;
-	for(auto& user:users) {
-		if(user.GetUserName() == user_name) {
-			return user.RevokeAuthority(database_name, number);
+	
+	for(auto& database:databases) {
+		if(database.GetDatabaseName() != database_name) continue;
+		//数据库级权限
+		if(number == authority_number::CREATE || number == authority_number::DROP) {
+			if(current_user->CheckAuthority(database_name,number) != kSuccess) {
+				return kInsufficientAuthority;
+			}
+			int find_user = 0;
+			for(auto& user:users) {
+				if(user.GetUserName() == user_name) {
+					find_user = 1;
+					return user.RevokeAuthority(database_name, number);
+				}
+			}
+			return kUserNameNotFound;
 		}
+		//表级权限
+		std::vector<std::string> return_tables;
+		database.ShowTables(return_tables);
+		for(const auto& table_name : return_tables) {
+			if(current_user->CheckAuthority(database_name,table_name,number) != kSuccess) {
+				return kInsufficientAuthority;
+			}
+		}
+		int find_user = 0;
+		for(auto& user:users) {
+			if(user.GetUserName() == user_name) {
+				find_user = 1;
+				for(const auto& table_name : return_tables) {
+					int ret = user.RevokeAuthority(database_name, table_name, number);
+					if(ret!= kSuccess) return ret;
+				}
+			}
+		}
+		if(find_user == 0) return kUserNameNotFound;
+		return kSuccess;
 	}
+	
+	
 	return kUserNameNotFound;
 }
 

@@ -81,7 +81,7 @@ int User::RevokeAuthority(std::string database_name, authority_number number) {
 }
 //删除表级权限
 int User::RevokeAuthority(std::string database_name, std::string table_name, authority_number number) {
-    if(CheckAuthority(database_name, table_name, number) != kSuccess) return kAuthorityNotFound;
+    if(CheckAuthority(database_name, table_name, number) != kSuccess) return kSuccess;
     for(int i = 0; i < authorities.size(); ++i) {
         const auto& authority = authorities[i];
         if(authority.database_name == database_name && authority.table_name == table_name && authority.number == number) {
