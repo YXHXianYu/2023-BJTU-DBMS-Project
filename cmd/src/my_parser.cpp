@@ -31,6 +31,7 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
         else if(seq[0] == "drop") return DeleteUser(seq);      // Drop User
     }
     if(seq[0] == "grant" && seq[1] == "user") return GrantUser(seq);
+    if(seq[0] == "revoke" && seq[1] == "user") return RevokeUser(seq);
     if(seq[0] == "login") return Login(seq);
 
     // ----- Database -----
@@ -106,12 +107,14 @@ std::string Parser::GrantUser(const std::vector<std::string>& seq) {
 std::string Parser::RevokeUser(const std::vector<std::string>& seq) {
     if(seq.size() != 5 && seq.size() != 6) return error + statementError;
 
+    // std::cout << "===" << seq.size() << ", " << seq[2] << ", " << seq[3] << ", " << seq[4] << std::endl;
+
     int ret;
     if(seq.size() == 5)
         ret = DataProcessor::GetInstance().RevokeAuthority(seq[2], seq[3], seq[4]);
     else
         ret = DataProcessor::GetInstance().RevokeAuthority(seq[2], seq[3], seq[4], seq[5]);
-    
+
     if(ret != 0) {
         return error + GetErrorMessage(ret);
     }

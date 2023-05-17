@@ -101,27 +101,27 @@ bool DataProcessor::IsAdmin() {
 
 bool DataProcessor::FindDatabase(std::string database_name) {
 	for(auto& database: databases) {
-		if(database.GetDatabaseName() == database_name) return kSuccess;
+		if(database.GetDatabaseName() == database_name) return true;
 	}
-	return kDatabaseNotFound;
+	return false;
 }
 bool DataProcessor::FindTable(std::string database_name, std::string table_name) {
 	for(auto& database: databases) {
 		std::vector<std::string> tables;
 		database.ShowTables(tables);
 		for(auto table_name_in : tables)
-		if(database.GetDatabaseName() == database_name && table_name_in == table_name) return kSuccess;
+		if(database.GetDatabaseName() == database_name && table_name_in == table_name) return true;
 	}
-	return kTableNotFound;
+	return false;
 }
 
 bool DataProcessor::FindUser(std::string user_name) {
 	for(auto& user_in : users) {
 		if(user_in.GetUserName() == user_name) {
-			return kSuccess;
+			return true;
 		}
 	}
-	return kUserNameNotFound;
+	return false;
 }
 
 int DataProcessor::GrantAuthority(std::string user_name, std::string database_name, std::string authority_name) {
