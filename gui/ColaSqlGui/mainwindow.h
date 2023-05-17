@@ -85,7 +85,7 @@ private slots:
     void onEnterPressed();
 
 protected:
-    // override命令行回车键
+    // override事件过滤器
     bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
@@ -97,7 +97,7 @@ private:
     createindex* ui_create_index;   // 新建索引界面
 
     // Co1aSQL!
-    QString prefix = "Co1aSQL > ";
+    QString prefix = "Co1aSQL @ ";
 
     // 状态
     std::string current_database = ""; // 当前选用的数据库

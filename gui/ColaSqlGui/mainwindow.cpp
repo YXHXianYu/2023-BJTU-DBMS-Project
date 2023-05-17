@@ -766,34 +766,75 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 return true; // 如果光标在行尾，不允许删除
             }
         }
+        else if (keyEvent->key() == Qt::Key_Up ||
+                 keyEvent->key() == Qt::Key_Down)
+        {
+            return true;
+        }
+        else if (keyEvent->key() == Qt::Key_Left)
+        {
+            cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor,
+                                prefix.length());
+            QString textBeforeCursor = cursor.selectedText();
+
+            if (textBeforeCursor == prefix)
+            {
+                return true; // 如果光标前的字符串等于指定字符串，不允许删除
+            }
+        }
     }
+
+    // 禁止鼠标移动光标，不会
+    //    else if (watched == ui->textEdit_code && event->type() ==
+    //    QEvent::MouseMove)
+    //    {
+    //        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    //        mouseEvent->ignore();
+    //        return true;
+    //    }
+    //    else if (watched == ui->textEdit_code &&
+    //             event->type() == QEvent::MouseButtonPress)
+    //    {
+    //        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    //        mouseEvent->ignore();
+    //        return true;
+    //    }
     // 对于其他事件和对象，调用基类的事件过滤器
     return QMainWindow::eventFilter(watched, event);
 }
 
 void MainWindow::onEnterPressed()
 {
-    QTextCursor cursor = ui->textEdit_code->textCursor();
-    cursor.select(QTextCursor::LineUnderCursor);
-    QString input = cursor.selectedText().mid(prefix.length());
-    qDebug() << "回车键被按下，当前行内容：" << input;
-    if (input == "cls;")
+    QString content = ui->textEdit_code->toPlainText();
+
+    int lastAtIndex = content.lastIndexOf('@');
+
+    if (lastAtIndex != -1)
     {
-        ui->textEdit_code->clear();
+        QString input = content.mid(lastAtIndex + 1);
+        qDebug() << "input: " << input;
+        if (input == " cls;")
+        {
+            ui->textEdit_code->clear();
+        }
+        else
+        {
+            QString ret = QString::fromStdString(
+                ColaSQLCommand::CommandProcessor::GetInstance().Run(
+                    input.toStdString()));
+            qDebug() << ret;
+            if (ret != "")
+            {
+                std::cout << ret.toStdString();
+                init_treeview();
+            }
+        }
+        ui->textEdit_code->append(prefix);
     }
     else
     {
-        QString ret = QString::fromStdString(
-            ColaSQLCommand::CommandProcessor::GetInstance().Run(
-                input.toStdString()));
-        qDebug() << ret;
-        if (ret != "")
-        {
-            std::cout << ret.toStdString();
-            init_treeview();
-        }
+        qDebug() << "No '@' symbol found.";
     }
-    ui->textEdit_code->append("Co1aSQL > ");
 }
 
 void MainWindow::handleTableModified() { save_change(); }
