@@ -10,7 +10,10 @@
 class ForeignKeyConstraint: public Constraint {
 
 public:
-    ForeignKeyConstraint(const std::string& fieldName, const std::string& referenceTableName, const std::string& referenceFieldName);
+    ForeignKeyConstraint(const std::string& fieldName,
+                         const std::string& constraintName, 
+                         const std::string& referenceTableName,
+                         const std::string& referenceFieldName);
 
     std::string GetReferenceTableName() const;
 

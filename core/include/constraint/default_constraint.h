@@ -10,7 +10,7 @@
 class DefaultConstraint: public Constraint {
 
 public:
-    DefaultConstraint(const std::string& fieldName, std::any value);
+    DefaultConstraint(const std::string& fieldName, const std::string& constraintName, std::any value);
 
     std::any GetValue() const;
 

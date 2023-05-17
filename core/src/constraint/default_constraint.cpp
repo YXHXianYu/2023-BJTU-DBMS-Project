@@ -1,6 +1,7 @@
 #include "default_constraint.h"
 
-DefaultConstraint::DefaultConstraint(const std::string& fieldName, std::any value): Constraint(fieldName), _value(value) {
+DefaultConstraint::DefaultConstraint(const std::string& fieldName, const std::string& constraintName, std::any value):
+    Constraint(fieldName, constraintName), _value(value) {
 }
 
 std::any DefaultConstraint::GetValue() const {

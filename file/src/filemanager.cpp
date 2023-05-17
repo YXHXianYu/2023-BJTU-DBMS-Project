@@ -260,26 +260,26 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
         in >> n;
         for(int i = 1; i <= n; i++) {
             int type;
-            std::string fieldName;
-            in >> type >> fieldName;
+            std::string fieldName, constraintName;
+            in >> type >> constraintName >> fieldName;
             if(type == kPrimaryKey) {
-                constraints.push_back(new PrimaryKeyConstraint(fieldName));
+                constraints.push_back(new PrimaryKeyConstraint(fieldName, constraintName));
             } else if(type == kForeignKey) {
                 std::string s1, s2;
                 in >> s1 >> s2;
-                constraints.push_back(new ForeignKeyConstraint(fieldName, s1, s2));
+                constraints.push_back(new ForeignKeyConstraint(fieldName, constraintName, s1, s2));
             } else if(type == kForeignRefered) {
                 std::string s1, s2;
                 in >> s1 >> s2;
-                constraints.push_back(new ForeignReferedConstraint(fieldName, s1, s2));
+                constraints.push_back(new ForeignReferedConstraint(fieldName, constraintName, s1, s2));
             } else if(type == kUnique) {
-                constraints.push_back(new UniqueConstraint(fieldName));
+                constraints.push_back(new UniqueConstraint(fieldName, constraintName));
             } else if(type == kNotNull) {
-                constraints.push_back(new NotNullConstraint(fieldName));
+                constraints.push_back(new NotNullConstraint(fieldName, constraintName));
             } else if(type == kDefault) {
                 std::string value;
                 in >> value;
-                constraints.push_back(new DefaultConstraint(fieldName, ColasqlTool::GetAnyByTypeAndValue(field_map.at(fieldName), value)));
+                constraints.push_back(new DefaultConstraint(fieldName, constraintName, ColasqlTool::GetAnyByTypeAndValue(field_map.at(fieldName), value)));
             } else {
                 std::cerr << "Unknown Constraint Type" << std::endl;
             }
