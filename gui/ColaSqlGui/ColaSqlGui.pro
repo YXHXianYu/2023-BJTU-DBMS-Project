@@ -20,6 +20,7 @@ SOURCES += \
     $${PWD}/../../cmd/src/*.cpp \
     $${PWD}/../../core/src/*.cpp \
     $${PWD}/../../core/src/constraint/*.cpp \
+    $${PWD}/../../core/src/index/*.cpp \
     ../../file/src/filemanager.cpp \
     createrecord.cpp \
     createtable.cpp \
@@ -53,4 +54,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 INCLUDEPATH +=$$quote("../../cmd/include")
 INCLUDEPATH +=$$quote("../../core/include")
 INCLUDEPATH +=$$quote("../../core/include/constraint")
+INCLUDEPATH +=$$quote("../../core/include/index")
 INCLUDEPATH +=$$quote("../../file/include/")

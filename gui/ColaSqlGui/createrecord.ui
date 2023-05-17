@@ -29,11 +29,37 @@
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>50</y>
-      <width>481</width>
-      <height>192</height>
+      <x>10</x>
+      <y>30</y>
+      <width>581</width>
+      <height>261</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_finish">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>320</y>
+      <width>80</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>完成</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_cancel">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>350</y>
+      <width>80</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>取消</string>
     </property>
    </widget>
   </widget>

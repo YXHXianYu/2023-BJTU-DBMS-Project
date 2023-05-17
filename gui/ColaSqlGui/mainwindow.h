@@ -4,6 +4,7 @@
 #include <ui_login.h>
 
 #include <QDebug>
+#include <QFormLayout>
 #include <QInputDialog>
 #include <QKeyEvent>
 #include <QMainWindow>
@@ -15,6 +16,7 @@
 
 #include "columndialog.h"
 #include "command_processor.h"
+#include "createrecord.h"
 #include "createtable.h"
 #include "dataprocessor.h"
 #include "qtbstreambuf.h"
@@ -38,8 +40,8 @@ private:
     QString anyToQString(const std::any& value);
     std::string anytoString(const std::any& value);
     void display_table(std::vector<std::vector<std::any>>& return_records);
-    void use_database(std::string database);
-    void select_all_from_table(
+    int use_database(std::string database);
+    int select_all_from_table(
         std::string tbName, std::vector<std::vector<std::any>>& return_records);
     void cancel_change();
     void save_change();
@@ -54,10 +56,9 @@ private slots:
     void init_treeview();
     void on_treeView_doubleClicked(const QModelIndex& index);
     void create_table(QString, QString);
+    void create_record(QString);
     void handleTableModified();
-
     void on_btn_commit_clicked();
-
     void on_btn_rollback_clicked();
 
 protected:
@@ -67,6 +68,7 @@ private:
     Ui::MainWindow* ui;
     ui_login* ui_log;
     createtable* ui_create_table;
+    createrecord* ui_create_record;
     std::vector<std::string> databases;
     QString prefix = "Co1aSQL > ";
     std::string current_database = "";

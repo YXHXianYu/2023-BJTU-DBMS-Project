@@ -47,19 +47,22 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::use_database(std::string database)
+int MainWindow::use_database(std::string database)
 {
     int ret = DataProcessor::GetInstance().UseDatabase(database);
     if (ret != 0)
     {
         qDebug() << "when click table Error using database"
                  << QString::fromStdString(database) << "error code:" << ret;
-        assert(false);
+
+        QMessageBox::warning(this, "错误", "使用数据库错误\n");
+        return ret;
     }
     qDebug() << "use" + QString::fromStdString(database) << ret << endl;
+    return kSuccess;
 }
 
-void MainWindow::select_all_from_table(
+int MainWindow::select_all_from_table(
     std::string tbName, std::vector<std::vector<std::any>>& return_records)
 {
     std::vector<std::string> f;
@@ -69,8 +72,11 @@ void MainWindow::select_all_from_table(
     if (ret != 0)
     {
         qDebug() << "when click table select error";
-        assert(false);
+        QMessageBox::warning(this, "错误", "查询表错误\n");
+        return_records.clear();
+        return ret;
     }
+    return kSuccess;
 }
 
 void MainWindow::init_treeview()
@@ -102,7 +108,9 @@ void MainWindow::init_treeview()
         model->appendRow(item_database);
 
         // get tables in current database
-        use_database(database);
+        ret = use_database(database);
+        if (ret != kSuccess)
+            return;
         std::vector<std::string> tables;
         ret = DataProcessor::GetInstance().ShowTables(tables);
         if (ret != 0)
@@ -206,9 +214,11 @@ void MainWindow::click_action_column()
         std::pair<std::string, std::string> field;
         field =
             std::make_pair(columnName.toStdString(), columnType.toStdString());
-        use_database(dbName.toStdString());
-        int ret = DataProcessor::GetInstance().AlterTableAdd(
-            tbName.toStdString(), field);
+        int ret = use_database(dbName.toStdString());
+        if (ret != kSuccess)
+            return;
+        ret = DataProcessor::GetInstance().AlterTableAdd(tbName.toStdString(),
+                                                         field);
         if (!ret)
         {
             QMessageBox::information(this, "通知", "新建列成功\n");
@@ -227,71 +237,126 @@ void MainWindow::click_action_column()
 void MainWindow::click_action_row()
 {
     qDebug() << "add row\n";
-    QString tbName =
-        QInputDialog::getText(this, "输入", "表名:", QLineEdit::Normal);
-    QStringList fieldName =
-        QInputDialog::getText(this, "输入",
-                              "请输入要插入的字段名，每个字段用','隔开",
-                              QLineEdit::Normal, "Info1,Info2,......")
-            .split(",");
-    QStringList input =
-        QInputDialog::getText(this, "输入", "请输入一条记录，每个字段用','隔开",
-                              QLineEdit::Normal, "Info1,Info2,......")
-            .split(",");
-    qDebug() << input << endl;
-    std::vector<std::pair<std::string, std::string>> record_in;
-    if (fieldName.at(0) == '*')
+    QDialog dialog;
+    QFormLayout layout(&dialog);
+    dialog.setWindowTitle("输入");
+
+    QLineEdit input1;
+    QLineEdit input2;
+
+    layout.addRow("数据库:", &input1);
+    layout.addRow("插入表:", &input2);
+
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                               Qt::Horizontal, &dialog);
+    layout.addRow(&buttonBox);
+
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog,
+                     &QDialog::accept);
+    QObject::connect(&buttonBox, &QDialogButtonBox::rejected, &dialog,
+                     &QDialog::reject);
+    QString dbName = "";
+    QString tbName = "";
+    if (dialog.exec() == QDialog::Accepted)
     {
-        for (int i = 0; i < input.length(); ++i)
-        {
-            record_in.push_back({"*", input.at(i).toStdString()});
-        }
+        dbName = input1.text();
+        tbName = input2.text();
     }
-    else if (fieldName.length() == input.length())
+
+    if (tbName == "" || dbName == "")
+        return;
+    qDebug() << dbName;
+    qDebug() << tbName;
+    int ret = use_database(dbName.toStdString());
+    if (ret != kSuccess)
+        return;
+    std::vector<std::vector<std::any>> return_records;
+    ret = select_all_from_table(tbName.toStdString(), return_records);
+    if (return_records.size() == 0 || ret != kSuccess)
+        return;
+    ui_create_record = new createrecord(return_records, tbName);
+    connect(ui_create_record, SIGNAL(create_record_signal(QString)), this,
+            SLOT(create_record(QString)));
+    ui_create_record->show();
+
+    //    QStringList fieldName =
+    //        QInputDialog::getText(this, "输入",
+    //                              "请输入要插入的字段名，每个字段用','隔开",
+    //                              QLineEdit::Normal, "Info1,Info2,......")
+    //            .split(",");
+    //    QStringList input =
+    //        QInputDialog::getText(this, "输入",
+    //        "请输入一条记录，每个字段用','隔开",
+    //                              QLineEdit::Normal, "Info1,Info2,......")
+    //            .split(",");
+    //    qDebug() << input << endl;
+    //    std::vector<std::pair<std::string, std::string>> record_in;
+    //    if (fieldName.at(0) == '*')
+    //    {
+    //        for (int i = 0; i < input.length(); ++i)
+    //        {
+    //            record_in.push_back({"*", input.at(i).toStdString()});
+    //        }
+    //    }
+    //    else if (fieldName.length() == input.length())
+    //    {
+    //        for (int i = 0; i < input.length(); ++i)
+    //        {
+    //            record_in.push_back(
+    //                {fieldName.at(i).toStdString(),
+    //                input.at(i).toStdString()});
+    //        }
+    //    }
+    //    else
+    //    {
+    //        QMessageBox::warning(this, "错误",
+    //        "插入字段与输入数据长度不同\n"); return;
+    //    }
+    //    int ret =
+    //        DataProcessor::GetInstance().Insert(tbName.toStdString(),
+    //        record_in);
+    //    if (!ret)
+    //    {
+    //        QMessageBox::information(this, "通知", "新建记录成功\n");
+    //        return;
+    //    }
+    //    else if (ret == kDatabaseNotUse)
+    //    {
+    //        QMessageBox::warning(this, "错误", "未选用数据库\n");
+    //        return;
+    //    }
+    //    else if (ret == kTableNotFound)
+    //    {
+    //        QMessageBox::warning(this, "错误", "未找到该表\n");
+    //        return;
+    //    }
+    //    else if (ret == kDataTypeWrong)
+    //    {
+    //        QMessageBox::warning(this, "错误", "数据与字段类型不符\n");
+    //        return;
+    //    }
+    //    else if (ret == kFieldNotFound)
+    //    {
+    //        QMessageBox::warning(this, "错误", "未找到该字段\n");
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        QMessageBox::warning(this, "错误", "i dont know! fk u!\n");
+    //        assert(false);
+    //    }
+}
+
+void MainWindow::create_record(QString opt)
+{
+    QString ret = QString::fromStdString(
+        ColaSQLCommand::CommandProcessor::GetInstance().Run(opt.toStdString()));
+    if (ret != "Success!")
     {
-        for (int i = 0; i < input.length(); ++i)
-        {
-            record_in.push_back(
-                {fieldName.at(i).toStdString(), input.at(i).toStdString()});
-        }
-    }
-    else
-    {
-        QMessageBox::warning(this, "错误", "插入字段与输入数据长度不同\n");
+        QMessageBox::warning(this, "错误", "新建记录失败，错误信息：" + ret);
         return;
     }
-    int ret =
-        DataProcessor::GetInstance().Insert(tbName.toStdString(), record_in);
-    if (!ret)
-    {
-        QMessageBox::information(this, "通知", "新建记录成功\n");
-        return;
-    }
-    else if (ret == kDatabaseNotUse)
-    {
-        QMessageBox::warning(this, "错误", "未选用数据库\n");
-        return;
-    }
-    else if (ret == kTableNotFound)
-    {
-        QMessageBox::warning(this, "错误", "未找到该表\n");
-        return;
-    }
-    else if (ret == kDataTypeWrong)
-    {
-        QMessageBox::warning(this, "错误", "数据与字段类型不符\n");
-        return;
-    }
-    else if (ret == kFieldNotFound)
-    {
-        QMessageBox::warning(this, "错误", "未找到该字段\n");
-        return;
-    }
-    else
-    {
-        QMessageBox::warning(this, "错误", "i dont know! fk u!\n");
-        assert(false);
-    }
+    QMessageBox::information(this, "通知", "新建记录成功\n");
 }
 
 void MainWindow::save()
@@ -380,9 +445,9 @@ QString MainWindow::anyToQString(const std::any& value)
     {
         result = QString::number(std::any_cast<int>(value));
     }
-    else if (value.type() == typeid(double))
+    else if (value.type() == typeid(float))
     {
-        result = QString::number(std::any_cast<double>(value));
+        result = QString::number(std::any_cast<float>(value));
     }
     return result;
 }
@@ -401,10 +466,14 @@ void MainWindow::on_treeView_doubleClicked(const QModelIndex& index)
         std::string database = index.parent().data().toString().toStdString();
         std::string table = index.data().toString().toStdString();
         qDebug() << "click on " + QString::fromStdString(table);
-        use_database(database);
+        int ret = use_database(database);
+        if (ret != kSuccess)
+            return;
         // select * from table
         std::vector<std::vector<std::any>> return_records;
-        select_all_from_table(table, return_records);
+        ret = select_all_from_table(table, return_records);
+        if (ret != kSuccess)
+            return;
         current_table = table;
         // display table on tableview
         display_table(return_records);
@@ -454,11 +523,15 @@ void MainWindow::cancel_change()
     }
     if (current_table == "" || current_database == "")
         return;
-    use_database(current_database);
+    ret = use_database(current_database);
+    if (ret != kSuccess)
+        return;
     qDebug() << "use current_database";
     // select * from table
     std::vector<std::vector<std::any>> return_records;
-    select_all_from_table(current_table, return_records);
+    ret = select_all_from_table(current_table, return_records);
+    if (ret != kSuccess)
+        return;
     // display table on tableview
     display_table(return_records);
 }
@@ -479,10 +552,14 @@ void MainWindow::save_change()
     // get origin table data
     if (current_table == "" || current_database == "")
         return;
-    use_database(current_database);
+    ret = use_database(current_database);
+    if (ret != kSuccess)
+        return;
     // select * from table
     std::vector<std::vector<std::any>> origin_records;
-    select_all_from_table(current_table, origin_records);
+    ret = select_all_from_table(current_table, origin_records);
+    if (ret != kSuccess)
+        return;
     QStandardItemModel* model =
         qobject_cast<QStandardItemModel*>(ui->tableView->model());
     int rows = model->rowCount();
@@ -550,5 +627,8 @@ void MainWindow::on_btn_rollback_clicked()
         return;
     }
     init_treeview();
-    cancel_change();
+    current_table = "";
+    QStandardItemModel* model = new QStandardItemModel();
+    ui->tableView->setModel(model);
+    ui->treeView->expandAll();
 }
