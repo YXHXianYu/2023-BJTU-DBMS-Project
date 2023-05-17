@@ -75,11 +75,31 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
 // ----- User -----
 
 std::string Parser::CreateUser(const std::vector<std::string>& seq) {
-    return "Warning: Create User is under development";
+    // return "Warning: Create User is under development";
+    if(seq.size() != 4) return error + statementError;
+
+    int ret = DataProcessor::GetInstance().CreateUser(seq[2], seq[3]);
+
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+    return success;
 }
 
 std::string Parser::GrantUser(const std::vector<std::string>& seq) {
-    return "Warning: Grant User is under development";
+    // return "Warning: Grant User is under development";
+    if(seq.size() != 5 || seq.size() != 6) return error + statementError;
+
+    int ret;
+    if(seq.size() == 5)
+        ret = DataProcessor::GetInstance().GrantAuthority(seq[2], seq[3], seq[4]);
+    else
+        ret = DataProcessor::GetInstance().GrantAuthority(seq[2], seq[3], seq[4], seq[5]);
+    
+    if(ret != 0) {
+        return error + GetErrorMessage(ret);
+    }
+    return success;
 }
 
 std::string Parser::DeleteUser(const std::vector<std::string>& seq) {
@@ -203,39 +223,39 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
         if(seq[i] != constraint) return error + statementError + "(error occurs when getting constraints in CreateTable)";
         if(j - i < 2) return error + statementError + "(constraint statement is too short)";
 
-        if(seq[i + 1] == "primary" && seq[i + 2] == "key") {
+        if(seq[i + 2] == "primary" && seq[i + 3] == "key") {
+            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)";
+            if(fieldMap.count(seq[i + 4]) == 0) return error + statementError + "(field name is not found)";
+
+            constraints.push_back(new PrimaryKeyConstraint(seq[i + 3], seq[i + 1]));
+
+        } else if(seq[i + 2] == "foreign" && seq[i + 3] == "key") {
+            if(j - i != 7) return error + statementError + "(constraint statement is too short or too long)";
+            if(fieldMap.count(seq[i + 4]) == 0) return error + statementError + "(field name is not found)";
+            if(seq[i + 5] != "references") return error + statementError + "(not found \"reference\")";
+
+            constraints.push_back(new ForeignKeyConstraint(seq[i + 4], seq[i + 1], seq[i + 6], seq[i + 7]));
+
+        } else if(seq[i + 2] == "unique") {
             if(j - i != 3) return error + statementError + "(constraint statement is too short or too long)";
             if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
 
-            constraints.push_back(new PrimaryKeyConstraint(seq[i + 3]));
+            constraints.push_back(new UniqueConstraint(seq[i + 2], seq[i + 1]));
 
-        } else if(seq[i + 1] == "foreign" && seq[i + 2] == "key") {
-            if(j - i != 6) return error + statementError + "(constraint statement is too short or too long)";
-            if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
-            if(seq[i + 4] != "references") return error + statementError + "(not found \"reference\")";
+        } else if(seq[i + 2] == "not" && seq[i + 3] == "null") {
+            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)";
+            if(fieldMap.count(seq[i + 4]) == 0) return error + statementError + "(field name is not found)";
 
-            constraints.push_back(new ForeignKeyConstraint(seq[i + 3], seq[i + 5], seq[i + 6]));
+            constraints.push_back(new NotNullConstraint(seq[i + 4], seq[i + 1]));
 
-        } else if(seq[i + 1] == "unique") {
-            if(j - i != 2) return error + statementError + "(constraint statement is too short or too long)";
-            if(fieldMap.count(seq[i + 2]) == 0) return error + statementError + "(field name is not found)";
-
-            constraints.push_back(new UniqueConstraint(seq[i + 2]));
-
-        } else if(seq[i + 1] == "not" && seq[i + 2] == "null") {
-            if(j - i != 3) return error + statementError + "(constraint statement is too short or too long)";
+        } else if(seq[i + 2] == "default") {
+            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)";
             if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
 
-            constraints.push_back(new NotNullConstraint(seq[i + 3]));
-
-        } else if(seq[i + 1] == "default") {
-            if(j - i != 3) return error + statementError + "(constraint statement is too short or too long)";
-            if(fieldMap.count(seq[i + 2]) == 0) return error + statementError + "(field name is not found)";
-
-            std::any value = ColasqlTool::GetAnyByTypeAndValue(fieldMap[seq[i + 2]], seq[i + 3]);
+            std::any value = ColasqlTool::GetAnyByTypeAndValue(fieldMap[seq[i + 3]], seq[i + 4]);
             if(value.type() == typeid(ColasqlException)) return error + statementError + "(default value is incompatible)";
 
-            constraints.push_back(new DefaultConstraint(seq[i + 2], value));
+            constraints.push_back(new DefaultConstraint(seq[i + 3], seq[i + 1], value));
 
         } else {
             return error + statementError + "(not found this kind of constraint)";
