@@ -60,6 +60,7 @@ int FHQTreapIndex::build(
     }
 
     // ===== Build Tree =====
+    reset();
     t = std::vector<Node>(records.size() + 2000);
     for (int i = 0; i < records.size(); i++)
     {
