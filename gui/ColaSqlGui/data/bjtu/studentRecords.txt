@@ -1,0 +1,4 @@
+3
+5 totalcredit 0 sbirthday 2002-10-12 ssex male sname yxh_xianyu sno 21301114 
+5 totalcredit 0 sbirthday unknown ssex male sname ylw sno 21301113 
+5 totalcredit 163 sbirthday 2002-03-16 ssex female sname shirahanesuoh sno 21301112 

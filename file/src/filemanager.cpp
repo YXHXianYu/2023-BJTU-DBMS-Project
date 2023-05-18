@@ -1,18 +1,33 @@
 #include "filemanager.h"
 
 #include <cassert>
-#include <experimental/filesystem>
 #include <fstream>
 
 #ifdef __WIN32__
+
 #include <direct.h>
+#include <experimental/filesystem>
+
 void myMkdir(const std::string& path) { mkdir(path.c_str()); }
+// true is success
+bool myRmdir(const std::string& path) {
+    std::error_code errorCode;
+    return std::filesystem::remove_all(path, errorCode);
+}
+
 #elif __linux__
+
 #include <sys/stat.h>
 #include <sys/types.h>
-void myMkdir(const std::string& path)
-{
+#include <filesystem>
+
+void myMkdir(const std::string& path) {
     mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
+}
+// true is success
+bool myRmdir(const std::string& path) {
+    std::error_code errorCode;
+    return std::filesystem::remove_all(path, errorCode);
 }
 #endif
 
@@ -30,8 +45,7 @@ FileManager& FileManager::GetInstance()
 
 int FileManager::ClearData()
 {
-    std::error_code errorCode;
-    if (!std::experimental::filesystem::remove_all("./data", errorCode))
+    if (!myRmdir("./data"))
     {
         return kClearDataFailed;
     }

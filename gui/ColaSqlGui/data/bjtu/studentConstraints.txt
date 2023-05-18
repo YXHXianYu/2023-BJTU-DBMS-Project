@@ -1,0 +1,6 @@
+4
+150 c1 sno
+154 c2 sname
+153 c3 sbirthday
+155 c4 totalcredit 0
+
