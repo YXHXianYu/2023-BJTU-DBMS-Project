@@ -28,6 +28,20 @@ createtable::createtable(QWidget* parent)
     ui->tableView->setColumnWidth(0, 60);
     ui->tableView->setColumnWidth(1, 60);
     ui->tableView->setColumnWidth(2, 60);
+
+    int font_Id =
+        QFontDatabase::addApplicationFont(":/font/FiraCode-Regular-1.ttf");
+    QStringList font_list = QFontDatabase::applicationFontFamilies(font_Id);
+    if (!font_list.isEmpty())
+    {
+        QFont f;
+        f.setFamily(font_list[0]);
+        f.setPointSize(9);
+        ui->dbName_lineEdit->setFont(f);
+        ui->tableName_lineEdit->setFont(f);
+        ui->col_name->setFont(f);
+        ui->tableView->setFont(f);
+    }
 }
 
 createtable::~createtable() { delete ui; }

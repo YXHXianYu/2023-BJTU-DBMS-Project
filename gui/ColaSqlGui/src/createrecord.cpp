@@ -14,6 +14,17 @@ createrecord::createrecord(std::vector<std::vector<std::any>> return_records,
     records = return_records;
     table = tbName;
     display_table(records);
+
+    int font_Id =
+        QFontDatabase::addApplicationFont(":/font/FiraCode-Regular-1.ttf");
+    QStringList font_list = QFontDatabase::applicationFontFamilies(font_Id);
+    if (!font_list.isEmpty())
+    {
+        QFont f;
+        f.setFamily(font_list[0]);
+        f.setPointSize(9);
+        ui->tableView->setFont(f);
+    }
 }
 
 createrecord::~createrecord() { delete ui; }

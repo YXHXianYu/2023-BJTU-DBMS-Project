@@ -14,6 +14,18 @@ ui_login::ui_login(QWidget* parent) : QMainWindow(parent), ui(new Ui::ui_login)
         "background:transparent;border-width:0;border-style:outset");
     ui->lineEdit_password->setStyleSheet(
         "background:transparent;border-width:0;border-style:outset");
+
+    int font_Id =
+        QFontDatabase::addApplicationFont(":/font/FiraCode-Regular-1.ttf");
+    QStringList font_list = QFontDatabase::applicationFontFamilies(font_Id);
+    if (!font_list.isEmpty())
+    {
+        QFont f;
+        f.setFamily(font_list[0]);
+        f.setPointSize(9);
+        ui->lineEdit_account->setFont(f);
+    }
+
     connect(ui_regist, SIGNAL(back()), this, SLOT(show()));
 }
 

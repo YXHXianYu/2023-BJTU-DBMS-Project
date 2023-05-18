@@ -4,6 +4,7 @@
 #include <QComboBox>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QFontDatabase>
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>

@@ -19,6 +19,17 @@ ui_register::ui_register(QWidget* parent)
         "background:transparent;border-width:0;border-style:outset");
     ui->lineEdit_password2->setStyleSheet(
         "background:transparent;border-width:0;border-style:outset");
+
+    int font_Id =
+        QFontDatabase::addApplicationFont(":/font/FiraCode-Regular-1.ttf");
+    QStringList font_list = QFontDatabase::applicationFontFamilies(font_Id);
+    if (!font_list.isEmpty())
+    {
+        QFont f;
+        f.setFamily(font_list[0]);
+        f.setPointSize(9);
+        ui->lineEdit_account->setFont(f);
+    }
 }
 
 ui_register::~ui_register() { delete ui; }

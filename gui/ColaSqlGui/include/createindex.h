@@ -2,6 +2,7 @@
 #define CREATEINDEX_H
 
 #include <QDebug>
+#include <QFontDatabase>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QStandardItem>

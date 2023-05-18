@@ -5,6 +5,7 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QFontDatabase>
 #include <QFormLayout>
 #include <QInputDialog>
 #include <QKeyEvent>
@@ -100,6 +101,8 @@ private:
 
     // Co1aSQL!
     QString prefix = "Co1aSQL @ ";
+
+    QFont f; // fira-code
 
     // 状态
     std::string current_database = ""; // 当前选用的数据库
