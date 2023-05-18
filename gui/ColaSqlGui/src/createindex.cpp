@@ -20,6 +20,7 @@ createindex::createindex(std::vector<std::vector<std::any>> return_records,
     QStringList font_list = QFontDatabase::applicationFontFamilies(font_Id);
     if (!font_list.isEmpty())
     {
+        qDebug() << "add font";
         QFont f;
         f.setFamily(font_list[0]);
         f.setPointSize(9);
