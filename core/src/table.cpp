@@ -100,13 +100,17 @@ int Table::GetIndex(std::vector<std::string>& result_key) const {
 int Table::DeleteConstraint(std::string constraint_name, Database* db) {
     for(auto it = constraints.begin(); it != constraints.end();) {
         if((*it)->GetConstraintName() == constraint_name) {
+            //std::cout<<"constraint_name is "<<constraint_name;
             if(dynamic_cast<const ForeignKeyConstraint *>(*it) != nullptr) {
-                std::cout<<"deleting refered"<<db->AlterTableDeleteConstraint(dynamic_cast<const ForeignKeyConstraint *>(*it)->GetReferenceTableName(), constraint_name + "refered")<<std::endl;
+                //std::cout<<"deleting refered "<<dynamic_cast<const ForeignKeyConstraint *>(*it)->GetReferenceTableName()<<std::endl;
+                db->AlterTableDeleteConstraint(dynamic_cast<const ForeignKeyConstraint *>(*it)->GetReferenceTableName(), constraint_name + "refered");
             }
             constraints.erase(it);
             return kSuccess;
         }
+        else it++;
     }
+    return kSuccess;
     return kConstraintNotFound;
 }
 
