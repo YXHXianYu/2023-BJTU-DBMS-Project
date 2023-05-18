@@ -72,7 +72,7 @@ void ui_register::on_pushButton_regist_clicked()
             if (get_ret != kSuccess)
             {
                 qDebug() << "get users error" + QString::number(get_ret);
-                assert(false);
+                // assert(false);
             }
             users.push_back(user);
             get_ret = FileManager::GetInstance().WriteUsersFile(users);
