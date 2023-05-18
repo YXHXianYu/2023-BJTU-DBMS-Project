@@ -9,6 +9,8 @@ createindex::createindex(std::vector<std::vector<std::any>> return_records,
     ui->setupUi(this);
     QIcon icon = QIcon(":/images/Colasql.png");
     this->setWindowIcon(icon);
+    ui->tableView->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
     records = return_records;
     table = tbName;
     display_table(records);
