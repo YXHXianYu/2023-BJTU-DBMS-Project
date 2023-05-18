@@ -57,6 +57,14 @@ void createtable::on_add_col_clicked()
     if (field == "")
     {
         QMessageBox::warning(this, "警告", "未输入字段名！");
+        ui->tableView->show();
+        ui->col_name->clear();
+        ui->foreign_table->clear();
+        ui->foreign_field->clear();
+        ui->foreign_check->setChecked(false);
+        ui->notnull_check->setChecked(false);
+        ui->pk_check->setChecked(false);
+        ui->unique_check->setChecked(false);
         return;
     }
     if (ui->foreign_check->isChecked())
@@ -66,6 +74,14 @@ void createtable::on_add_col_clicked()
         if (reference_table == "" || reference_field == "")
         {
             QMessageBox::warning(this, "警告", "未输入参考值！");
+            ui->tableView->show();
+            ui->col_name->clear();
+            ui->foreign_table->clear();
+            ui->foreign_field->clear();
+            ui->foreign_check->setChecked(false);
+            ui->notnull_check->setChecked(false);
+            ui->pk_check->setChecked(false);
+            ui->unique_check->setChecked(false);
             return;
         }
         else
