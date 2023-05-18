@@ -2,6 +2,7 @@
 #include<assert.h>
 #include <functional>
 #include<map>
+#include<algorithm>
 Database::Database() {
 
 }
@@ -281,6 +282,7 @@ int Database::Select(std::vector<std::string> table_names,
         }
     }
     return_records.push_back(tmp);
+    std::vector<std::unordered_map<std::string, std::any>> records;
     const auto& get_return_records = [&]() {
         const auto& dfs = [&](auto&& self, int now, std::unordered_map<std::string, std::any> record) {
             //std::cout<<"check now and sz: "<<now<<" "<<sz<<std::endl;
@@ -292,7 +294,10 @@ int Database::Select(std::vector<std::string> table_names,
                     else return_record.push_back(record.at(field_name));
                 }
                 //std::cout<<std::endl;
-                if(CheckCondition(record, conditions, field_map) == kSuccess) return_records.push_back(return_record);
+                if(CheckCondition(record, conditions, field_map) == kSuccess) {
+                    records.push_back(record);
+                    return_records.push_back(return_record);
+                }
                 return;
             }
             const auto& inner_records = td_records[now];
@@ -319,6 +324,27 @@ int Database::Select(std::vector<std::string> table_names,
     };
 
     get_return_records();
+
+    if(orderby_key.size() > 0) {
+        std::sort(records.begin(), records.end(), [&](std::unordered_map<std::string, std::any> x, std::unordered_map<std::string, std::any> y) {
+            for(const auto& key: orderby_key) {
+                int ret = ColasqlTool::CompareAny(x.at(key), y.at(key));
+                if(ret < 0) return true;
+                else if(ret > 0) return false;
+            }
+            return false;
+        });
+    }
+    for(const auto& record : records) {
+        std::vector<std::any> return_record;
+            for(const auto& field_name: field_names) {
+                //std::cout<<"check dfs: "<<field_name<<" ";
+                if(!record.count(field_name)) return_record.push_back(std::any(ColasqlNull()));
+                else return_record.push_back(record.at(field_name));
+            }
+            return_records.push_back(return_record);
+    }
+
     return kSuccess;
     //dfs(0, sz, return_records);
 }
