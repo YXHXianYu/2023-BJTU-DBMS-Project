@@ -52,7 +52,8 @@ FORMS += \
     ./ui/createtable.ui \
     ./ui/mainwindow.ui \
     ./ui/ui_login.ui \
-    ./ui/ui_register.ui
+    ./ui/ui_register.ui \
+    ./ui/secondarywindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
