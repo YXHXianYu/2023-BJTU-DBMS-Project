@@ -18,8 +18,8 @@ int FHQTreapIndex::build(const std::vector<std::unordered_map<std::string, std::
                          const std::vector<std::string>& compare_key) {
 
     // ===== Records =====
-    _records_ptr.reset(&records);
-    _field_map_ptr.reset(&field_map);
+    _records_ptr.reset(new std::vector<std::unordered_map<std::string, std::any>>(records));
+    _field_map_ptr.reset(new std::unordered_map<std::string, std::string>(field_map));
 
     // ===== Compare Key =====
     // n^2 optimization could be used here

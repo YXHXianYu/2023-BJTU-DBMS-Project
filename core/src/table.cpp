@@ -36,13 +36,14 @@ Table::Table(const std::string& table_name,
 
 
 Table::~Table() {                           // 根据零三五法则，需要同时定义析构、拷贝构造、拷贝赋值函数
-    // for(auto& ptr: constraints)
-        // delete ptr;
 }
 
 Table::Table(const Table& p): table_name(p.table_name), fields(p.fields), constraints(p.constraints), records(p.records) {
     for(auto& field: fields) {
         field_map[field.first] = field.second;
+    }
+    if(p.index_ptr != nullptr) {
+        index_ptr = p.index_ptr;
     }
 }
 
@@ -687,7 +688,7 @@ int Table::AlterTableModify(std::pair<std::string, std::string> field) {
 
 int Table::BuildIndex(const std::vector<std::string>& compare_key, int type) {
     if(type == kFHQTreapIndex) {
-        index_ptr = std::make_unique<FHQTreapIndex>(records, fields, field_map, compare_key);
+        index_ptr = std::make_shared<FHQTreapIndex>(records, fields, field_map, compare_key);
         return kSuccess;
     } else {
         return kUnknownIndex;

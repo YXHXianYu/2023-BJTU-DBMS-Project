@@ -124,8 +124,8 @@ public:
 protected:
     int _state; // 记录index状态
 
-    std::unique_ptr<const std::vector<std::unordered_map<std::string, std::any>>> _records_ptr;
-    std::unique_ptr<const std::unordered_map<std::string, std::string>> _field_map_ptr;
+    std::shared_ptr<const std::vector<std::unordered_map<std::string, std::any>>> _records_ptr;
+    std::shared_ptr<const std::unordered_map<std::string, std::string>> _field_map_ptr;
     std::vector<std::string> _compare_key;
 };
 
