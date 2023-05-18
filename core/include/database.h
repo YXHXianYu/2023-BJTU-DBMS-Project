@@ -55,6 +55,8 @@ public:
     int AlterTableConstraint(std::string table_name, Constraint* constraint);
     // 建立索引
     int BuildIndex(std::string table_name, const std::vector<std::string>& compare_key);
+
+    int AlterTableDeleteConstraint(std::string table_name, std::string constraint_name);
 };
 
 

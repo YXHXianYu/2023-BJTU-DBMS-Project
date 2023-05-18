@@ -62,7 +62,14 @@ int Database::FindTable(std::string table_name, Table& return_table) {
     }
     return kTableNotFound;
 }
-
+int Database::AlterTableDeleteConstraint(std::string table_name, std::string constraint_name) {
+    for(auto& table:tables) {
+        if(table.GetTableName() == table_name) {
+            return table.DeleteConstraint(constraint_name, this);
+        }
+    }
+    return kTableNotFound;
+}
 int Database::CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints) {
     for(const auto& table : tables) {
         if(table.GetTableName() == table_name) {
@@ -101,15 +108,16 @@ int Database::CreateTable(std::string table_name, std::vector<std::pair<std::str
         }
     }
 
-    for(auto constraint : constraints) {
+    for(const auto& constraint : constraints) {
         if(dynamic_cast<const ForeignKeyConstraint *>(constraint) == nullptr) continue;
         
         //std::cout<<"AlterTableConstraint checked in database"<<std::endl;
         
-        std::cout<<"AlterTableConstraint checked foreignkey and adding ForeignReferedConstraint"<<std::endl;
+        //std::cout<<"AlterTableConstraint checked foreignkey and adding ForeignReferedConstraint"<<std::endl;
         ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
         int ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
         if(ret!=kSuccess) return ret;
+        
     }
     tables.push_back(table);
     return kSuccess;
@@ -117,9 +125,31 @@ int Database::CreateTable(std::string table_name, std::vector<std::pair<std::str
 int Database::AlterTableConstraint(std::string table_name, Constraint* constraint) {
     for(auto& table:tables) {
         if(table.GetTableName() == table_name) {
-            std::cout<<"AlterTableConstraint checked in database"<<std::endl;
+           
+            const auto& constraints = table.GetConstraints();
+            const auto& fields = table.GetFields();
+            int flag = 0;
+            for(const auto& field: fields) {
+                if(field.first == constraint->GetFieldName()) {
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag == 0) return kFieldNotFound;
+            int sumpri = 0;
+            if(dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr) {
+                for(const auto& other_constraint : constraints) {
+                    if(dynamic_cast<const PrimaryKeyConstraint *>(other_constraint) != nullptr) {
+                        sumpri++;
+                        break;
+                    }
+                }
+                if(sumpri != 0) return kPrimaryKeyExcessive;
+            }
+            
+            
             if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
-                std::cout<<"AlterTableConstraint checked foreignkey and adding ForeignReferedConstraint"<<std::endl;
+                //std::cout<<"AlterTableConstraint checked foreignkey and adding ForeignReferedConstraint"<<std::endl;
                 ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
                 int ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
                 if(ret!=kSuccess) return ret;
@@ -140,13 +170,16 @@ int Database::DropTable(std::string table_name) {
             for(const auto& constraint : constraints) {
                 if(dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr){return kBeingRefered;}
             }
-            
+            //std::cout<<"check point 1"<<std::endl;
             //删除所有被此表参考的约束
             for(const auto& constraint : constraints) {
                 if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr){
                     std::string reference_table_name = dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName();
-                    std::string tmp;
-                    FindTableReference(reference_table_name).DropForeignReferedConstraint(table_name);
+                    for(auto& table:tables) {
+                        if(table.GetTableName() == reference_table_name) {
+                            table.DropForeignReferedConstraint(table_name);
+                        }
+                    }
                 }
             }
             tables.erase(tables.begin() + i);
@@ -215,7 +248,7 @@ int Database::Select(std::string table_name,
                      std::vector<std::tuple<std::string, std::string, int>> conditions,
                      std::vector<std::vector<std::any>> &return_records,
                      const std::vector<std::string>& orderby_key) {
-    
+    //std::cout<<"select 1"<<std::endl;
     for(auto& table : tables) {
         if(table.GetTableName() == table_name) {
             return table.Select(field_name, conditions, return_records, orderby_key);
@@ -228,6 +261,7 @@ int Database::Select(std::vector<std::string> table_names,
                      std::vector<std::tuple<std::string, std::string, int>> conditions,
                      std::vector<std::vector<std::any>>& return_records,
                      const std::vector<std::string>& orderby_key) {
+    //std::cout<<"select 2"<<std::endl;
     std::unordered_map<std::string, std::string> field_map;
     std::vector<std::vector<std::vector<std::any>>> td_records;
     std::vector<std::tuple<std::string, std::string, int>> empty_condition;
@@ -237,7 +271,7 @@ int Database::Select(std::vector<std::string> table_names,
         for(auto & table: tables) {
             if(table.GetTableName() == table_name) {
                 return_records.clear();
-                table.Select(all_field_names, empty_condition, return_records, orderby_key);
+                table.Select(all_field_names, empty_condition, return_records);
                 std::unordered_map<std::string, std::string> table_field_map = table.GetFieldMap();
                 for(const auto& x : table_field_map) {
                     if(field_map.count(x.first) && field_map.at(x.first) != x.second) {
@@ -296,7 +330,7 @@ int Database::Select(std::vector<std::string> table_names,
                 //std::cout<<std::endl;
                 if(CheckCondition(record, conditions, field_map) == kSuccess) {
                     records.push_back(record);
-                    return_records.push_back(return_record);
+                    //return_records.push_back(return_record);
                 }
                 return;
             }
@@ -326,15 +360,20 @@ int Database::Select(std::vector<std::string> table_names,
     get_return_records();
 
     if(orderby_key.size() > 0) {
+        //std::cout<<"check point 1"<<std::endl;
         std::sort(records.begin(), records.end(), [&](std::unordered_map<std::string, std::any> x, std::unordered_map<std::string, std::any> y) {
+            //std::cout<<"check point 2"<<std::endl;
             for(const auto& key: orderby_key) {
+                //std::cout<<"check point 3"<<std::endl;
                 int ret = ColasqlTool::CompareAny(x.at(key), y.at(key));
                 if(ret < 0) return true;
                 else if(ret > 0) return false;
             }
             return false;
         });
+        //std::cout<<"check point 4"<<std::endl;
     }
+   //std::cout<<"check point 5"<<std::endl;
     for(const auto& record : records) {
         std::vector<std::any> return_record;
             for(const auto& field_name: field_names) {
@@ -344,6 +383,7 @@ int Database::Select(std::vector<std::string> table_names,
             }
             return_records.push_back(return_record);
     }
+    //std::cout<<"check point 6"<<std::endl;
 
     return kSuccess;
     //dfs(0, sz, return_records);

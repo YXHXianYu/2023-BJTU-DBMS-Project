@@ -84,6 +84,8 @@ public:
     int FindField(std::string field_name) const;
     int DropForeignReferedConstraint(std::string table_name);
     int DropForeignReferedConstraint(std::string table_name, std::string field_name);
+
+    int DeleteConstraint(std::string constraint_name, Database* db);
 };
 
 #endif // TABLE_H

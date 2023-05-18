@@ -97,9 +97,22 @@ int Table::GetIndex(std::vector<std::string>& result_key) const {
     return kSuccess;
 }
 
+int Table::DeleteConstraint(std::string constraint_name, Database* db) {
+    for(auto it = constraints.begin(); it != constraints.end();) {
+        if((*it)->GetConstraintName() == constraint_name) {
+            if(dynamic_cast<const ForeignKeyConstraint *>(*it) != nullptr) {
+                std::cout<<"deleting refered"<<db->AlterTableDeleteConstraint(dynamic_cast<const ForeignKeyConstraint *>(*it)->GetReferenceTableName(), constraint_name + "refered")<<std::endl;
+            }
+            constraints.erase(it);
+            return kSuccess;
+        }
+    }
+    return kConstraintNotFound;
+}
+
 int Table::DropForeignReferedConstraint(std::string table_name) {
     for(auto it = constraints.begin(); it != constraints.end();) {
-        if(dynamic_cast<const ForeignReferedConstraint *>(*it) == nullptr) {
+        if(dynamic_cast<const ForeignReferedConstraint *>(*it) != nullptr) {
             if(dynamic_cast<const ForeignReferedConstraint *>(*it)->GetReferenceTableName() == table_name) {
                 delete *it;
                 constraints.erase(it);
@@ -127,10 +140,10 @@ int Table::DropForeignReferedConstraint(std::string table_name, std::string fiel
 
 int Table::CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db) {
     int cnt = 0;
-    std::cout<<"constraint number is "<<constraints.size()<<std::endl;
+    //std::cout<<"constraint number is "<<constraints.size()<<std::endl;
     for(auto constraint:constraints) {
         cnt++;
-        std::cout<<"checking constraint "<<cnt<<std::endl;
+        //std::cout<<"checking constraint "<<cnt<<std::endl;
         if (dynamic_cast<const DefaultConstraint *>(constraint) != nullptr){//默认
             if (!record.count(constraint->GetFieldName())) {
                 record[constraint->GetFieldName()] = dynamic_cast<const DefaultConstraint *>(constraint)->GetValue();

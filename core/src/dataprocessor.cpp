@@ -13,6 +13,7 @@ DataProcessor::DataProcessor() {
 
 	// read files into data
 	Read(false);
+	UpdateConstraintMap();
 }
 
 int DataProcessor::GetCurrentDatabase(std::string& database_name) {
@@ -264,6 +265,10 @@ int DataProcessor::RevokeAuthority(std::string user_name, std::string database_n
 			if(user.GetUserName() == user_name) {
 				find_user = 1;
 				for(const auto& table_name : return_tables) {
+					int ret = user.CheckAuthority(database_name, table_name, number);
+					if(ret!= kSuccess) return ret;
+				}
+				for(const auto& table_name : return_tables) {
 					int ret = user.RevokeAuthority(database_name, table_name, number);
 					if(ret!= kSuccess) return ret;
 				}
@@ -389,7 +394,13 @@ int DataProcessor::CreateTable(
 		return kDatabaseNotUse;
 	}
 	if(current_user->CheckAuthority(current_database_name, authority_number::CREATE) == kSuccess) {
+		for(const auto& constraint :constraints) {
+			if(constraint_map.count(constraint->GetConstraintName())) {
+				return kConstraintNameExisted;
+			}
+		}
 		int ret = current_database->CreateTable(table_name, fields, constraints);
+		
 		if(ret == kSuccess) {
 			UpdatePointer();
 			current_user->GrantAllTableAuthorities(current_database_name, table_name);
@@ -623,10 +634,46 @@ int DataProcessor::AlterTableConstraint(std::string table_name, Constraint* cons
 	if(current_database->FindTable(table_name) != kSuccess) {
 		return kTableNotFound;
 	}
+	if(current_user->CheckAuthority(current_database_name,table_name,authority_number::ALTER) != kSuccess) return kInsufficientAuthority;
+	
+	if(constraint_map.count(constraint->GetConstraintName())) return kConstraintNameExisted;
 	int ret = current_database->AlterTableConstraint(table_name, constraint);
 	return ret;
 }
+int DataProcessor::UpdateConstraintMap() {
+	for(const auto& database : databases) {
+		const auto & tables = database.GetTables();
+		for(const auto& table :tables) {
+			const auto& constraints = table.GetConstraints();
+			for(auto constraint : constraints) {
+				constraint_map[constraint->GetConstraintName()] = {database.GetDatabaseName(), table.GetTableName()};
+			}
+		}
+	}
+	return kSuccess;
+}
 
+int DataProcessor::AlterTableDeleteConstraint(std::string table_name, std::string constraint_name) {
+	if(current_user == nullptr) return kUserNotLogin;
+	if(current_database == nullptr) return kDatabaseNotUse;
+	if(current_database->FindTable(table_name) != kSuccess) {
+		return kTableNotFound;
+	}
+	if(current_user->CheckAuthority(current_database_name,table_name,authority_number::ALTER) != kSuccess) return kInsufficientAuthority;
+	if(!constraint_map.count(constraint_name)) return kConstraintNotFound;
+	auto x = constraint_map[constraint_name];
+	std::string database_name = x.first;
+	std::string table_name_2 = x.second;
+	for(auto& database : databases) {
+		if(database.GetDatabaseName() == database_name) {
+			int ret = database.AlterTableDeleteConstraint(table_name, constraint_name);
+			if(ret != kSuccess) return ret;
+			break;
+		}
+	}
+	UpdateConstraintMap();
+	return kSuccess;
+}
 int DataProcessor::BuildIndex(std::string table_name, const std::vector<std::string>& compare_key) {
 	if (current_user == nullptr) {
 		return kUserNotLogin;

@@ -49,7 +49,8 @@ const int kAuthorityNotProper = 39;
 const int kReferenceTableNotFound = 40;
 const int kFieldExisted = 41;
 const int kPrimaryKeyExcessive = 42;
-
+const int kConstraintNameExisted = 43;
+const int kConstraintNotFound = 44;
 // ===== About Index =====
 const int kUnknownIndex = 100;
 const int kFHQTreapIndex = 101;

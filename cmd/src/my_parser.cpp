@@ -256,35 +256,36 @@ std::string Parser::CreateTable(const std::vector<std::string>& seq) {
 
         // token读取完毕，seq[i...j]即为当前constraint的所有内容
         if(seq[i] != constraint) return error + statementError + "(error occurs when getting constraints in CreateTable)";
-        if(j - i < 2) return error + statementError + "(constraint statement is too short)";
+        if(j - i < 2) return error + statementError + "(constraint statement is too short)0";
 
         if(seq[i + 2] == "primary" && seq[i + 3] == "key") {
-            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)";
+            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)1";
             if(fieldMap.count(seq[i + 4]) == 0) return error + statementError + "(field name is not found)";
 
             constraints.push_back(new PrimaryKeyConstraint(seq[i + 4], seq[i + 1]));
 
         } else if(seq[i + 2] == "foreign" && seq[i + 3] == "key") {
-            if(j - i != 7) return error + statementError + "(constraint statement is too short or too long)";
+            std::cout<<"("<<j<<" "<<i<<")"<<std::endl;
+            if(j - i != 7) return error + statementError + "(constraint statement is too short or too long)2";
             if(fieldMap.count(seq[i + 4]) == 0) return error + statementError + "(field name is not found)";
             if(seq[i + 5] != "references") return error + statementError + "(not found \"reference\")";
 
             constraints.push_back(new ForeignKeyConstraint(seq[i + 4], seq[i + 1], seq[i + 6], seq[i + 7]));
 
         } else if(seq[i + 2] == "unique") {
-            if(j - i != 3) return error + statementError + "(constraint statement is too short or too long)";
+            if(j - i != 3) return error + statementError + "(constraint statement is too short or too long)3";
             if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
 
             constraints.push_back(new UniqueConstraint(seq[i + 3], seq[i + 1]));
 
         } else if(seq[i + 2] == "not" && seq[i + 3] == "null") {
-            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)";
+            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)4";
             if(fieldMap.count(seq[i + 4]) == 0) return error + statementError + "(field name is not found)";
 
             constraints.push_back(new NotNullConstraint(seq[i + 4], seq[i + 1]));
 
         } else if(seq[i + 2] == "default") {
-            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)";
+            if(j - i != 4) return error + statementError + "(constraint statement is too short or too long)5";
             if(fieldMap.count(seq[i + 3]) == 0) return error + statementError + "(field name is not found)";
 
             std::any value = ColasqlTool::GetAnyByTypeAndValue(fieldMap[seq[i + 3]], seq[i + 4]);
