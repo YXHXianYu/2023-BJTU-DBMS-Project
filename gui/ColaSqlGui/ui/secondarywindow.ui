@@ -6,36 +6,97 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>621</height>
+    <width>600</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>900</width>
-    <height>621</height>
+    <width>600</width>
+    <height>471</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>900</width>
-    <height>621</height>
+    <width>600</width>
+    <height>471</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">#centralwidget{border-image: url(:/images/main/BIGGERONE.png)}</string>
+    <string notr="true">#centralwidget{border-image: url(:/images/main/main-bg.png)}</string>
    </property>
+   <widget class="QTreeView" name="treeView">
+    <property name="geometry">
+     <rect>
+      <x>13</x>
+      <y>44</y>
+      <width>150</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_commit">
+    <property name="geometry">
+     <rect>
+      <x>337</x>
+      <y>404</y>
+      <width>77</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#btn_commit{border-image: url(:/images/main/tijiao-1.png)}
+QPushButton::pressed#btn_commit{border-image: url(:/images/main/tijiao-2.png)}
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_rollback">
+    <property name="geometry">
+     <rect>
+      <x>423</x>
+      <y>404</y>
+      <width>77</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#btn_rollback{border-image: url(:/images/main/huitui-1.png)}
+QPushButton::pressed#btn_rollback{border-image: url(:/images/main/huitui-2.png)}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QTableView" name="tableView">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>14</y>
+      <width>385</width>
+      <height>165</height>
+     </rect>
+    </property>
+   </widget>
    <widget class="QTextEdit" name="textEdit_code">
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>290</y>
-      <width>680</width>
-      <height>230</height>
+      <y>209</y>
+      <width>385</width>
+      <height>165</height>
      </rect>
     </property>
     <property name="font">
@@ -54,88 +115,16 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Co1aSQL @ &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QTableView" name="tableView">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>20</y>
-      <width>680</width>
-      <height>230</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_commit">
-    <property name="geometry">
-     <rect>
-      <x>637</x>
-      <y>554</y>
-      <width>77</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton#btn_commit{border-image: url(:/images/main/tijiao-1.png)}
-QPushButton::pressed#btn_commit{border-image: url(:/images/main/tijiao-2.png)}
-</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_rollback">
-    <property name="geometry">
-     <rect>
-      <x>723</x>
-      <y>554</y>
-      <width>77</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton#btn_rollback{border-image: url(:/images/main/huitui-1.png)}
-QPushButton::pressed#btn_rollback{border-image: url(:/images/main/huitui-2.png)}</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QTreeView" name="treeView">
-    <property name="geometry">
-     <rect>
-      <x>13</x>
-      <y>45</y>
-      <width>150</width>
-      <height>521</height>
-     </rect>
-    </property>
-    <property name="editTriggers">
-     <set>QAbstractItemView::NoEditTriggers</set>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>900</width>
+     <width>600</width>
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_user">
-    <property name="title">
-     <string>用户</string>
-    </property>
-    <addaction name="current_user"/>
-    <addaction name="btn_change_user"/>
-   </widget>
-   <widget class="QMenu" name="menu_file">
-    <property name="title">
-     <string>文件</string>
-    </property>
-    <addaction name="btn_save"/>
-    <addaction name="btn_read_sql"/>
-   </widget>
    <widget class="QMenu" name="menu_create">
     <property name="title">
      <string>新建</string>
@@ -161,35 +150,59 @@ QPushButton::pressed#btn_rollback{border-image: url(:/images/main/huitui-2.png)}
     </property>
     <addaction name="btn_SQL"/>
    </widget>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="btn_save"/>
+    <addaction name="btn_read_sql"/>
+   </widget>
+   <widget class="QMenu" name="menu_user">
+    <property name="title">
+     <string>用户</string>
+    </property>
+    <addaction name="current_user"/>
+    <addaction name="btn_change_user"/>
+   </widget>
    <addaction name="menu_user"/>
    <addaction name="menu_file"/>
    <addaction name="menu_create"/>
    <addaction name="menu_delete"/>
    <addaction name="menu_query"/>
   </widget>
-  <action name="current_user">
+  <action name="actiontable">
    <property name="text">
-    <string>current_user</string>
+    <string>table</string>
    </property>
   </action>
-  <action name="btn_change_user">
+  <action name="actionrow">
    <property name="text">
-    <string>切换用户</string>
+    <string>row</string>
    </property>
   </action>
-  <action name="btn_save">
+  <action name="action">
    <property name="text">
-    <string>保存</string>
+    <string>表</string>
    </property>
   </action>
-  <action name="btn_read_sql">
+  <action name="btn_create_table">
    <property name="text">
-    <string>读取colasql文件</string>
+    <string>新建表</string>
    </property>
   </action>
-  <action name="btn_SQL">
+  <action name="btn_create_record">
    <property name="text">
-    <string>SQL</string>
+    <string>新建记录</string>
+   </property>
+  </action>
+  <action name="btn_create_field">
+   <property name="text">
+    <string>新建字段</string>
+   </property>
+  </action>
+  <action name="btn_create_database">
+   <property name="text">
+    <string>新建数据库</string>
    </property>
   </action>
   <action name="btn_delete_database">
@@ -202,6 +215,21 @@ QPushButton::pressed#btn_rollback{border-image: url(:/images/main/huitui-2.png)}
     <string>删除表</string>
    </property>
   </action>
+  <action name="btn_SQL">
+   <property name="text">
+    <string>SQL</string>
+   </property>
+  </action>
+  <action name="btn_save">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="btn__load">
+   <property name="text">
+    <string>加载</string>
+   </property>
+  </action>
   <action name="btn_delete_field">
    <property name="text">
     <string>删除所选字段</string>
@@ -212,29 +240,24 @@ QPushButton::pressed#btn_rollback{border-image: url(:/images/main/huitui-2.png)}
     <string>删除所选记录</string>
    </property>
   </action>
-  <action name="btn_create_database">
+  <action name="btn_read_sql">
    <property name="text">
-    <string>新建数据库</string>
-   </property>
-  </action>
-  <action name="btn_create_table">
-   <property name="text">
-    <string>新建表</string>
-   </property>
-  </action>
-  <action name="btn_create_field">
-   <property name="text">
-    <string>新建字段</string>
-   </property>
-  </action>
-  <action name="btn_create_record">
-   <property name="text">
-    <string>新建记录</string>
+    <string>读取colasql文件</string>
    </property>
   </action>
   <action name="btn_create_index">
    <property name="text">
     <string>新建索引</string>
+   </property>
+  </action>
+  <action name="btn_change_user">
+   <property name="text">
+    <string>切换用户</string>
+   </property>
+  </action>
+  <action name="current_user">
+   <property name="text">
+    <string>current_user</string>
    </property>
   </action>
  </widget>
