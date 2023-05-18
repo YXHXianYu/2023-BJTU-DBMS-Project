@@ -31,6 +31,7 @@ public:
 //数据库
 public:
     int GetCurrentDatabase(std::string& database_name);
+    int GetCurrentUser(std::string& user_name);
     int CreateUser(std::string user_name, std::string user_password);           //创建用户
     int Login(std::string user_name, std::string user_password);                //登录用户
 //数据库

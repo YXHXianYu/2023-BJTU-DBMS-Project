@@ -21,6 +21,12 @@ int DataProcessor::GetCurrentDatabase(std::string& database_name) {
 	return kSuccess;
 }
 
+int DataProcessor::GetCurrentUser(std::string& user_name) {
+	if(current_user == nullptr) return kUserNameNotFound;
+	user_name = current_user_name;
+	return kSuccess;
+}
+
 int DataProcessor::CreateUser(std::string user_name,
 								std::string user_password) {
 	for (auto& user : users) {
