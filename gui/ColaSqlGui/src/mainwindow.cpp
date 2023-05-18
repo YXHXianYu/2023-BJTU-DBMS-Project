@@ -758,15 +758,20 @@ void MainWindow::click_read_sql()
                     opt.toStdString()));
             qDebug() << ret;
             init_treeview();
+            qDebug() << "init_treeview success!";
             ui->textEdit_code->append(prefix);
+            qDebug() << "add prefix success!";
             QTextCursor cursor = ui->textEdit_code->textCursor();
+            qDebug() << "get cursor success!";
             cursor.movePosition(QTextCursor::End);
             ui->textEdit_code->setTextCursor(cursor);
+            qDebug() << "move cursor to the end success!";
 
             // 滚动到光标所在位置
             QScrollBar* vScrollBar = ui->textEdit_code->verticalScrollBar();
             if (vScrollBar)
                 vScrollBar->setValue(vScrollBar->maximum());
+            qDebug() << "scroll to cursor success!";
         }
     }
 }
