@@ -50,6 +50,7 @@ int FHQTreapIndex::build(const std::vector<std::unordered_map<std::string, std::
     }
 
     // ===== Build Tree =====
+    reset();
     t = std::vector<Node>(records.size() + 2000);
     for(int i = 0; i < records.size(); i++) {
         insert(i);
