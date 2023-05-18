@@ -681,11 +681,11 @@ int DataProcessor::AlterTableDeleteConstraint(std::string table_name, std::strin
 int DataProcessor::ShowConstraints(std::vector<std::vector<std::any>>& ret_records) {
 	UpdateConstraintMap();
 	std::vector<std::any> inner_record;
-	inner_record.push_back(std::any("Name"));
-	inner_record.push_back(std::any("Type"));
-	inner_record.push_back(std::any("Database"));
-	inner_record.push_back(std::any("Table"));
-	inner_record.push_back(std::any("Field"));
+	inner_record.push_back(std::any(std::string("Name")));
+	inner_record.push_back(std::any(std::string("Type")));
+	inner_record.push_back(std::any(std::string("Database")));
+	inner_record.push_back(std::any(std::string("Table")));
+	inner_record.push_back(std::any(std::string("Field")));
 	ret_records.push_back(inner_record);
 	for(const auto& database : databases) {
 		const auto & tables = database.GetTables();
@@ -698,19 +698,19 @@ int DataProcessor::ShowConstraints(std::vector<std::vector<std::any>>& ret_recor
 				}
 				inner_record.push_back(std::any(constraint->GetConstraintName()));
 				if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
-					inner_record.push_back(std::any("FK"));
+					inner_record.push_back(std::any(std::string("FK")));
 				}
 				else if(dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr) {
-					inner_record.push_back(std::any("PK"));
+					inner_record.push_back(std::any(std::string("PK")));
 				}
 				else if(dynamic_cast<const UniqueConstraint *>(constraint) != nullptr) {
-					inner_record.push_back(std::any("UNI"));
+					inner_record.push_back(std::any(std::string("UNI")));
 				}
 				else if(dynamic_cast<const NotNullConstraint *>(constraint) != nullptr) {
-					inner_record.push_back(std::any("NN"));
+					inner_record.push_back(std::any(std::string("NN")));
 				}
 				else if(dynamic_cast<const DefaultConstraint *>(constraint) != nullptr) {
-					inner_record.push_back(std::any("DF"));
+					inner_record.push_back(std::any(std::string("DF")));
 				}
 				
 				inner_record.push_back(std::any(database.GetDatabaseName()));
