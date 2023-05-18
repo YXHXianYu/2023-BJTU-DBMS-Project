@@ -430,9 +430,9 @@ std::string Parser::AlterTableDeleteConstraint(const std::vector<std::string>& s
     // return "Warning: AlterTableDeleteConstraint Under development";
     if(seq.size() != 5) return error + statementError;
 
-    // int ret = DataProcessor::GetInstance().AlterTableDeleteConstraint(seq[2], seq[4]);
+    int ret = DataProcessor::GetInstance().AlterTableDeleteConstraint(seq[2], seq[4]);
 
-    // if(ret != 0) return error + GetErrorMessage(ret);
+    if(ret != 0) return error + GetErrorMessage(ret);
     return success;
 }
 
