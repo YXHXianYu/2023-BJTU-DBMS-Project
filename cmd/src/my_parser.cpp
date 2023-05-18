@@ -48,6 +48,9 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
     if(seq[0] == "create" && seq[1] == "index") {              // Build Index
         return BuildIndex(seq);
     }
+    if(seq[0] == "show" && seq[1] == "constraints") {
+        return ShowConstraints(seq);
+    }
 
     // ----- Table -----
     if(seq[1] == "table") {
