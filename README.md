@@ -154,8 +154,7 @@
   
     ```sql
     CONSTRAINT 约束名 PRIMARY KEY 列名;                # 指定主键
-    CONSTRAINT 约束名 FOREIGN KEY 列名 REFERENCES 表名2 列名2; 
-    	# 指定外键，该列 参考 表2的列2
+    CONSTRAINT 约束名 FOREIGN KEY 列名 REFERENCES 表名2 列名2; # 指定外键，该列 参考 表2的列2
     CONSTRAINT 约束名 UNIQUE 列名;                   # 指定该列值不可重复（未指定时，默认可重）
     CONSTRAINT 约束名 NOT NULL 列名;                 # 指定该列非空（未指定时，默认可空）
     CONSTRAINT 约束名 DEFAULT 列名 值;               # 指定该列默认值（未指定时，默认值为NULL）
@@ -265,15 +264,15 @@
 
 * 执行Co1aSQL脚本
   * ```
-  RUN path/to/directory/script.colasql
-  ```
+    RUN path/to/directory/script.colasql
+    ```
 
 #### 2.9 关键字
 
 * 以下内容为Co1aSQL关键字，若占用，则不一定能得到预期结果
   * ```
-  NULL
-  ```
+    NULL
+    ```
 
 ***
 
