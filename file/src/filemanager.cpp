@@ -6,26 +6,31 @@
 #ifdef __WIN32__
 
 #include <direct.h>
+
 #include <experimental/filesystem>
 
 void myMkdir(const std::string& path) { mkdir(path.c_str()); }
 // true is success
-bool myRmdir(const std::string& path) {
+bool myRmdir(const std::string& path)
+{
     std::error_code errorCode;
-    return std::filesystem::remove_all(path, errorCode);
+    return std::experimental::filesystem::remove_all(path, errorCode);
 }
 
 #elif __linux__
 
 #include <sys/stat.h>
 #include <sys/types.h>
+
 #include <filesystem>
 
-void myMkdir(const std::string& path) {
+void myMkdir(const std::string& path)
+{
     mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
 }
 // true is success
-bool myRmdir(const std::string& path) {
+bool myRmdir(const std::string& path)
+{
     std::error_code errorCode;
     return std::filesystem::remove_all(path, errorCode);
 }
