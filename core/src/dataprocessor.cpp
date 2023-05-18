@@ -404,6 +404,7 @@ int DataProcessor::CreateTable(
 		if(ret == kSuccess) {
 			UpdatePointer();
 			current_user->GrantAllTableAuthorities(current_database_name, table_name);
+			UpdateConstraintMap();
 			UpdatePointer();
 		}
 		return ret;
@@ -638,6 +639,7 @@ int DataProcessor::AlterTableConstraint(std::string table_name, Constraint* cons
 	
 	if(constraint_map.count(constraint->GetConstraintName())) return kConstraintNameExisted;
 	int ret = current_database->AlterTableConstraint(table_name, constraint);
+	UpdateConstraintMap();
 	return ret;
 }
 int DataProcessor::UpdateConstraintMap() {
