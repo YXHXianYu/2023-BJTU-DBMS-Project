@@ -11,6 +11,12 @@ ui_register::ui_register(QWidget* parent)
     setWindowTitle("Register");
     ui->lineEdit_password1->setEchoMode(QLineEdit::Password);
     ui->lineEdit_password2->setEchoMode(QLineEdit::Password);
+    ui->lineEdit_account->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+    ui->lineEdit_password1->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+    ui->lineEdit_password2->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
 }
 
 ui_register::~ui_register() { delete ui; }
@@ -43,8 +49,8 @@ void ui_register::on_pushButton_regist_clicked()
     }
     if (user_pwd1 == user_pwd2)
     {
-        int ret = DataProcessor::GetInstance().CreateUser(user_name.toStdString(),
-                                                          user_pwd1.toStdString());
+        int ret = DataProcessor::GetInstance().CreateUser(
+            user_name.toStdString(), user_pwd1.toStdString());
         if (ret == kUserNameExisted)
             QMessageBox::warning(this, "错误", "用户已存在");
         else if (!ret)
