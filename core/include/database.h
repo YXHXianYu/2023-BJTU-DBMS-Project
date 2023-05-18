@@ -31,8 +31,16 @@ public:
     int DropTable(std::string table_name);
     int Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in);
     
-    int Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string,std::string,int>> conditions, std::vector<std::vector<std::any>> &return_records);
-    int Select(std::vector<std::string> table_names, std::vector<std::string> field_name,std::vector<std::tuple<std::string, std::string, int>> conditions,std::vector<std::vector<std::any>>& return_records);
+    int Select(std::string table_name,
+               std::vector<std::string> field_name,
+               std::vector<std::tuple<std::string,std::string,int>> conditions,
+               std::vector<std::vector<std::any>> &return_records,
+               const std::vector<std::string>& orderby_key = std::vector<std::string>());
+    int Select(std::vector<std::string> table_names,
+               std::vector<std::string> field_name,
+               std::vector<std::tuple<std::string, std::string, int>> conditions,
+               std::vector<std::vector<std::any>>& return_records,
+               const std::vector<std::string>& orderby_key = std::vector<std::string>());
 
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);
 

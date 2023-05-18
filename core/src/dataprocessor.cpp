@@ -534,7 +534,8 @@ int DataProcessor::Insert(
 int DataProcessor::Select(
 		std::string table_name, std::vector<std::string> field_name,
 		std::vector<std::tuple<std::string, std::string, int>> conditions,
-		std::vector<std::vector<std::any>>& return_records) {
+		std::vector<std::vector<std::any>>& return_records,
+        const std::vector<std::string>& orderby_key) {
 	return_records.clear();
 	if (current_user == nullptr) {
 		return kUserNotLogin;
@@ -547,7 +548,7 @@ int DataProcessor::Select(
 	} 
 	if(current_user->CheckAuthority(current_database_name,table_name,authority_number::SELECT) != kSuccess) return kInsufficientAuthority;
 	int ret = current_database->Select(table_name, field_name, conditions,
-									return_records);
+									return_records, orderby_key);
 	UpdatePointer();
 	return ret;
 }
@@ -555,7 +556,8 @@ int DataProcessor::Select(
 int DataProcessor::Select(
 		std::vector<std::string> table_names, std::vector<std::string> field_name,
 		std::vector<std::tuple<std::string, std::string, int>> conditions,
-		std::vector<std::vector<std::any>>& return_records) {
+		std::vector<std::vector<std::any>>& return_records,
+        const std::vector<std::string>& orderby_key) {
 	return_records.clear();
 	if (current_user == nullptr) {
 		return kUserNotLogin;
@@ -572,7 +574,7 @@ int DataProcessor::Select(
 		if(current_user->CheckAuthority(current_database_name,table_name,authority_number::SELECT) != kSuccess) return kInsufficientAuthority;
 	}
 	int ret = current_database->Select(table_names, field_name, conditions,
-									return_records);
+									return_records, orderby_key);
 	UpdatePointer();
 	return ret;
 }
@@ -686,6 +688,7 @@ int DataProcessor::Read(bool debug) {
 }
 
 int DataProcessor::Write() {
+    FileManager::GetInstance().ClearData();
 	FileManager::GetInstance().WriteUsersFile(users);
 	FileManager::GetInstance().WriteDatabasesFile(databases);
 	for (const auto& database : databases) {

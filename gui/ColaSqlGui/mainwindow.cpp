@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget* parent)
             SLOT(click_create_field()));
     connect(ui->btn_create_record, SIGNAL(triggered()), this,
             SLOT(click_create_record()));
+    connect(ui->btn_create_index, SIGNAL(triggered()), this,
+            SLOT(click_create_index()));
     connect(ui->btn_delete_database, SIGNAL(triggered()), this,
             SLOT(click_delete_db()));
     connect(ui->btn_delete_table, SIGNAL(triggered()), this,
@@ -84,6 +86,7 @@ std::string MainWindow::anytoString(const std::any& value)
 
 int MainWindow::use_database(std::string database)
 {
+    qDebug() << "usedata database:" + QString::fromStdString(database);
     int ret = DataProcessor::GetInstance().UseDatabase(database);
     if (ret != 0)
     {
@@ -100,6 +103,7 @@ int MainWindow::use_database(std::string database)
 int MainWindow::select_all_from_table(
     std::string tbName, std::vector<std::vector<std::any>>& return_records)
 {
+    qDebug() << "select_all_from_table: " + QString::fromStdString(tbName);
     std::vector<std::string> f;
     f.push_back("*");
     std::vector<std::tuple<std::string, std::string, int>> c;
@@ -142,8 +146,7 @@ void MainWindow::display_table(
 
 void MainWindow::init_treeview()
 {
-    clicked_column = -1;
-    clicked_row = -1;
+    qDebug() << "init treetabase";
     QStandardItemModel* model = new QStandardItemModel(this);
     ui->treeView->header()->setSectionResizeMode(QHeaderView::Stretch);
     model->setHorizontalHeaderLabels(QStringList(QStringLiteral("database")));
@@ -232,8 +235,7 @@ void MainWindow::on_treeView_doubleClicked(const QModelIndex& index)
 
 void MainWindow::click_create_database()
 {
-    //    新建数据库
-    qDebug() << "add database ";
+    qDebug() << "create database";
     QString dbName =
         QInputDialog::getText(this, "输入", "数据库名:", QLineEdit::Normal);
     if (dbName.isEmpty())
@@ -262,8 +264,9 @@ void MainWindow::click_create_database()
 
 void MainWindow::click_create_table()
 {
-    // add table
+    qDebug() << "create table";
     ui_create_table = new createtable();
+    ui_create_table->setWindowTitle("新建表");
     connect(ui_create_table, SIGNAL(create_table_signal(QString, QString)),
             this, SLOT(create_table(QString, QString)));
     ui_create_table->show();
@@ -294,7 +297,7 @@ void MainWindow::create_table(QString database, QString opt)
 
 void MainWindow::click_create_field()
 {
-    qDebug() << "add column\n";
+    qDebug() << "create field";
     ColumnDialog dialog;
     if (dialog.exec() == QDialog::Accepted)
     {
@@ -329,7 +332,7 @@ void MainWindow::click_create_field()
 
 void MainWindow::click_create_record()
 {
-    qDebug() << "add row\n";
+    qDebug() << "create record\n";
     QDialog dialog;
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
@@ -366,6 +369,7 @@ void MainWindow::click_create_record()
         if (return_records.size() == 0 || ret != kSuccess)
             return;
         ui_create_record = new createrecord(return_records, tbName);
+        ui_create_record->setWindowTitle("新建记录");
         connect(ui_create_record, SIGNAL(create_record_signal(QString)), this,
                 SLOT(create_record(QString)));
         ui_create_record->show();
@@ -382,6 +386,64 @@ void MainWindow::create_record(QString opt)
         return;
     }
     QMessageBox::information(this, "通知", "新建记录成功\n");
+}
+
+void MainWindow::click_create_index()
+{
+    qDebug() << "create index";
+    QDialog dialog;
+    QFormLayout layout(&dialog);
+    dialog.setWindowTitle("输入");
+
+    QLineEdit input1;
+    QLineEdit input2;
+
+    layout.addRow("数据库:", &input1);
+    layout.addRow("插入表:", &input2);
+
+    QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                               Qt::Horizontal, &dialog);
+    layout.addRow(&buttonBox);
+
+    QObject::connect(&buttonBox, &QDialogButtonBox::accepted, &dialog,
+                     &QDialog::accept);
+    QObject::connect(&buttonBox, &QDialogButtonBox::rejected, &dialog,
+                     &QDialog::reject);
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        QString dbName = "";
+        QString tbName = "";
+        dbName = input1.text();
+        tbName = input2.text();
+        if (tbName == "" || dbName == "")
+            return;
+        qDebug() << dbName;
+        qDebug() << tbName;
+        int ret = use_database(dbName.toLower().toStdString());
+        if (ret != kSuccess)
+            return;
+        std::vector<std::vector<std::any>> return_records;
+        ret = select_all_from_table(tbName.toStdString(), return_records);
+        if (return_records.size() == 0 || ret != kSuccess)
+            return;
+        ui_create_index = new createindex(return_records, tbName);
+        ui_create_index->setWindowTitle("新建索引");
+        connect(ui_create_index, SIGNAL(create_index_signal(QString)), this,
+                SLOT(create_index(QString)));
+        ui_create_index->show();
+    }
+}
+
+void MainWindow::create_index(QString opt)
+{
+    QString ret = QString::fromStdString(
+        ColaSQLCommand::CommandProcessor::GetInstance().Run(opt.toStdString()));
+    if (ret != "Success!")
+    {
+        QMessageBox::warning(this, "错误", "新建索引失败，错误信息：" + ret);
+        return;
+    }
+    QMessageBox::information(this, "通知", "新建索引成功\n");
 }
 
 void MainWindow::click_delete_db()
@@ -483,7 +545,6 @@ void MainWindow::click_delete_field()
         {
             QString field =
                 model->headerData(index.column(), Qt::Horizontal).toString();
-            qDebug() << QString::number(clicked_column);
             qDebug() << "delete field" + field + "from table" +
                             QString::fromStdString(current_table);
             int ret = DataProcessor::GetInstance().AlterTableDrop(
@@ -627,6 +688,7 @@ void MainWindow::click_complex_select()
     }
 }
 
+// 读取执行.colasql文件
 void MainWindow::click_read_sql()
 {
     QFileDialog dialog(this);
@@ -642,18 +704,22 @@ void MainWindow::click_read_sql()
         else
         {
             qDebug() << "Selected File: " << filePath;
-            QString opt = "run " + filePath + ";";
+            QString opt = "run " + filePath;
             qDebug() << "cmd run: " << opt;
             QString ret = QString::fromStdString(
-                ColaSQLCommand::CommandProcessor::GetInstance().Run(
+                ColaSQLCommand::CommandProcessor::GetInstance().RunScript(
                     opt.toStdString()));
-            qDebug() << "return success!";
-            if (ret != "Success!")
-            {
-                QMessageBox::warning(this, "错误",
-                                     "执行.colasql错误，错误信息：" + ret);
-                return;
-            }
+            qDebug() << ret;
+            init_treeview();
+            ui->textEdit_code->append(prefix);
+            QTextCursor cursor = ui->textEdit_code->textCursor();
+            cursor.movePosition(QTextCursor::End);
+            ui->textEdit_code->setTextCursor(cursor);
+
+            // 滚动到光标所在位置
+            QScrollBar* vScrollBar = ui->textEdit_code->verticalScrollBar();
+            if (vScrollBar)
+                vScrollBar->setValue(vScrollBar->maximum());
         }
     }
 }
@@ -705,34 +771,75 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 return true; // 如果光标在行尾，不允许删除
             }
         }
+        else if (keyEvent->key() == Qt::Key_Up ||
+                 keyEvent->key() == Qt::Key_Down)
+        {
+            return true;
+        }
+        else if (keyEvent->key() == Qt::Key_Left)
+        {
+            cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor,
+                                prefix.length());
+            QString textBeforeCursor = cursor.selectedText();
+
+            if (textBeforeCursor == prefix)
+            {
+                return true; // 如果光标前的字符串等于指定字符串，不允许删除
+            }
+        }
     }
+
+    // 禁止鼠标移动光标，不会
+    //    else if (watched == ui->textEdit_code && event->type() ==
+    //    QEvent::MouseMove)
+    //    {
+    //        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    //        mouseEvent->ignore();
+    //        return true;
+    //    }
+    //    else if (watched == ui->textEdit_code &&
+    //             event->type() == QEvent::MouseButtonPress)
+    //    {
+    //        QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    //        mouseEvent->ignore();
+    //        return true;
+    //    }
     // 对于其他事件和对象，调用基类的事件过滤器
     return QMainWindow::eventFilter(watched, event);
 }
 
 void MainWindow::onEnterPressed()
 {
-    QTextCursor cursor = ui->textEdit_code->textCursor();
-    cursor.select(QTextCursor::LineUnderCursor);
-    QString input = cursor.selectedText().mid(prefix.length());
-    qDebug() << "回车键被按下，当前行内容：" << input;
-    if (input == "cls;")
+    QString content = ui->textEdit_code->toPlainText();
+
+    int lastAtIndex = content.lastIndexOf('@');
+
+    if (lastAtIndex != -1)
     {
-        ui->textEdit_code->clear();
+        QString input = content.mid(lastAtIndex + 1);
+        qDebug() << "input: " << input;
+        if (input == " cls;")
+        {
+            ui->textEdit_code->clear();
+        }
+        else
+        {
+            QString ret = QString::fromStdString(
+                ColaSQLCommand::CommandProcessor::GetInstance().Run(
+                    input.toStdString()));
+            qDebug() << ret;
+            if (ret != "")
+            {
+                std::cout << ret.toStdString();
+                init_treeview();
+            }
+        }
+        ui->textEdit_code->append(prefix);
     }
     else
     {
-        QString ret = QString::fromStdString(
-            ColaSQLCommand::CommandProcessor::GetInstance().Run(
-                input.toStdString()));
-        qDebug() << ret;
-        if (ret != "")
-        {
-            std::cout << ret.toStdString();
-            init_treeview();
-        }
+        qDebug() << "No '@' symbol found.";
     }
-    ui->textEdit_code->append("Co1aSQL > ");
 }
 
 void MainWindow::handleTableModified() { save_change(); }
@@ -857,10 +964,4 @@ void MainWindow::on_btn_rollback_clicked()
     ui->tableView->setModel(model);
     ui->treeView->expandAll();
     QMessageBox::information(this, "通知", "rollback success!");
-}
-
-void MainWindow::on_tableView_clicked(const QModelIndex& index)
-{
-    clicked_column = index.column();
-    clicked_row = index.row();
 }

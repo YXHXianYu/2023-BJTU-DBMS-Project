@@ -5,6 +5,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
+LIBS += -lstdc++fs
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -22,6 +24,7 @@ SOURCES += \
     $${PWD}/../../core/src/constraint/*.cpp \
     $${PWD}/../../core/src/index/*.cpp \
     ../../file/src/filemanager.cpp \
+    createindex.cpp \
     createrecord.cpp \
     createtable.cpp \
     main.cpp \
@@ -32,6 +35,7 @@ SOURCES += \
 
 HEADERS += \
     columndialog.h \
+    createindex.h \
     createrecord.h \
     createtable.h \
     mainwindow.h \
@@ -40,6 +44,7 @@ HEADERS += \
     ui_register.h
 
 FORMS += \
+    createindex.ui \
     createrecord.ui \
     createtable.ui \
     mainwindow.ui \

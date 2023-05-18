@@ -22,7 +22,7 @@ private:
     std::vector<std::unordered_map<std::string, std::any> > records;
     std::vector<Constraint*> constraints;
 
-    std::unique_ptr<Index> index_ptr;
+    std::shared_ptr<Index> index_ptr;
 
 public:
     Table(std::string &table_name);
@@ -50,9 +50,10 @@ public:
     int GetIndex(std::vector<std::string>& result_key) const;
     
     //查询记录
-    int Select(std::vector<std::string> field_name,
-               std::vector<std::tuple<std::string, std::string,int>> conditions,
-               std::vector<std::vector<std::any>> &return_records);
+    int Select(std::vector<std::string> field_name, // field_name不为常引用的原因是，函数内对field_name进行了修改
+               const std::vector<std::tuple<std::string, std::string,int>>& conditions,
+               std::vector<std::vector<std::any>> &return_records,
+               const std::vector<std::string>& orderby_key = std::vector<std::string>());
     //插入记录
     int Insert(std::vector<std::pair<std::string, std::string>> record_in, Database* db);
     //删除记录

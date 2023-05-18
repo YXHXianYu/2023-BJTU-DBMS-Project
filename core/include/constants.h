@@ -68,4 +68,7 @@ const int kUnique = 153;
 const int kNotNull = 154;
 const int kDefault = 155;
 
+// ===== File =====
+const int kClearDataFailed = 170;
+
 #endif

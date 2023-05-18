@@ -16,6 +16,8 @@ public :
 
 public :
     // ----- Write -----
+    
+    int ClearData();
 
     int WriteDatabasesFile(const std::vector<Database>& databases);
 

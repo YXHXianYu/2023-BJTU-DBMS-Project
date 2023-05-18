@@ -625,9 +625,9 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
     int ret;
 
     if(tableName.size() == 1)
-        ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result);
+        ret = DataProcessor::GetInstance().Select(tableName[0], fieldName, conditions, result, orderField);
     else
-        ret = DataProcessor::GetInstance().Select(tableName, fieldName, conditions, result);
+        ret = DataProcessor::GetInstance().Select(tableName, fieldName, conditions, result, orderField);
 
     if(ret != 0) {
         return error + GetErrorMessage(ret); // TODO: error information
