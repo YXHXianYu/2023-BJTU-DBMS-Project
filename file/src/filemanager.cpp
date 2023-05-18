@@ -3,6 +3,8 @@
 #include <cassert>
 #include <fstream>
 
+#include <filesystem>
+
 #ifdef __WIN32__
 #include <direct.h>
 void myMkdir(const std::string& path) { mkdir(path.c_str()); }
@@ -24,6 +26,14 @@ FileManager& FileManager::GetInstance() {
 }
 
 // ----- Write -----
+
+int FileManager::ClearData() {
+    std::error_code errorCode;
+    if(!std::filesystem::remove_all("./data", errorCode)) {
+        return kClearDataFailed;
+    }
+    return kSuccess;
+}
 
 int FileManager::WriteDatabasesFile(const std::vector<Database>& databases) {
   // 创建新文件夹

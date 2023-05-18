@@ -682,6 +682,7 @@ int DataProcessor::Read(bool debug) {
 }
 
 int DataProcessor::Write() {
+    FileManager::GetInstance().ClearData();
 	FileManager::GetInstance().WriteUsersFile(users);
 	FileManager::GetInstance().WriteDatabasesFile(databases);
 	for (const auto& database : databases) {
