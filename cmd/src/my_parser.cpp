@@ -384,11 +384,56 @@ std::string Parser::AlterTableModify(const std::vector<std::string>& seq) {
 }
 
 std::string Parser::AlterTableConstraint(const std::vector<std::string>& seq) {
-    return "Warning: AlterTableConstraint Under development";
+    // return "Warning: AlterTableConstraint Under development";
+    if(seq.size() < 7) return error + statementError + "(constraint statement is too short)";
+
+    std::string tableName = seq[2];
+    std::string constraintName = seq[4];
+    
+    Constraint* constraint_ptr;
+    
+    if(seq[5] == "primary" && seq[6] == "key") {
+        if(seq.size() != 8) return error + statementError + "(constraint statement is too short or too long)";
+
+        constraint_ptr = new PrimaryKeyConstraint(seq[7], constraintName);
+
+    } else if(seq[5] == "foreign" && seq[6] == "key") {
+        if(seq.size() != 11) return error + statementError + "(constraint statement is too short or too long)";
+        if(seq[8] != "references") return error + statementError + "(not found \"reference\")";
+
+        constraint_ptr = (new ForeignKeyConstraint(seq[7], constraintName, seq[9], seq[10]));
+
+    } else if(seq[5] == "unique") {
+        if(seq.size() != 7) return error + statementError + "(constraint statement is too short or too long)";
+
+        constraint_ptr = (new UniqueConstraint(seq[6], constraintName));
+
+    } else if(seq[5] == "not" && seq[6] == "null") {
+        if(seq.size() != 8) return error + statementError + "(constraint statement is too short or too long)";
+
+        constraint_ptr = (new NotNullConstraint(seq[7], constraintName));
+
+    } else if(seq[5] == "default") {
+        return success; // in fact, this operation is not successful.
+    } else {
+        return error + statementError + "(not found this kind of constraint)";
+    }
+
+    int ret = DataProcessor::GetInstance().AlterTableConstraint(tableName, constraint_ptr);
+
+    if(ret != 0) return error + GetErrorMessage(ret);
+
+    return success;
 }
 
 std::string Parser::AlterTableDeleteConstraint(const std::vector<std::string>& seq) {
-    return "Warning: AlterTableDeleteConstraint Under development";
+    // return "Warning: AlterTableDeleteConstraint Under development";
+    if(seq.size() != 5) return error + statementError;
+
+    // int ret = DataProcessor::GetInstance().AlterTableDeleteConstraint(seq[2], seq[4]);
+
+    // if(ret != 0) return error + GetErrorMessage(ret);
+    return success;
 }
 
 std::string Parser::QueryTable(const std::vector<std::string>& seq) {

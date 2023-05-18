@@ -51,11 +51,11 @@ paginate: true
 
 - 创建数据库 CREATE DATABASE `database_name`;
 - 删除数据库 DROP DATABASE `database_name`;
-- 创建表 CREATE TABLE ...;
-- 添加字段 ALTER TABLE `表名` ADD `列名` `类型名`;
-- 删除字段 ALTER TABLE `表名` DROP `列名`;
-- 修改字段 ALTER TABLE `表名` MODIFY `列名` `类型名`;
-- 删除表 DROP TABLE `表名`;
+- 创建表     CREATE TABLE ...;
+- 添加字段   ALTER TABLE `表名` ADD `列名` `类型名`;
+- 删除字段   ALTER TABLE `表名` DROP `列名`;
+- 修改字段   ALTER TABLE `表名` MODIFY `列名` `类型名`;
+- 删除表     DROP TABLE `表名`;
 
 ---
 
@@ -73,10 +73,11 @@ paginate: true
 
 ## 2.3 DQL功能展示
 
-- 查询所有数据库 SHOW DATABASES;
+- 查询所有数据库       SHOW DATABASES;
 - 查询当前数据库所有表 SHOW TABLES;
-- 查询表的所有记录 SELECT * FROM `表名`;
-- 指定字段和where条件 SELECT `列1` `列2` ... WHERE `筛选条件1`...;
+- 描述表               DESC TABLE `表名`;
+- 查询表的所有记录     SELECT * FROM `表名`;
+- 指定字段和where条件  SELECT `列1` `列2` ... WHERE `筛选条件1`...;
 
 ---
 
@@ -100,11 +101,11 @@ paginate: true
 
 ## 3.2 复杂的SQL查询
 
-- 多表
+- 多表 SELECT * FROM `table1` NATURAL JOIN `table2` ...;
 
-- 多条件
+- 多条件 SELECT * FROM `table` WHERE `condition1` ...;
 
-- 排序
+- 排序 SELECT * FROM `table` ORDER BY `field1` ...;
 
 ---
 
@@ -138,13 +139,15 @@ paginate: true
 
 ## 3.5 索引
 
-- 索引效率展示
+- [无旋Treap](https://oi-wiki.org/ds/treap/#%E6%97%A0%E6%97%8B-treap)
 
 ---
 
 # 3. 拓展功能展示
 
 ## 3.6 用户权限管理
+
+
 
 ---
 
