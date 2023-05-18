@@ -110,7 +110,6 @@ int Table::DeleteConstraint(std::string constraint_name, Database* db) {
         }
         else it++;
     }
-    return kSuccess;
     return kConstraintNotFound;
 }
 

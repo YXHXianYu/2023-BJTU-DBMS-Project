@@ -53,6 +53,7 @@ public:
     int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field); //修改字段
     int AlterTableConstraint(std::string table_name, Constraint* constraint);    //添加约束条件
     int AlterTableDeleteConstraint(std::string table_name, std::string constraint_name); ///删除约束
+    int ShowConstraints(std::vector<std::vector<std::any>>& ret_records);
 
 //记录
 public:
