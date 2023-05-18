@@ -3,6 +3,7 @@
 
 #include <ui_register.h>
 
+#include <QFontDatabase>
 #include <QMainWindow>
 #include <QMessageBox>
 

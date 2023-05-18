@@ -26,5 +26,12 @@
         <file>images/Colasql.png</file>
         <file>images/database.jpg</file>
         <file>images/table.jpg</file>
+        <file>images/create/cancel-1.png</file>
+        <file>images/create/cancel-2.png</file>
+        <file>images/create/createindex-bg.png</file>
+        <file>images/create/createrecord-bg.png</file>
+        <file>images/create/ok-1.png</file>
+        <file>images/create/ok-2.png</file>
+        <file>font/FiraCode-Regular-1.ttf</file>
     </qresource>
 </RCC>

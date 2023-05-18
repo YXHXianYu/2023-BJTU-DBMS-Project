@@ -14,12 +14,25 @@ MainWindow::MainWindow(QWidget* parent)
         "background:transparent;border-width:0;border-style:outset");
     ui->textEdit_code->setStyleSheet(
         "background:transparent;border-width:0;border-style:outset");
-    ui->tableView->setStyleSheet(
-        "background:transparent;border-width:0;border-style:outset");
+
+    // tableview设置stylesheet有bug
+    //    ui->tableView->setStyleSheet(
+    //        "background:transparent;border-width:0;border-style:outset");
 
     setWindowTitle("ColaSql");
     QIcon icon = QIcon(":/images/Colasql.png");
     this->setWindowIcon(icon);
+    int font_Id =
+        QFontDatabase::addApplicationFont(":/font/FiraCode-Regular-1.ttf");
+    QStringList font_list = QFontDatabase::applicationFontFamilies(font_Id);
+    if (!font_list.isEmpty())
+    {
+        f.setFamily(font_list[0]);
+        f.setPointSize(9);
+        ui->textEdit_code->setFont(f);
+        ui->treeView->setFont(f);
+        ui->tableView->setFont(f);
+    }
 
     //  auto streamBuf =
     //  std::make_unique<QTextBrowserStreamBuf>(ui->textBrowser);

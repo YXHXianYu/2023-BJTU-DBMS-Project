@@ -26,40 +26,51 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">#centralwidget{border-image: url(:/images/create/createrecord-bg.png)}</string>
+   </property>
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>381</width>
-      <height>181</height>
+      <x>13</x>
+      <y>13</y>
+      <width>373</width>
+      <height>179</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_finish">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>230</y>
-      <width>80</width>
-      <height>20</height>
+      <x>162</x>
+      <y>202</y>
+      <width>77</width>
+      <height>29</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#btn_finish{border-image: url(:/images/create/ok-1.png)}
+QPushButton::pressed#btn_finish{border-image: url(:/images/create/ok-2.png)}</string>
+    </property>
     <property name="text">
-     <string>完成</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_cancel">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>260</y>
-      <width>80</width>
-      <height>20</height>
+      <x>162</x>
+      <y>239</y>
+      <width>77</width>
+      <height>29</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#btn_cancel{border-image: url(:/images/create/cancel-1.png)}
+QPushButton::pressed#btn_cancel{border-image: url(:/images/create/cancel-2.png)}</string>
+    </property>
     <property name="text">
-     <string>取消</string>
+     <string/>
     </property>
    </widget>
   </widget>

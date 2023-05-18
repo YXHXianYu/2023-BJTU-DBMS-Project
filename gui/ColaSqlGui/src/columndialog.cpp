@@ -2,25 +2,37 @@
 
 ColumnDialog::ColumnDialog(QWidget* parent) : QDialog(parent)
 {
+    lineEdit4 = new QLineEdit(this);
+    lineEdit1 = new QLineEdit(this);
+    lineEdit2 = new QLineEdit(this);
+    int font_Id =
+        QFontDatabase::addApplicationFont(":/font/FiraCode-Regular-1.ttf");
+    QStringList font_list = QFontDatabase::applicationFontFamilies(font_Id);
+    if (!font_list.isEmpty())
+    {
+        QFont f;
+        f.setFamily(font_list[0]);
+        f.setPointSize(9);
+        lineEdit1->setFont(f);
+        lineEdit2->setFont(f);
+        lineEdit4->setFont(f);
+    }
     // 创建三个QLineEdit输入框，并将它们添加到布局中
     QVBoxLayout* layout = new QVBoxLayout(this);
     QHBoxLayout* hLayout = new QHBoxLayout();
     QLabel* label = new QLabel("插入数据库:", this);
-    lineEdit4 = new QLineEdit(this);
     hLayout->addWidget(label);
     hLayout->addWidget(lineEdit4);
     layout->addLayout(hLayout);
 
     QHBoxLayout* hLayout1 = new QHBoxLayout();
     QLabel* label1 = new QLabel("插入表:", this);
-    lineEdit1 = new QLineEdit(this);
     hLayout1->addWidget(label1);
     hLayout1->addWidget(lineEdit1);
     layout->addLayout(hLayout1);
 
     QHBoxLayout* hLayout2 = new QHBoxLayout();
     QLabel* label2 = new QLabel("字段名:", this);
-    lineEdit2 = new QLineEdit(this);
     hLayout2->addWidget(label2);
     hLayout2->addWidget(lineEdit2);
     layout->addLayout(hLayout2);

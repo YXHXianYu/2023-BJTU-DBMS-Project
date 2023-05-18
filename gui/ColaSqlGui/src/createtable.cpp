@@ -28,6 +28,20 @@ createtable::createtable(QWidget* parent)
     ui->tableView->setColumnWidth(0, 60);
     ui->tableView->setColumnWidth(1, 60);
     ui->tableView->setColumnWidth(2, 60);
+
+    int font_Id =
+        QFontDatabase::addApplicationFont(":/font/FiraCode-Regular-1.ttf");
+    QStringList font_list = QFontDatabase::applicationFontFamilies(font_Id);
+    if (!font_list.isEmpty())
+    {
+        QFont f;
+        f.setFamily(font_list[0]);
+        f.setPointSize(9);
+        ui->dbName_lineEdit->setFont(f);
+        ui->tableName_lineEdit->setFont(f);
+        ui->col_name->setFont(f);
+        ui->tableView->setFont(f);
+    }
 }
 
 createtable::~createtable() { delete ui; }
@@ -43,6 +57,14 @@ void createtable::on_add_col_clicked()
     if (field == "")
     {
         QMessageBox::warning(this, "警告", "未输入字段名！");
+        ui->tableView->show();
+        ui->col_name->clear();
+        ui->foreign_table->clear();
+        ui->foreign_field->clear();
+        ui->foreign_check->setChecked(false);
+        ui->notnull_check->setChecked(false);
+        ui->pk_check->setChecked(false);
+        ui->unique_check->setChecked(false);
         return;
     }
     if (ui->foreign_check->isChecked())
@@ -52,6 +74,14 @@ void createtable::on_add_col_clicked()
         if (reference_table == "" || reference_field == "")
         {
             QMessageBox::warning(this, "警告", "未输入参考值！");
+            ui->tableView->show();
+            ui->col_name->clear();
+            ui->foreign_table->clear();
+            ui->foreign_field->clear();
+            ui->foreign_check->setChecked(false);
+            ui->notnull_check->setChecked(false);
+            ui->pk_check->setChecked(false);
+            ui->unique_check->setChecked(false);
             return;
         }
         else

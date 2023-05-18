@@ -1,6 +1,7 @@
 #ifndef UI_REGISTER_H
 #define UI_REGISTER_H
 
+#include <QFontDatabase>
 #include <QMainWindow>
 #include <QMessageBox>
 
