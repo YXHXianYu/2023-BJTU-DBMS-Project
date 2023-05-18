@@ -10,14 +10,12 @@ MainWindow::MainWindow(QWidget* parent)
     ui_log = new ui_login;
     ui_log->show();
 
-    ui->treeView->setStyleSheet(
-        "background:transparent;border-width:0;border-style:outset");
+    ui->treeView->setStyleSheet("border-style:outset");
     ui->textEdit_code->setStyleSheet(
         "background:transparent;border-width:0;border-style:outset");
 
     // tableview设置stylesheet有bug
-    //    ui->tableView->setStyleSheet(
-    //        "background:transparent;border-width:0;border-style:outset");
+    ui->tableView->setStyleSheet("border-style:outset");
 
     setWindowTitle("ColaSql");
     QIcon icon = QIcon(":/images/Colasql.png");
