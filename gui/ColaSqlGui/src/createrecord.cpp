@@ -7,6 +7,8 @@ createrecord::createrecord(std::vector<std::vector<std::any>> return_records,
     : QMainWindow(parent), ui(new Ui::createrecord)
 {
     ui->setupUi(this);
+    QIcon icon = QIcon(":/images/Colasql.png");
+    this->setWindowIcon(icon);
     records = return_records;
     table = tbName;
     display_table(records);

@@ -10,7 +10,16 @@ MainWindow::MainWindow(QWidget* parent)
     ui_log = new ui_login;
     ui_log->show();
 
+    ui->treeView->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+    ui->textEdit_code->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+    ui->tableView->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+
     setWindowTitle("ColaSql");
+    QIcon icon = QIcon(":/images/Colasql.png");
+    this->setWindowIcon(icon);
 
     //  auto streamBuf =
     //  std::make_unique<QTextBrowserStreamBuf>(ui->textBrowser);
@@ -353,6 +362,8 @@ void MainWindow::click_create_record()
     QDialog dialog;
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
+    QIcon icon = QIcon(":/images/Colasql.png");
+    dialog.setWindowIcon(icon);
 
     QLineEdit input1;
     QLineEdit input2;
@@ -411,6 +422,8 @@ void MainWindow::click_create_index()
     QDialog dialog;
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
+    QIcon icon = QIcon(":/images/Colasql.png");
+    dialog.setWindowIcon(icon);
 
     QLineEdit input1;
     QLineEdit input2;

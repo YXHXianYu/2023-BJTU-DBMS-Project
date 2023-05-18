@@ -70,3 +70,4 @@ RESOURCES += \
     resource/res.qrc
 
 
+

@@ -7,6 +7,8 @@ createindex::createindex(std::vector<std::vector<std::any>> return_records,
     : QMainWindow(parent), ui(new Ui::createindex)
 {
     ui->setupUi(this);
+    QIcon icon = QIcon(":/images/Colasql.png");
+    this->setWindowIcon(icon);
     records = return_records;
     table = tbName;
     display_table(records);
