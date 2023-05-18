@@ -14,10 +14,8 @@ createtable::createtable(QWidget* parent)
         "background:transparent;border-width:0;border-style:outset");
     ui->col_name->setStyleSheet(
         "background:transparent;border-width:0;border-style:outset");
-    ui->tableView->setStyleSheet(
-        "background:transparent;border-width:0;border-style:outset");
-    ui->comboBox->setStyleSheet(
-        "background:transparent;border-width:0;border-style:outset");
+    ui->tableView->setStyleSheet("border-style:outset");
+    ui->comboBox->setStyleSheet("border-style:outset");
 
     model = new QStandardItemModel();
     model->setColumnCount(3);
