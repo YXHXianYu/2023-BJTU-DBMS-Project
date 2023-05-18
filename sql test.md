@@ -15,11 +15,13 @@ insert into course values(3, study);
 
 insert into sc values(21301032, 1, 100);
 
-//delete from student where sno = 21301032;
+delete from student where sno = 21301032;//违反约束
+
 insert into sc values(21301032, 1, 90);
 insert into sc values(21301032, 3, 91);
 insert into sc values(21301114, 1, 50);
-insert into sc values(21301013, 1, 67);
+
+insert into sc values(21301013, 1, 67);//违反约束
 
 select * from student natural join course natural join sc order by grade;
 
