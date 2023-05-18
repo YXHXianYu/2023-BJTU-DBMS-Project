@@ -553,10 +553,8 @@ std::string Parser::DeleteRecord(const std::vector<std::string>& seq) {
         if((idx[whereIdx + 1] - idx[whereIdx] - 1) % 3 != 0) return error + statementError + "(conditions statement is incompatible)";
 
         for(int i = idx[whereIdx] + 1; i < idx[whereIdx + 1]; i += 3) {
-            if(seq[i + 1] != "=") return error + statementError + "(conditions statement is error)";
-
-            // TODO: 缺少了其他关系条件
-            conditions.push_back({seq[i], seq[i + 2], kEqualConditon});
+            if(PushCondition(conditions, seq[i], seq[i + 1], seq[i + 2]))
+                return error + statementError + "(conditions statement is error)";
         }
     }
 
@@ -625,10 +623,8 @@ std::string Parser::SelectRecord(const std::vector<std::string>& seq) {
         if((idx[whereIdx + 1] - idx[whereIdx] - 1) % 3 != 0) return error + statementError + "(conditions statement is incompatible)";
 
         for(int i = idx[whereIdx] + 1; i < idx[whereIdx + 1]; i += 3) {
-            if(seq[i + 1] != "=") return error + statementError + "(conditions statement is error)";
-
-            // TODO: 缺少了其他关系条件
-            conditions.push_back({seq[i], seq[i + 2], kEqualConditon});
+            if(PushCondition(conditions, seq[i], seq[i + 1], seq[i + 2]))
+                return error + statementError + "(conditions statement is error)";
         }
     }
 
@@ -738,10 +734,8 @@ std::string Parser::ReturnSelectRecord(const std::vector<std::string>& seq, std:
         if((idx[whereIdx + 1] - idx[whereIdx] - 1) % 3 != 0) return error + statementError + "(conditions statement is incompatible)";
 
         for(int i = idx[whereIdx] + 1; i < idx[whereIdx + 1]; i += 3) {
-            if(seq[i + 1] != "=") return error + statementError + "(conditions statement is error)";
-
-            // TODO: 缺少了其他关系条件
-            conditions.push_back({seq[i], seq[i + 2], kEqualConditon});
+            if(PushCondition(conditions, seq[i], seq[i + 1], seq[i + 2]))
+                return error + statementError + "(conditions statement is error)";
         }
     }
 
@@ -809,10 +803,8 @@ std::string Parser::UpdateRecord(const std::vector<std::string>& seq) {
         if((idx[whereIdx + 1] - idx[whereIdx] - 1) % 3 != 0) return error + statementError + "(conditions statement is incompatible)";
 
         for(int i = idx[whereIdx] + 1; i < idx[whereIdx + 1]; i += 3) {
-            if(seq[i + 1] != "=") return error + statementError + "(conditions statement is error)";
-
-            // TODO: 缺少了其他关系条件
-            conditions.push_back({seq[i], seq[i + 2], kEqualConditon});
+            if(PushCondition(conditions, seq[i], seq[i + 1], seq[i + 2]))
+                return error + statementError + "(conditions statement is error)";
         }
     }
 
@@ -877,6 +869,18 @@ std::string Parser::Save() {
 
 std::string Parser::GetErrorMessage(int errorCode) {
     return "ErrorCode: " + std::to_string(errorCode);
+}
+
+bool Parser::PushCondition(std::vector<std::tuple<std::string, std::string, int>>& conditions,
+                   std::string fieldName, std::string sign, std::string value) {
+    if(sign == "=") conditions.push_back({fieldName, value, kEqualConditon});
+    else if(sign == ">") conditions.push_back({fieldName, value, kLargerConditon});
+    else if(sign == "<") conditions.push_back({fieldName, value, kLessCondition});
+    else if(sign == ">=") conditions.push_back({fieldName, value, kLargerEqualCondition});
+    else if(sign == "<=") conditions.push_back({fieldName, value, kLessEqualConditon});
+    else return 1;
+    return 0;
+    // error + statementError + "(conditions statement is error)";
 }
 
 } // ColaSQLCommand

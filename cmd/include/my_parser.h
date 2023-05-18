@@ -74,6 +74,9 @@ private:
 
     std::string GetErrorMessage(int errorCode);
 
+    bool PushCondition(std::vector<std::tuple<std::string, std::string, int>>& conditions,
+                       std::string fieldName, std::string sign, std::string value);
+
 };
 
 } // ColaSQLCommand
