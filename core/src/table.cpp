@@ -336,8 +336,11 @@ int Table::Insert(std::vector<std::pair<std::string, std::string>> record_in, Da
     return kSuccess;
 }
 
-int Table::Select(std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string,int>> conditions, std::vector<std::vector<std::any>>& return_records)
-{
+
+int Table::Select(std::vector<std::string> field_name,
+                  const std::vector<std::tuple<std::string, std::string,int>>& conditions,
+                  std::vector<std::vector<std::any>> &return_records,
+                  const std::vector<std::string>& orderby_key) {
     if(field_name[0] == "*") {
         field_name.clear();
         for(auto field : fields) {
@@ -356,8 +359,46 @@ int Table::Select(std::vector<std::string> field_name, std::vector<std::tuple<st
     }
     return_records.push_back(tmp);
     //ok
-    
 
+    
+    bool haveGetAnswer = false;
+    
+    // ===== 获取 selected_index =====
+    std::vector<int> selected_index;
+    
+    // 可以由索引得到选中记录
+    if(!haveGetAnswer && index_ptr && conditions.size() > 0) {
+        int ret = index_ptr->query(conditions, selected_index);
+        if(ret == 0) {
+            std::cout << "Index speedup successfully." << std::endl;
+            haveGetAnswer = true;
+        }
+    }
+    
+    // 默认使用暴力方法求选中记录
+    if(!haveGetAnswer) {
+        for(int i = 0; i < records.size(); i++) {
+            // 检查条件
+            if(CheckCondition(records[i], conditions) != kSuccess) continue;
+            // 添加一条记录
+            selected_index.push_back(i);
+        }
+    }
+
+    // ===== Order By =====
+    if(orderby_key.size() > 0) {
+        std::sort(selected_index.begin(), selected_index.end(), [&](int x, int y) {
+            for(const auto& key: orderby_key) {
+                int ret = ColasqlTool::CompareAny(records[x].at(key), records[y].at(key));
+                if(ret < 0) return true;
+                else if(ret > 0) return false;
+            }
+            return false;
+        });
+    }
+
+    // ===== 将记录索引转换成表格 =====
+    
     // 这个lambda表达式用于往return_records中加入一条记录
     auto addRecord = [&](const auto& record) {
         std::vector<std::any> ret_record;
@@ -370,34 +411,12 @@ int Table::Select(std::vector<std::string> field_name, std::vector<std::tuple<st
         }
         return_records.push_back(ret_record);
     };
-    
-    bool haveGetAnswer = false;
 
-    // 可以由索引得到选中记录
-    if(!haveGetAnswer && index_ptr && conditions.size() > 0) {
-        std::vector<int> selected_index;
-        int ret = index_ptr->query(conditions, selected_index);
-        if(ret == 0) {
-            for(const auto& idx: selected_index) {
-                assert(idx < records.size());
-                addRecord(records[idx]);
-            }
-            std::cout << "Index speedup successfully." << std::endl;
-            haveGetAnswer = true;
-        }
-    }
-    
-    // 默认使用暴力方法求选中记录
-    if(!haveGetAnswer) {
-        for(const auto& record: records) {
-            // where ... continue
-            if(CheckCondition(record, conditions) != kSuccess) continue;
-            // 添加一条记录
-            addRecord(record);
-        }
+    for(const auto& idx: selected_index) {
+        assert(idx < records.size());
+        addRecord(records[idx]);
     }
 
-    // TODO
     return kSuccess;
 }
 

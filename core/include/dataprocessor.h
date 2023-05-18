@@ -55,8 +55,16 @@ public:
 //记录
 public:
     int Insert(std::string table_name, std::vector<std::pair<std::string, std::string>> record_in); // 插入记录
-    int Select(std::string table_name, std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string, int>> conditions, std::vector<std::vector<std::any>> &return_records); // 查询记录
-    int Select(std::vector<std::string> table_names, std::vector<std::string> field_name, std::vector<std::tuple<std::string, std::string, int>> conditions, std::vector<std::vector<std::any>> &return_records); // 多表查询
+    int Select(std::string table_name,
+               std::vector<std::string> field_name,
+               std::vector<std::tuple<std::string, std::string, int>> conditions,
+               std::vector<std::vector<std::any>> &return_records,
+               const std::vector<std::string>& orderby_key = std::vector<std::string>()); // 查询记录
+    int Select(std::vector<std::string> table_names,
+               std::vector<std::string> field_name,
+               std::vector<std::tuple<std::string, std::string, int>> conditions,
+               std::vector<std::vector<std::any>> &return_records,
+               const std::vector<std::string>& orderby_key = std::vector<std::string>()); // 多表查询
     int Delete(std::string table_name, std::vector<std::tuple<std::string, std::string, int>> conditions);                                                                                         // 删除记录
     int Update(std::string table_name, const std::vector<std::pair<std::string,std::string>>& values, const std::vector<std::tuple<std::string, std::string, int>>& conditions);                      //更新记录
     //values: vector<>
