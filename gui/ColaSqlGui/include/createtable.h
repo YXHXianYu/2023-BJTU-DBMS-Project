@@ -36,11 +36,11 @@ private:
     QStandardItemModel* model;
     QString database_name;
     QString table_name;
-    std::vector<QString> not_nulls;
-    std::vector<QString> primes;
-    std::vector<QString> uniques;
-    std::vector<std::tuple<QString, QString, QString> > foreigns;
-    std::vector<std::pair<QString, QString> > record;
+    std::vector<std::pair<QString, QString>> not_nulls;
+    std::vector<std::pair<QString, QString>> primes;
+    std::vector<std::pair<QString, QString>> uniques;
+    std::vector<std::tuple<QString, QString, QString, QString>> foreigns;
+    std::vector<std::pair<QString, QString>> record;
 };
 
 #endif // CREATETABLE_H

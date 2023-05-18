@@ -62,20 +62,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QCheckBox" name="pk_check">
-       <property name="text">
-        <string>PRIMARY KEY</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QCheckBox" name="unique_check">
-       <property name="text">
-        <string>UNIQUE</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1" colspan="2">
       <widget class="QLineEdit" name="foreign_field">
        <property name="placeholderText">
@@ -94,6 +80,34 @@
       <widget class="QLineEdit" name="foreign_table">
        <property name="placeholderText">
         <string>reference table name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QCheckBox" name="pk_check">
+       <property name="text">
+        <string>PRIMARY KEY</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QCheckBox" name="unique_check">
+       <property name="text">
+        <string>UNIQUE</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QLineEdit" name="constraint_name">
+       <property name="placeholderText">
+        <string>constrain name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>CONSTRAINT NAME:</string>
        </property>
       </widget>
      </item>

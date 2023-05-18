@@ -643,6 +643,7 @@ int DataProcessor::AlterTableConstraint(std::string table_name, Constraint* cons
 	return ret;
 }
 int DataProcessor::UpdateConstraintMap() {
+	constraint_map.clear();
 	for(const auto& database : databases) {
 		const auto & tables = database.GetTables();
 		for(const auto& table :tables) {
@@ -677,6 +678,52 @@ int DataProcessor::AlterTableDeleteConstraint(std::string table_name, std::strin
 	UpdateConstraintMap();
 	return kSuccess;
 }
+
+int DataProcessor::ShowConstraints(std::vector<std::vector<std::any>>& ret_records) {
+	UpdateConstraintMap();
+	std::vector<std::any> inner_record;
+	inner_record.push_back(std::any("Name"));
+	inner_record.push_back(std::any("Type"));
+	inner_record.push_back(std::any("Database"));
+	inner_record.push_back(std::any("Table"));
+	inner_record.push_back(std::any("Field"));
+	ret_records.push_back(inner_record);
+	for(const auto& database : databases) {
+		const auto & tables = database.GetTables();
+		for(const auto& table :tables) {
+			const auto& constraints = table.GetConstraints();
+			for(const auto& constraint : constraints) {
+				inner_record.clear();
+				if(dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr) {
+					continue;
+				}
+				inner_record.push_back(std::any(constraint->GetConstraintName()));
+				if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
+					inner_record.push_back(std::any("FK"));
+				}
+				else if(dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr) {
+					inner_record.push_back(std::any("PK"));
+				}
+				else if(dynamic_cast<const UniqueConstraint *>(constraint) != nullptr) {
+					inner_record.push_back(std::any("UNI"));
+				}
+				else if(dynamic_cast<const NotNullConstraint *>(constraint) != nullptr) {
+					inner_record.push_back(std::any("NN"));
+				}
+				else if(dynamic_cast<const DefaultConstraint *>(constraint) != nullptr) {
+					inner_record.push_back(std::any("DF"));
+				}
+				
+				inner_record.push_back(std::any(database.GetDatabaseName()));
+				inner_record.push_back(std::any(table.GetTableName()));
+				inner_record.push_back(std::any(constraint->GetFieldName()));
+				ret_records.push_back(inner_record);
+			}
+		}
+	}
+	return kSuccess;
+}
+
 int DataProcessor::BuildIndex(std::string table_name, const std::vector<std::string>& compare_key) {
 	if (current_user == nullptr) {
 		return kUserNotLogin;
