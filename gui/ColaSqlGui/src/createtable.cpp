@@ -8,12 +8,26 @@ createtable::createtable(QWidget* parent)
     ui->setupUi(this);
     QIcon icon = QIcon(":/images/Colasql.png");
     this->setWindowIcon(icon);
+    ui->tableName_lineEdit->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+    ui->dbName_lineEdit->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+    ui->col_name->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+    ui->tableView->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+    ui->comboBox->setStyleSheet(
+        "background:transparent;border-width:0;border-style:outset");
+
     model = new QStandardItemModel();
     model->setColumnCount(3);
     model->setHeaderData(0, Qt::Horizontal, "字段");
     model->setHeaderData(1, Qt::Horizontal, "类型");
     model->setHeaderData(2, Qt::Horizontal, "约束");
     ui->tableView->setModel(model);
+    ui->tableView->setColumnWidth(0, 60);
+    ui->tableView->setColumnWidth(1, 60);
+    ui->tableView->setColumnWidth(2, 60);
 }
 
 createtable::~createtable() { delete ui; }

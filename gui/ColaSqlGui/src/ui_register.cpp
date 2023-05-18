@@ -53,14 +53,29 @@ void ui_register::on_pushButton_regist_clicked()
     {
         int ret = DataProcessor::GetInstance().CreateUser(
             user_name.toStdString(), user_pwd1.toStdString());
-        if (ret == kUserNameExisted)
-            QMessageBox::warning(this, "错误", "用户已存在");
-        else if (!ret)
+        if (ret == kSuccess)
         {
+            User user(user_name.toStdString(), user_pwd1.toStdString());
+            std::vector<User> users;
+            int get_ret = FileManager::GetInstance().ReadUsersFile(users);
+            if (get_ret != kSuccess)
+            {
+                qDebug() << "get users error" + QString::number(get_ret);
+                assert(false);
+            }
+            users.push_back(user);
+            get_ret = FileManager::GetInstance().WriteUsersFile(users);
+            if (get_ret != kSuccess)
+            {
+                qDebug() << "write users error" + QString::number(get_ret);
+                assert(false);
+            }
             QMessageBox::information(this, "欢迎", "用户注册成功");
             emit back();
             this->close();
         }
+        else if (ret == kUserNameExisted)
+            QMessageBox::warning(this, "错误", "用户已存在");
         else
         {
             qDebug() << "i dont know!fk urself!";

@@ -198,6 +198,7 @@ void MainWindow::init_treeview()
     {
         QStandardItem* item_database =
             new QStandardItem(QString::fromStdString(database));
+        item_database->setIcon(QIcon(":/images/database.jpg"));
         model->appendRow(item_database);
 
         // get tables in current database
@@ -218,6 +219,7 @@ void MainWindow::init_treeview()
         {
             QStandardItem* item_table =
                 new QStandardItem(QString::fromStdString(table));
+            item_table->setIcon(QIcon(":/images/table.jpg"));
             item_database->appendRow(item_table);
         }
     }
@@ -506,6 +508,8 @@ void MainWindow::click_delete_tb()
     QDialog dialog;
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
+    QIcon icon = QIcon(":/images/Colasql.png");
+    dialog.setWindowIcon(icon);
 
     QLineEdit input1;
     QLineEdit input2;
@@ -671,10 +675,11 @@ void MainWindow::click_save()
 void MainWindow::click_complex_select()
 {
     qDebug() << "complex select";
-    multiple_select = 1;
     QDialog dialog;
     QFormLayout layout(&dialog);
     dialog.setWindowTitle("输入");
+    QIcon icon = QIcon(":/images/Colasql.png");
+    dialog.setWindowIcon(icon);
 
     QLineEdit dbInput;
     QTextEdit input;
@@ -701,6 +706,7 @@ void MainWindow::click_complex_select()
                 "使用数据库失败，错误信息：" + QString::number(db_ret));
             return;
         }
+        multiple_select = 1;
         QString sql = input.toPlainText();
         qDebug() << sql;
         std::vector<std::vector<std::any>> return_records;
