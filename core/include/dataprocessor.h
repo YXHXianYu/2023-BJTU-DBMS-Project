@@ -20,6 +20,7 @@ private:
     User* current_user;
     std::string current_database_name;
     std::string current_user_name;
+    std::unordered_map<std::string, std::pair<std::string, std::string>> constraint_map;//约束名->数据库名，表名
 private:
     DataProcessor();
 public:
@@ -46,7 +47,7 @@ public:
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);                                                               // 创建表
     int DropTable(std::string table_name);                                      //删除表
     int DescribeTable(std::string table_name,std::vector<std::pair<std::string, std::string>>& fields,std::vector<Constraint*>&    constraints);                                  //查看表结构
-
+    int UpdateConstraintMap();
     int AlterTableAdd(std::string table_name, std::pair<std::string, std::string> field);//修改表结构,增加字段
     int AlterTableDrop(std::string table_name, std::string field_name);          //删除字段
     int AlterTableModify(std::string table_name, std::pair<std::string, std::string> field); //修改字段
