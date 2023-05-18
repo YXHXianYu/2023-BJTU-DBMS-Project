@@ -265,7 +265,7 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
     // tables.txt
     std::ifstream in(path + "tables.txt", std::ifstream::in);
     if (!in.is_open())
-        assert(false);
+        return -1;
 
     in >> n;
     for (int i = 1; i <= n; i++)
@@ -290,7 +290,7 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
         // table.txt
         in.open(path + tableName + ".txt", std::ifstream::in);
         if (!in.is_open())
-            assert(false);
+            return -1;
 
         in >> n;
         for (int i = 1; i <= n; i++)
@@ -306,7 +306,7 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
         // tableRecords.txt
         in.open(path + tableName + "Records.txt", std::ifstream::in);
         if (!in.is_open())
-            assert(false);
+            return -1;
 
         in >> n;
         for (int i = 1; i <= n; i++)
@@ -328,7 +328,7 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
         // tableConstraints.txt
         in.open(path + tableName + "Constraints.txt", std::ifstream::in);
         if (!in.is_open())
-            assert(false);
+            return -1;
 
         in >> n;
         for (int i = 1; i <= n; i++)
@@ -386,7 +386,7 @@ int FileManager::ReadTablesFile(const std::string& databaseName,
         // tableIndexes.txt
         in.open(path + tableName + "Indexes.txt", std::ifstream::in);
         if (!in.is_open())
-            assert(false);
+            return -1;
 
         int indexState;
         in >> indexState;
