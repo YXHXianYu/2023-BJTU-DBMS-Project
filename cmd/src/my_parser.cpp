@@ -850,6 +850,19 @@ std::string Parser::BuildIndex(const std::vector<std::string>& seq) {
 
 }
 
+std::string Parser::ShowConstraints(const std::vector<std::string>& seq) {
+    if(seq.size() != 2) return error + statementError;
+
+    std::vector<std::vector<std::any>> result;
+    int ret = DataProcessor::GetInstance().ShowConstraints(result);
+
+    if(ret != 0) return error + GetErrorMessage(ret);
+
+    ColasqlTool::OutputSelectResult(result);
+    return success;
+}
+
+
 std::string Parser::Read(bool debug) {
 
     int ret = DataProcessor::GetInstance().Read(debug);
