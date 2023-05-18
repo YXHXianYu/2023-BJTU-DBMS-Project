@@ -688,6 +688,7 @@ void MainWindow::click_complex_select()
     }
 }
 
+// 读取执行.colasql文件
 void MainWindow::click_read_sql()
 {
     QFileDialog dialog(this);
@@ -703,18 +704,22 @@ void MainWindow::click_read_sql()
         else
         {
             qDebug() << "Selected File: " << filePath;
-            QString opt = "run " + filePath + ";";
+            QString opt = "run " + filePath;
             qDebug() << "cmd run: " << opt;
             QString ret = QString::fromStdString(
-                ColaSQLCommand::CommandProcessor::GetInstance().Run(
+                ColaSQLCommand::CommandProcessor::GetInstance().RunScript(
                     opt.toStdString()));
-            qDebug() << "return success!";
-            if (ret != "Success!")
-            {
-                QMessageBox::warning(this, "错误",
-                                     "执行.colasql错误，错误信息：" + ret);
-                return;
-            }
+            qDebug() << ret;
+            init_treeview();
+            ui->textEdit_code->append(prefix);
+            QTextCursor cursor = ui->textEdit_code->textCursor();
+            cursor.movePosition(QTextCursor::End);
+            ui->textEdit_code->setTextCursor(cursor);
+
+            // 滚动到光标所在位置
+            QScrollBar* vScrollBar = ui->textEdit_code->verticalScrollBar();
+            if (vScrollBar)
+                vScrollBar->setValue(vScrollBar->maximum());
         }
     }
 }

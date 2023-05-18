@@ -11,6 +11,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QObject>
+#include <QScrollBar>
 #include <QStandardItemModel>
 #include <QTextEdit>
 #include <QTreeWidget>
