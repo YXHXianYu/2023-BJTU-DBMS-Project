@@ -22,7 +22,7 @@ private:
     std::vector<std::unordered_map<std::string, std::any> > records;
     std::vector<Constraint*> constraints;
 
-    std::shared_ptr<Index> index_ptr;
+    Index* index_ptr;
 
 public:
     Table(std::string &table_name);

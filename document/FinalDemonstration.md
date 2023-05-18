@@ -141,6 +141,8 @@ paginate: true
 
 - [无旋Treap](https://oi-wiki.org/ds/treap/#%E6%97%A0%E6%97%8B-treap)
 
+- CREATE INDEX ON `TableName` `Field1` ...;
+
 ---
 
 # 3. 拓展功能展示

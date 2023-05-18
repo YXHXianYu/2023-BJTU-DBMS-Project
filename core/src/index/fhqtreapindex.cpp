@@ -5,11 +5,18 @@
 FHQTreapIndex::FHQTreapIndex(const std::vector<std::unordered_map<std::string, std::any>>& records,
                              const std::vector<std::pair<std::string, std::string>>& fields,
                              const std::unordered_map<std::string, std::string>& field_map,
-                             const std::vector<std::string>& compare_key): Index(records, fields, field_map, compare_key) {
+                             const std::vector<std::string>& compare_key):
+    Index(records, fields, field_map, compare_key) {
+    _records_ptr = nullptr;
+    _field_map_ptr = nullptr;
     build(records, fields, field_map, compare_key);
 }
 
 FHQTreapIndex::~FHQTreapIndex() {
+    delete _records_ptr;
+    _records_ptr = nullptr;
+    delete _field_map_ptr;
+    _field_map_ptr = nullptr;
 }
 
 int FHQTreapIndex::build(const std::vector<std::unordered_map<std::string, std::any>>& records,
@@ -18,8 +25,13 @@ int FHQTreapIndex::build(const std::vector<std::unordered_map<std::string, std::
                          const std::vector<std::string>& compare_key) {
 
     // ===== Records =====
-    _records_ptr.reset(new std::vector<std::unordered_map<std::string, std::any>>(records));
-    _field_map_ptr.reset(new std::unordered_map<std::string, std::string>(field_map));
+    delete _records_ptr;
+    _records_ptr = nullptr;
+    _records_ptr = new std::vector<std::unordered_map<std::string, std::any>>(records);
+
+    delete _field_map_ptr;
+    _field_map_ptr = nullptr;
+    _field_map_ptr = new std::unordered_map<std::string, std::string>(field_map);
 
     // ===== Compare Key =====
     // n^2 optimization could be used here

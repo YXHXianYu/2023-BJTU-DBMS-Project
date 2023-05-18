@@ -66,6 +66,7 @@ public:
     * 1  if r[i] > r[j]
     */
     int compare(int i, int j, bool nullIsLess = true) const {
+        if(!_records_ptr) return 0;
         if(i >= _records_ptr->size() || j >= _records_ptr->size()) return 0;
         for(const auto& fieldName: _compare_key) {
             bool iHave = _records_ptr->at(i).count(fieldName) > 0;
@@ -94,6 +95,7 @@ public:
     * 1  if r[i] > r[j]
     */
     int compare(const std::unordered_map<std::string, std::any>& i, int j, bool nullIsLess = true) const {
+        if(!_records_ptr) return 0;
         if(j >= _records_ptr->size()) return 0;
         for(const auto& fieldName: _compare_key) {
             bool iHave = i.count(fieldName) > 0;
@@ -124,8 +126,8 @@ public:
 protected:
     int _state; // 记录index状态
 
-    std::shared_ptr<const std::vector<std::unordered_map<std::string, std::any>>> _records_ptr;
-    std::shared_ptr<const std::unordered_map<std::string, std::string>> _field_map_ptr;
+    const std::vector<std::unordered_map<std::string, std::any>>* _records_ptr;
+    const std::unordered_map<std::string, std::string>* _field_map_ptr;
     std::vector<std::string> _compare_key;
 };
 
