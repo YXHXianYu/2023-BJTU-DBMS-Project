@@ -13,9 +13,9 @@ FHQTreapIndex::FHQTreapIndex(const std::vector<std::unordered_map<std::string, s
 }
 
 FHQTreapIndex::~FHQTreapIndex() {
-    delete _records_ptr;
+    // delete _records_ptr;
     _records_ptr = nullptr;
-    delete _field_map_ptr;
+    // delete _field_map_ptr;
     _field_map_ptr = nullptr;
 }
 
@@ -25,11 +25,11 @@ int FHQTreapIndex::build(const std::vector<std::unordered_map<std::string, std::
                          const std::vector<std::string>& compare_key) {
 
     // ===== Records =====
-    delete _records_ptr;
+    // delete _records_ptr;
     _records_ptr = nullptr;
     _records_ptr = new std::vector<std::unordered_map<std::string, std::any>>(records);
 
-    delete _field_map_ptr;
+    // delete _field_map_ptr;
     _field_map_ptr = nullptr;
     _field_map_ptr = new std::unordered_map<std::string, std::string>(field_map);
 
@@ -50,7 +50,7 @@ int FHQTreapIndex::build(const std::vector<std::unordered_map<std::string, std::
     }
 
     // ===== Build Tree =====
-    t = std::vector<Node>(records.size() + 2);
+    t = std::vector<Node>(records.size() + 2000);
     for(int i = 0; i < records.size(); i++) {
         insert(i);
     }
