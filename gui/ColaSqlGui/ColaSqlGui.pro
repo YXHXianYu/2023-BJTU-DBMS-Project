@@ -24,32 +24,35 @@ SOURCES += \
     $${PWD}/../../core/src/constraint/*.cpp \
     $${PWD}/../../core/src/index/*.cpp \
     ../../file/src/filemanager.cpp \
-    createindex.cpp \
-    createrecord.cpp \
-    createtable.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    ui_login.cpp \
-    ui_register.cpp \
-    columndialog.cpp
+#    ./src/*.cpp
+    ./src/createindex.cpp \
+    ./src/createrecord.cpp \
+    ./src/createtable.cpp \
+    ./src/mainwindow.cpp \
+    ./src/ui_login.cpp \
+    ./src/ui_register.cpp \
+    ./src/columndialog.cpp \
+    ./src/main.cpp
 
 HEADERS += \
-    columndialog.h \
-    createindex.h \
-    createrecord.h \
-    createtable.h \
-    mainwindow.h \
-    qtbstreambuf.h \
-    ui_login.h \
-    ui_register.h
+#    ./include/*.h \
+    ./include/columndialog.h \
+    ./include/createindex.h \
+    ./include/createrecord.h \
+    ./include/createtable.h \
+    ./include/mainwindow.h \
+    ./include/qtbstreambuf.h \
+    ./include/ui_login.h \
+    ./include/ui_register.h
 
 FORMS += \
-    createindex.ui \
-    createrecord.ui \
-    createtable.ui \
-    mainwindow.ui \
-    ui_login.ui \
-    ui_register.ui
+#    ./ui/*.h
+    ./ui/createindex.ui \
+    ./ui/createrecord.ui \
+    ./ui/createtable.ui \
+    ./ui/mainwindow.ui \
+    ./ui/ui_login.ui \
+    ./ui/ui_register.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -61,3 +64,9 @@ INCLUDEPATH +=$$quote("../../core/include")
 INCLUDEPATH +=$$quote("../../core/include/constraint")
 INCLUDEPATH +=$$quote("../../core/include/index")
 INCLUDEPATH +=$$quote("../../file/include/")
+INCLUDEPATH +=$$quote("./include")
+
+RESOURCES += \
+    resource/res.qrc
+
+
