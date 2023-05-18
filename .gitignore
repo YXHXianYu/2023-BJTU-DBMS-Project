@@ -24,6 +24,7 @@ core/build/
 # Gui
 gui/build*/
 gui/ColaSqlGui/build/
+gui/ColaSqlGui/data/
 
 
 ### C++ ###
