@@ -9,6 +9,8 @@ ui_register::ui_register(QWidget* parent)
 {
     ui->setupUi(this);
     setWindowTitle("Register");
+    QIcon icon = QIcon(":/images/Colasql.png");
+    this->setWindowIcon(icon);
     ui->lineEdit_password1->setEchoMode(QLineEdit::Password);
     ui->lineEdit_password2->setEchoMode(QLineEdit::Password);
     ui->lineEdit_account->setStyleSheet(

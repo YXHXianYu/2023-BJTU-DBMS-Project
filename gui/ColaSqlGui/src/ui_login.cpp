@@ -7,6 +7,8 @@ ui_login::ui_login(QWidget* parent) : QMainWindow(parent), ui(new Ui::ui_login)
     ui->setupUi(this);
     ui_regist = new ui_register;
     setWindowTitle("Login");
+    QIcon icon = QIcon(":/images/Colasql.png");
+    this->setWindowIcon(icon);
     ui->lineEdit_password->setEchoMode(QLineEdit::Password);
     ui->lineEdit_account->setStyleSheet(
         "background:transparent;border-width:0;border-style:outset");

@@ -6,6 +6,8 @@ createtable::createtable(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::createtable)
 {
     ui->setupUi(this);
+    QIcon icon = QIcon(":/images/Colasql.png");
+    this->setWindowIcon(icon);
     model = new QStandardItemModel();
     model->setColumnCount(3);
     model->setHeaderData(0, Qt::Horizontal, "字段");

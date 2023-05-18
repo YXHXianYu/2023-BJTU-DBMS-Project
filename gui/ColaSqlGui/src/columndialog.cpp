@@ -1,7 +1,6 @@
 #include "columndialog.h"
 
-ColumnDialog::ColumnDialog(QWidget* parent)
-    : QDialog(parent)
+ColumnDialog::ColumnDialog(QWidget* parent) : QDialog(parent)
 {
     // 创建三个QLineEdit输入框，并将它们添加到布局中
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -48,6 +47,8 @@ ColumnDialog::ColumnDialog(QWidget* parent)
     connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
     // 设置窗口标题和大小
     setWindowTitle("输入");
+    QIcon icon = QIcon(":/images/Colasql.png");
+    setWindowIcon(icon);
     resize(300, 150);
 }
 // 返回输入框内容的函数
