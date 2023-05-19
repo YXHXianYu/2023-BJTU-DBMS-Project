@@ -33,6 +33,7 @@ public:
     int FindTable(std::string table_name);
     int FindTable(std::string table_name, Table& return_table);
     int FindField(std::string table_name, std::string field_name);
+    int FindField(std::string table_name, std::string field_name, std::any);
     Table& FindTableReference(std::string table_name);
     int ShowTables(std::vector<std::string>& return_tables);
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
@@ -65,6 +66,8 @@ public:
     int BuildIndex(std::string table_name, const std::vector<std::string>& compare_key);
 
     int AlterTableDeleteConstraint(std::string table_name, std::string constraint_name);
+    int CheckUnique(std::string table_name, std::string field_name);
+    
 };
 
 

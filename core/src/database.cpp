@@ -44,6 +44,16 @@ int Database::FindField(std::string table_name, std::string field_name){
     return kTableNotFound;
 }
 
+int Database::FindField(std::string table_name, std::string field_name, std::any value){
+    if(FindTable(table_name) != kSuccess) return kTableNotFound;
+    for(const auto& table: tables) {
+        if(table.GetTableName() == table_name) {
+            return table.FindField(field_name, value);
+        }
+    }
+    return kTableNotFound;
+}
+
 Table& Database::FindTableReference(std::string table_name) {
     for(auto& table : tables) {
         if(table.GetTableName() == table_name) return table;
@@ -100,6 +110,11 @@ int Database::CreateTable(std::string table_name, std::vector<std::pair<std::str
         if(ret != kSuccess) return ret;
         
         if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
+
+            int ret = CheckUnique(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(), dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName());
+            if(ret!=kSuccess) return ret;
+            
+
             ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
             ret = FindTable(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName());
             if(ret!=kSuccess) return ret;
@@ -121,6 +136,15 @@ int Database::CreateTable(std::string table_name, std::vector<std::pair<std::str
     }
     tables.push_back(table);
     return kSuccess;
+}
+
+int Database::CheckUnique(std::string table_name, std::string field_name) {
+    for(const auto& table: tables) {
+        if(table.GetTableName() == table_name) {
+            return table.CheckUnique(field_name);
+        }
+    }
+    return kFieldNotFound;
 }
 int Database::AlterTableConstraint(std::string table_name, Constraint* constraint) {
     for(auto& table:tables) {
@@ -150,8 +174,16 @@ int Database::AlterTableConstraint(std::string table_name, Constraint* constrain
             
             if(dynamic_cast<const ForeignKeyConstraint *>(constraint) != nullptr) {
                 //std::cout<<"AlterTableConstraint checked foreignkey and adding ForeignReferedConstraint"<<std::endl;
+                const auto& records = table.GetRecords();
+                for(const auto& record : records) {
+                    if(!record.count(constraint->GetFieldName())) continue;
+                    int ret = FindField(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(), dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), record.at(constraint->GetFieldName()));
+                    if(ret != kSuccess) return ret;
+                }
+                int ret = CheckUnique(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(), dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName());
+                if(ret!=kSuccess) return ret;
                 ForeignReferedConstraint* refered_constraint = new ForeignReferedConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName(), constraint->GetConstraintName() + "refered", table_name,constraint->GetFieldName());
-                int ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
+                ret = AlterTableConstraint(dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName(),refered_constraint);
                 if(ret!=kSuccess) return ret;
             }
             return table.AlterTableConstraint(constraint);

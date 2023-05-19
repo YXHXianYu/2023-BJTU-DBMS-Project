@@ -91,12 +91,14 @@ public:
     int CheckBeingRefered(std::unordered_map<std::string, std::any>& record, Database* db);
     //查找字段，找到返回kSuccess
     int FindField(std::string field_name) const;
+    int FindField(std::string field_name, std::any value) const;
     //根据表名来删除外键约束
     int DropForeignReferedConstraint(std::string table_name);
     //根据表名和字段名来删除外键约束。
     int DropForeignReferedConstraint(std::string table_name, std::string field_name);
 
     int DeleteConstraint(std::string constraint_name, Database* db);
+    int CheckUnique(std::string field_name) const;
 };
 
 #endif // TABLE_H
