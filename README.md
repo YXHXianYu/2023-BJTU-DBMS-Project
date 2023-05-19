@@ -84,13 +84,15 @@ build/ColaSqlGui
 * 有关 `#include\<filemanager\>` 的编译错误
   * gcc在c++17中支持了 `filemanager` 库，但qt5在c++17中只支持 `experimental/filemanager`，需要根据环境具体决定。可以在 `file/src/filemanager.cpp` 中修改对应内容。
 
-![pic](./document/pictures/pic1.png)
-
 ***
 
 ### 3. GUI展示
 
+![pic](./document/pictures/pic1.png)
 
+![pic](./document/pictures/pic2.png)
+
+![pic](./document/pictures/pic3.png)
 
 ***
 
@@ -329,8 +331,6 @@ build/ColaSqlGui
 
 * `NULL` 为Co1aSQL关键字，若占用，则不一定能得到预期结果
 
-![pic](./document/pictures/pic2.png)
-
 ***
 
 ### 5. C++函数接口
@@ -445,8 +445,6 @@ build/ColaSqlGui
                    const std::vector<Field>& values,
                    const std::vector<Field>& conditions);
   ```
-
-![pic](./document/pictures/pic3.png)
 
 ***
 
