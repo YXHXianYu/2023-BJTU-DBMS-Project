@@ -1,6 +1,7 @@
 #include "table.h"
 #include "database.h"
 #include <algorithm>
+#include<map>
 #include <cassert>
 
 #include "index/fhqtreapindex.h"
@@ -73,6 +74,14 @@ const std::string& Table::GetTableName() const {
 int Table::FindField(std::string field_name) const {
     if(field_map.count(field_name)) return kSuccess;
     return kFieldNotFound;
+}
+int Table::FindField(std::string field_name, std::any value) const {
+    if(!field_map.count(field_name)) return kFieldNotFound;
+    for(const auto& record : records) {
+        if(!record.count(field_name)) continue;
+        if(ColasqlTool::CompareAny(record.at(field_name), value) == kEqual) return kSuccess; 
+    }
+    return kFieldValueNotFound;
 }
 
 const std::vector<std::pair<std::string, std::string>>& Table::GetFields() const {
@@ -547,7 +556,31 @@ int Table::AlterTableConstraint(Constraint* constraint) {
         std::string reference_table_name = dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceTableName();
         std::string reference_field_name = dynamic_cast<const ForeignKeyConstraint *>(constraint)->GetReferenceFieldName();
     }*/
-
+    if(dynamic_cast<const PrimaryKeyConstraint *>(constraint) != nullptr) {
+        std::string field_name = constraint->GetFieldName();
+        std::map<std::string, int> mp;
+        for(const auto& record : records) {
+            if(!record.count(field_name)) return kPrimaryKeyEmpty;
+            if(mp.count(ColasqlTool::AnyToString(record.at(field_name)))) return kPrimaryKeyRepeated;
+            mp[ColasqlTool::AnyToString(record.at(field_name))] = 1;
+        }
+        
+    }
+    else if(dynamic_cast<const NotNullConstraint *>(constraint) != nullptr) {
+        std::string field_name = constraint->GetFieldName();
+        for(const auto& record : records) {
+            if(!record.count(field_name)) return kNotNullEmpty;
+        }
+    }
+    else if(dynamic_cast<const UniqueConstraint *>(constraint) != nullptr) {
+        std::string field_name = constraint->GetFieldName();
+        std::map<std::string, int> mp;
+        for(const auto& record : records) {
+            if(!record.count(field_name)) continue;
+            if(mp.count(ColasqlTool::AnyToString(record.at(field_name)))) return kUniqueRepeated;
+            mp[ColasqlTool::AnyToString(record.at(field_name))] = 1;
+        }
+    }
 
     constraints.push_back(constraint);
     return kSuccess;
@@ -601,7 +634,13 @@ int Table::Update(const std::vector<std::pair<std::string,std::string>>& values,
         if(CheckCondition(record,conditions) != kSuccess) {
             continue;
         }
+        
         for(const auto& field : values) {
+            if(field.second == "") {
+                if(!record.count(field.first)) continue;
+                record.erase(record.find(field.first));
+                continue;
+            }
             if(field_map[field.first] == "int") {
                 for(auto x : field.second) {
                     if(x > '9' || x < '0') return kDataTypeWrong;
@@ -717,6 +756,17 @@ int Table::AlterTableModify(std::pair<std::string, std::string> field) {
         }
         std::string tmp = ColasqlTool::AnyToString(record[field.first]);
         record[field.first] = ColasqlTool::GetAnyByTypeAndValue(field.second, tmp);
+    }
+    return kSuccess;
+}
+
+int Table::CheckUnique(std::string field_name) const{
+    if(!field_map.count(field_name)) return kFieldNotFound;
+    std::map<std::string, int> mp;
+    for(const auto& record : records) {
+        if(!record.count(field_name)) continue;
+        if(mp.count(ColasqlTool::AnyToString(record.at(field_name)))) return kUniqueRepeated;
+        mp[ColasqlTool::AnyToString(record.at(field_name))] = 1;
     }
     return kSuccess;
 }

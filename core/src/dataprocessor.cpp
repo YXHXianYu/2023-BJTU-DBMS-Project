@@ -680,6 +680,7 @@ int DataProcessor::AlterTableDeleteConstraint(std::string table_name, std::strin
 }
 
 int DataProcessor::ShowConstraints(std::vector<std::vector<std::any>>& ret_records) {
+	if(current_user == nullptr) return kUserNotLogin;
 	UpdateConstraintMap();
 	std::vector<std::any> inner_record;
 	inner_record.push_back(std::any(std::string("Name")));
@@ -691,7 +692,9 @@ int DataProcessor::ShowConstraints(std::vector<std::vector<std::any>>& ret_recor
 	for(const auto& database : databases) {
 		const auto & tables = database.GetTables();
 		for(const auto& table :tables) {
+			if(current_user->CheckTableInAuthorities(database.GetDatabaseName(),table.GetTableName()) != kSuccess) continue;
 			const auto& constraints = table.GetConstraints();
+
 			for(const auto& constraint : constraints) {
 				inner_record.clear();
 				if(dynamic_cast<const ForeignReferedConstraint *>(constraint) != nullptr) {

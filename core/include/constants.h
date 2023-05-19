@@ -1,3 +1,8 @@
+/**
+ * author: drj
+ * 常量类，存储了所有常量，包括错误代码常量、数据比较结果常量等等。
+*/
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
@@ -51,6 +56,13 @@ const int kFieldExisted = 41;
 const int kPrimaryKeyExcessive = 42;
 const int kConstraintNameExisted = 43;
 const int kConstraintNotFound = 44;
+
+const int kPrimaryKeyEmpty = 45;
+const int kPrimaryKeyRepeated = 46;
+const int kNotNullEmpty = 47;
+const int kUniqueRepeated = 48;
+const int kFieldValueNotFound = 49;
+
 // ===== About Index =====
 const int kUnknownIndex = 100;
 const int kFHQTreapIndex = 101;

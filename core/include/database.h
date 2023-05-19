@@ -1,3 +1,11 @@
+/**
+ * author: drj
+ * 数据库类，存储了该数据库里的所有表。
+ * 由dataprocessor调用，对数据库或表进行操作。
+ * 接口运行正确时返回kSuccess
+ * 否则返回./constrants.h里的错误代码
+*/
+
 #ifndef DATABASE_H
 #define DATABASE_H
 
@@ -25,6 +33,7 @@ public:
     int FindTable(std::string table_name);
     int FindTable(std::string table_name, Table& return_table);
     int FindField(std::string table_name, std::string field_name);
+    int FindField(std::string table_name, std::string field_name, std::any);
     Table& FindTableReference(std::string table_name);
     int ShowTables(std::vector<std::string>& return_tables);
     int CreateTable(std::string table_name, std::vector<std::pair<std::string, std::string>> fields, std::vector<Constraint *> constraints);
@@ -57,6 +66,8 @@ public:
     int BuildIndex(std::string table_name, const std::vector<std::string>& compare_key);
 
     int AlterTableDeleteConstraint(std::string table_name, std::string constraint_name);
+    int CheckUnique(std::string table_name, std::string field_name);
+    
 };
 
 

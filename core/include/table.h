@@ -1,3 +1,11 @@
+/**
+ * author: drj
+ * 表类。存储了所有表里的记录，和字段信息、约束等。
+ * 主要由database调用，正确时返回kSuccess。
+ * 否则返回./constrants.h里的错误代码
+ * 本模块中，记录的存储方式是std::vector<std::unordered_map<std::string, std::any> > records，一条记录的类型是std::unordered_map<std::string, std::any>，其中string为记录对应字段，any是记录在对应字段的值。
+ * 单行单列交叉处的数据以STL中的any存储，在colasqltool类里有对any进行转换、修改、输出等操作的方法。
+*/
 #ifndef TABLE_H
 #define TABLE_H
 
@@ -64,7 +72,7 @@ public:
     //更新记录
     int Update(const std::vector<std::pair<std::string,std::string>>& value,
                const std::vector<std::tuple<std::string, std::string, int>>& conditions, Database* db);
-
+    //描述表（字段信息、约束等）
     int DescribeTable(std::vector<std::pair<std::string, std::string>>& fields,
                       std::vector<Constraint*>& constraints);
     
@@ -81,11 +89,16 @@ public:
     int CheckConstraint(std::unordered_map<std::string, std::any>& record, Database* db, std::vector<std::unordered_map<std::string, std::any> > records, int current_record_order);
     //检查是否被其它表参考
     int CheckBeingRefered(std::unordered_map<std::string, std::any>& record, Database* db);
+    //查找字段，找到返回kSuccess
     int FindField(std::string field_name) const;
+    int FindField(std::string field_name, std::any value) const;
+    //根据表名来删除外键约束
     int DropForeignReferedConstraint(std::string table_name);
+    //根据表名和字段名来删除外键约束。
     int DropForeignReferedConstraint(std::string table_name, std::string field_name);
 
     int DeleteConstraint(std::string constraint_name, Database* db);
+    int CheckUnique(std::string field_name) const;
 };
 
 #endif // TABLE_H
