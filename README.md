@@ -43,42 +43,31 @@
 ### 2. 构建与使用
 
 #### 2.1 项目版本
-
 * gcc 13.1.1
   * c++17
-
 * qt 5.15.9
 * cmake 3.26.3
 * qmake 3.1
-
 #### 2.2 构建CLI
-
 ```
 cd cmd
 cmake -Bbuild
 make -Cbuild -j8
 ```
-
 #### 2.3 启动CLI
-
 ```
 build/colasql admin 123456;
 ```
-
 #### 2.4 构建GUI
-
 ```
 cd gui/ColaSqlGui
 qmake -o build/Makefile ColaSqlGui.pro
 make -Cbuild -j8
 ```
-
 #### 2.5 启动GUI
-
 ```
 build/ColaSqlGui
 ```
-
 #### 2.6 FAQ
 
 * 有关 `#include\<filemanager\>` 的编译错误
