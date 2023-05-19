@@ -1,4 +1,7 @@
+![logo](./document/pictures/logo.png)
+
 # Co1aSQL
+
 > 2023-BJTU-DBMS-Project
 >
 > 北京交通大学软件学院 2023年春季 实训课项目 数据库管理系统
@@ -11,7 +14,7 @@
 * 我们需要实现一个数据库管理系统，支持数据库的创建、数据库表的管理、记录的添加与查询、完整性 约束的实现，索引的创建与实现，多用户等功能。
 * 数据库管理系统是一种操纵和管理数据库的大型软件，用于建立、使用和维护数据库。它对数据库进行 统一的管理和控制，以保证数据库的安全性和完整性。用户通过数据库管理系统访问数据库中的数据， 数:据库管理员也通过数据库管理系统进行数据库的维护工作。它可使多个应用程序和用户用不同的方法 在同时或不同时刻去建立，修改和询问数据库。
 * 我们也支持用户使用SQL语句来控制数据库，包括DDL、DML、DCL，供用户定义数据库的模式结构与 权限约束，实现对数据的追加、删除等操作。
-* ![pic](./document/pictures/ProjectConstruction.png)
+* 项目结构：![pic](./document/pictures/ProjectConstruction.png)
 
 #### 1.2 基本功能
 
@@ -30,6 +33,10 @@
 * 完整性管理（主键、外键、UNIQUE、NOT NULL、DEFAULT）
 * 安全性管理（用户、权限）
 * GUI点击修改记录
+
+#### 1.4 结题报告
+
+* [结题报告](./document/FinalDocument.md)
 
 ***
 
@@ -77,17 +84,24 @@ build/ColaSqlGui
 * 有关 `#include\<filemanager\>` 的编译错误
   * gcc在c++17中支持了 `filemanager` 库，但qt5在c++17中只支持 `experimental/filemanager`，需要根据环境具体决定。可以在 `file/src/filemanager.cpp` 中修改对应内容。
 
+![pic](./document/pictures/pic1.png)
 
 ***
 
-### 3. SQL语法
+### 3. GUI展示
 
-#### 3.1 基本约定
+
+
+***
+
+### 4. SQL语法
+
+#### 4.1 基本约定
 
 * Co1aSQL 支持的SQL语法，均为 **大小写不敏感**。
 * Co1aSQL 在预处理SQL语句时，会自动将所有的小括号和逗号替换为空格，以尽可能兼容标准SQL。
 
-#### 3.2 用户
+#### 4.2 用户
 
 * 登入数据库
 
@@ -142,15 +156,15 @@ build/ColaSqlGui
   DROP USER 用户名;
   ```
 
-#### 3.3 数据类型
+#### 4.3 数据类型
 
 * ```sql
-  int    # 32位整数，如 1, 14, 514
-  float  # 32位浮点数，如 1.0, 5.1, 2
+  int    # 42位整数，如 1, 14, 514
+  float  # 42位浮点数，如 1.0, 5.1, 2
   string # 字符串，如 "dbms", "2002-10-12"
   ```
 
-#### 3.4 数据库
+#### 4.4 数据库
 
 * 创建数据库（需要管理员权限）
 
@@ -176,7 +190,7 @@ build/ColaSqlGui
   SHOW DATABASES;
   ```
 
-#### 3.5 表
+#### 4.5 表
 
 * 创建表(需要CREATE权限)
 
@@ -248,9 +262,9 @@ build/ColaSqlGui
   ```
   
 
-#### 3.6 记录
+#### 4.6 记录
 
-* 插入记录点击了rollback
+* 插入记录
 
   ```sql
   INSERT INTO 表名 列名1 列名2 列名3 ... VALUES 值1 值2 值3 ...;
@@ -286,7 +300,7 @@ build/ColaSqlGui
   [WHERE 筛选条件1 筛选条件2 ...];
   ```
 
-#### 3.7 文件
+#### 4.7 文件
 
 * 储存 & 提交
 
@@ -302,7 +316,7 @@ build/ColaSqlGui
   ROLLBACK;
   ```
 
-#### 3.8 Co1aSQL脚本执行
+#### 4.8 Co1aSQL脚本执行
 
 * 执行Co1aSQL脚本
   * ```
@@ -311,18 +325,17 @@ build/ColaSqlGui
     
     * 注意！此处不能在语句末尾加 `;`，否则会解析失败！
 
-#### 3.9 关键字
+#### 4.9 关键字
 
-* 以下内容为Co1aSQL关键字，若占用，则不一定能得到预期结果
-  * ```
-    NULL
-    ```
+* `NULL` 为Co1aSQL关键字，若占用，则不一定能得到预期结果
+
+![pic](./document/pictures/pic2.png)
 
 ***
 
-### 4. C++函数接口
+### 5. C++函数接口
 
-#### 4.1 基本约定
+#### 5.1 基本约定
 
 * 异常
   * 不使用异常，而是使用 函数返回值 来表示执行状态，用 assert断言 来处理一些重大异常。
@@ -331,7 +344,7 @@ build/ColaSqlGui
   * 比如，可以把以下接口置于不同类中；
   * 比如，可以让 使用数据库(登录)方法 返回一个 数据库对象，通过该对象来操作数据库。
 
-#### 4.2 数据载体
+#### 5.2 数据载体
 
 * ```c++
   // 属性（字段）
@@ -347,7 +360,7 @@ build/ColaSqlGui
   Class DefaultConstraint: public Constraint {};
   ```
 
-#### 4.3 用户
+#### 5.3 用户
 
 * ```c++
   // 创建用户（需要管理员权限）
@@ -367,7 +380,7 @@ build/ColaSqlGui
                    int authority);
   ```
 
-#### 4.4 数据库
+#### 5.4 数据库
 
 * ```c++
   // 创建数据库（需要管理员权限）
@@ -385,7 +398,7 @@ build/ColaSqlGui
   int ShowDatabase(std::string& output);
   ```
 
-#### 4.5 表
+#### 5.5 表
 
 * ```c++
   // 创建表
@@ -410,7 +423,7 @@ build/ColaSqlGui
   int ShowTable(std::string& output);
   ```
 
-#### 4.6 记录
+#### 5.6 记录
 
 * ```c++
   // 插入记录
@@ -433,10 +446,35 @@ build/ColaSqlGui
                    const std::vector<Field>& conditions);
   ```
 
+![pic](./document/pictures/pic3.png)
+
 ***
 
-### 5. 小故事
+### 6. 小故事
 
 * lovekdl测试时发现的Bug
   * 管理员给用户授予了查看表和修改表的权限，然后用户不小心把表改错了，所以进行了回滚，然后回滚的时候，系统把他查看表的权限也回滚了，导致他把自己的权限滚掉了（笑死）
   * 这个Bug因为过于有趣，所以被保留了，有兴趣可以尝试一下
+
+***
+
+### 7. 其他
+
+#### 7.1 资源
+
+* 本软件图片素材主要来自小组成员 [ZY_](https://space.bilibili.com/67662455)
+
+#### 7.2 协议
+
+* 本项目代码采用MIT协议
+
+#### 7.3 开发人员与分工
+
+* [F1qi](https://github.com/FooLiqi)
+  * GUI开发
+* [lovekdl](https://github.com/lovekdl)
+  * 核心模块开发
+* [YXH_XianYu](https://github.com/YXHXianYu)
+  * CLI模块与文件模块开发
+* [ZY-MC](https://github.com/ZY-MC)
+  * GUI设计与素材绘制
