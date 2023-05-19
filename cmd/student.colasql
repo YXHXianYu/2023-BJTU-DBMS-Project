@@ -9,10 +9,10 @@ CREATE TABLE student
   Sbirthday string
   Totalcredit int
 
-  Constraint c1 Primary key Sno
-  Constraint c2 Not Null Sname
-  Constraint c3 Unique Sbirthday
-  Constraint c4 Default Totalcredit 0
+  Constraint c10 Primary key Sno
+  Constraint c11 Not Null Sname
+  Constraint c12 Unique Sbirthday
+  Constraint c13 Default Totalcredit 0
 ;
 
 INSERT INTO student Sno Sname Ssex Sbirthday 

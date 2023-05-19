@@ -36,6 +36,20 @@ paginate: true
 
 ---
 
+# 1. 项目介绍
+
+## 1.3 编译相关
+
+- gcc 13.1.1
+
+- cmake 3.26.3
+
+- qmake 3.1
+
+- qt 5.15.9
+
+---
+
 # 2. 基本功能展示
 
 ## 2.1 DDL功能实现
@@ -91,6 +105,18 @@ paginate: true
 
 # 3. 拓展功能展示
 
+- 读取SQL脚本(RUN)
+- 复杂SQL查询(SELECT)
+- 提交/回滚(数据持久化)
+- 完整性(约束)
+- 索引管理(INDEX)
+- 安全性(用户权限管理)
+- GUI点击修改
+
+---
+
+# 3. 拓展功能展示
+
 ## 3.1 读取SQL脚本
 
 - run `脚本路径`
@@ -139,7 +165,7 @@ paginate: true
 
 ## 3.5 索引
 
-- [无旋Treap](https://oi-wiki.org/ds/treap/#%E6%97%A0%E6%97%8B-treap)
+- 因为是内存数据库，所以使用 [无旋Treap](https://oi-wiki.org/ds/treap/#%E6%97%A0%E6%97%8B-treap)
 
 - CREATE INDEX ON `TableName` `Field1` ...;
 
@@ -149,7 +175,15 @@ paginate: true
 
 ## 3.6 用户权限管理
 
+- Grant User `User` `Database` `AuthorityName`;
 
+- Revoke User `User` `Database` `AuthorityName`;
+
+- Authority:
+  - SELECT
+  - INSERT
+  - UPDATE
+  - etc
 
 ---
 
