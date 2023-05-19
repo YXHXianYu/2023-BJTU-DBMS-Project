@@ -586,6 +586,12 @@ void MainWindow::click_delete_field()
     {
         QItemSelectionModel* selectionModel = ui->tableView->selectionModel();
         QModelIndexList selectedColumns = selectionModel->selectedColumns();
+        if (selectedColumns.isEmpty())
+        {
+            QMessageBox::warning(this, "错误", "请至少选用一个字段");
+            qDebug() << "delete field error";
+            return;
+        }
         foreach (const QModelIndex& index, selectedColumns)
         {
             QString field =
@@ -636,6 +642,12 @@ void MainWindow::click_delete_record()
     {
         QItemSelectionModel* selectionModel = ui->tableView->selectionModel();
         QModelIndexList selectedRows = selectionModel->selectedRows();
+        if (selectedRows.isEmpty())
+        {
+            QMessageBox::warning(this, "错误", "请选用一行");
+            qDebug() << "delete record error";
+            return;
+        }
         foreach (const QModelIndex& index, selectedRows)
         {
             int row = index.row();
