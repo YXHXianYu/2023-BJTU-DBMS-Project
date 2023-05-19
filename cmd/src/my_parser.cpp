@@ -48,6 +48,9 @@ std::string Parser::Parse(const std::vector<std::string>& seq) {
     if(seq[0] == "create" && seq[1] == "index") {              // Build Index
         return BuildIndex(seq);
     }
+    if(seq[0] == "show" && seq[1] == "constraints") {
+        return ShowConstraints(seq);
+    }
 
     // ----- Table -----
     if(seq[1] == "table") {
@@ -849,6 +852,19 @@ std::string Parser::BuildIndex(const std::vector<std::string>& seq) {
     return success;
 
 }
+
+std::string Parser::ShowConstraints(const std::vector<std::string>& seq) {
+    if(seq.size() != 2) return error + statementError;
+
+    std::vector<std::vector<std::any>> result;
+    int ret = DataProcessor::GetInstance().ShowConstraints(result);
+
+    if(ret != 0) return error + GetErrorMessage(ret);
+
+    ColasqlTool::OutputSelectResult(result);
+    return success;
+}
+
 
 std::string Parser::Read(bool debug) {
 

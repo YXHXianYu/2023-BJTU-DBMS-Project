@@ -1,9 +1,0 @@
-CREATE USER yxh_xianyu 20021012;
-GRANT USER yxh_xianyu bjtu select;
-LOGIN yxh_xianyu 20021012;
-USE bjtu;
-SELECT * FROM student;
-LOGIN admin 123456;
-REVOKE USER yxh_xianyu bjtu select;
-LOGIN yxh_xianyu 20021012;
-SELECT * FROM student;

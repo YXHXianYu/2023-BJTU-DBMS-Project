@@ -69,6 +69,8 @@ private:
 
     std::string BuildIndex(const std::vector<std::string>& seq);
 
+    std::string ShowConstraints(const std::vector<std::string>& seq);
+
     std::string Read(bool debug = false);
     std::string Save();
 
