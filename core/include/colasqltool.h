@@ -1,3 +1,8 @@
+/**
+ * author: drj
+ * 工具类。
+ * 含有对any类型进行操作的接口、输出表信息的接口、数据结构转换的接口、对其它数据结构转换成表结构的接口等等。
+*/
 #ifndef __COLASQLTOOL_H__
 #define __COLASQLTOOL_H__
 

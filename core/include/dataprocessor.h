@@ -1,3 +1,10 @@
+/**
+ * author: drj
+ * 数据处理类，单例模式，外部调用时请使用单例。
+ * 正确处理数据时返回常量kSuccess(0)
+ * 否则返回./constrants.h里的错误代码
+*/
+
 #ifndef DATAPROCESSOR_H
 #define DATAPROCESSOR_H
 
@@ -29,7 +36,7 @@ public:
 //更新指针
 public:
     int UpdatePointer();
-//数据库
+//数据库,用户
 public:
     int GetCurrentDatabase(std::string& database_name);
     int GetCurrentUser(std::string& user_name);
@@ -78,10 +85,10 @@ public:
     bool FindDatabase(std::string database_name);
     bool FindTable(std::string database_name, std::string table_name);
     bool FindUser(std::string user_name);
-    int GrantAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);
-    int GrantAuthority(std::string user_name,std::string database_name, std::string authority_name);
-    int RevokeAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);
-    int RevokeAuthority(std::string user_name,std::string database_name, std::string authority_name);
+    int GrantAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);//给出表级权限
+    int GrantAuthority(std::string user_name,std::string database_name, std::string authority_name);//给出数据库级和表级权限
+    int RevokeAuthority(std::string user_name,std::string database_name, std::string table_name, std::string authority_name);//收回表级权限
+    int RevokeAuthority(std::string user_name,std::string database_name, std::string authority_name);//收回数据库级权限
 
 //索引
 public:

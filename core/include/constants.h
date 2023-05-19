@@ -1,3 +1,8 @@
+/**
+ * author: drj
+ * 常量类，存储了所有常量，包括错误代码常量、数据比较结果常量等等。
+*/
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 

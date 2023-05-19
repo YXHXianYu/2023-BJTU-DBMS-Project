@@ -1,3 +1,11 @@
+/**
+ * author: drj
+ * 数据库类，存储了该数据库里的所有表。
+ * 由dataprocessor调用，对数据库或表进行操作。
+ * 接口运行正确时返回kSuccess
+ * 否则返回./constrants.h里的错误代码
+*/
+
 #ifndef DATABASE_H
 #define DATABASE_H
 
