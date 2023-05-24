@@ -42,33 +42,42 @@
 
 ### 2. 构建与使用
 
-#### 2.1 项目版本
+#### 2.1 Release
+
+* 本仓库的Release中有已经构建好的可执行程序。
+* 使用账户 `admin`与密码 `123456` 即可登录。
+
+#### 2.2 项目版本
 * gcc 13.1.1
   * c++17
 * qt 5.15.9
 * cmake 3.26.3
 * qmake 3.1
-#### 2.2 构建CLI
+#### 2.3 构建CLI
 ```
 cd cmd
 cmake -Bbuild
 make -Cbuild -j8
 ```
-#### 2.3 启动CLI
+#### 2.4 启动CLI
 ```
 build/colasql admin 123456;
 ```
-#### 2.4 构建GUI
+#### 2.5 构建GUI
 ```
 cd gui/ColaSqlGui
 qmake -o build/Makefile ColaSqlGui.pro
 make -Cbuild -j8
 ```
-#### 2.5 启动GUI
+#### 2.6 启动GUI
 ```
 build/ColaSqlGui
 ```
-#### 2.6 FAQ
+#### 2.7 管理员账户
+
+* 请使用 `admin` 与 `123456` 来登入数据库
+
+#### 2.8 FAQ
 
 * 有关 `#include\<filemanager\>` 的编译错误
   * gcc在c++17中支持了 `filemanager` 库，但qt5在c++17中只支持 `experimental/filemanager`，需要根据环境具体决定。可以在 `file/src/filemanager.cpp` 中修改对应内容。
