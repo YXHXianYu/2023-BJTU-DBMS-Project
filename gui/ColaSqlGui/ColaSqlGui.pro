@@ -19,10 +19,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    $${PWD}/../../cmd/src/*.cpp \
-    $${PWD}/../../core/src/*.cpp \
-    $${PWD}/../../core/src/constraint/*.cpp \
-    $${PWD}/../../core/src/index/*.cpp \
+    $${PWD}/../../cmd/src/command_processor.cpp \
+    $${PWD}/../../cmd/src/my_parser.cpp \
+    $${PWD}/../../core/src/colasqltool.cpp \
+    $${PWD}/../../core/src/database.cpp \
+    $${PWD}/../../core/src/dataprocessor.cpp \
+    $${PWD}/../../core/src/table.cpp \
+    $${PWD}/../../core/src/user.cpp \
+    $${PWD}/../../core/src/constraint/constraint.cpp \
+    $${PWD}/../../core/src/constraint/default_constraint.cpp \
+    $${PWD}/../../core/src/constraint/foreign_key_constraint.cpp \
+    $${PWD}/../../core/src/constraint/foreign_refered_constraint.cpp \
+    $${PWD}/../../core/src/constraint/not_null_constraint.cpp \
+    $${PWD}/../../core/src/constraint/primary_key_constraint.cpp \
+    $${PWD}/../../core/src/constraint/unique_constraint.cpp \
+    $${PWD}/../../core/src/index/fhqtreapindex.cpp \
+    $${PWD}/../../core/src/index/index.cpp \
     ../../file/src/filemanager.cpp \
 #    ./src/*.cpp
     ./src/createindex.cpp \
